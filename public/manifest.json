@@ -1,0 +1,37 @@
+{
+  "name": "RaychemQR_Halol",
+  "short_name": "HALOL",
+  "start_url": "/",
+  "display": "standalone",
+  "description": "Official PWA for the RaychemQR HALOL",
+  "id" : "/",
+  "background_color": "rgb(31, 41, 55)",
+  "theme_color": "transparent",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/android/android-launchericon-192-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android/android-launchericon-512-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/web.png",
+      "sizes": "2940x1912",
+      "type": "image/png",
+      "form_factor" : "wide"
+    },
+     {
+      "src": "/screenshots/android.jpeg",
+      "sizes": "1080x2340",
+      "type": "image/png",
+      "form_factor" : "narrow"
+    }
+  ]
+}
