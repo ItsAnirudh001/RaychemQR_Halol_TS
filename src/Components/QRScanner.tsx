@@ -1,14 +1,7 @@
+import { QRScannerProps } from "@/Types/scannerTypes";
 import { Scanner } from "@yudiel/react-qr-scanner";
-import React from "react";
-
-type QRScannerProps = {
-  onScan?: (result?: string | null) => void;
-  onError?: (error?: unknown) => void;
-  sound?: boolean;
-};
 
 export default function QRScanner({ onScan, onError, sound }: QRScannerProps) {
-
   return (
     <Scanner
       onScan={onScan}
