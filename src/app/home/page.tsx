@@ -2,6 +2,7 @@
 
 import QRScanner from "@/Components/QRScanner";
 import { toastify } from "@/Utils/toast";
+import { IDetectedBarcode } from "@yudiel/react-qr-scanner";
 import Image from "next/image";
 
 export default function Home() {
@@ -14,8 +15,8 @@ export default function Home() {
     toastify("error", "QR Scan Failed");
   }
 
-  function handleQRScan(result?: string | null): void {
-    console.log("QR Scan Result", result);
+  function handleQRScan(detectedCodes: IDetectedBarcode[]): void {
+    console.log("QR Scan Result", detectedCodes);
     toastify("success", "QR Scan successful", 3300);
   }
 
