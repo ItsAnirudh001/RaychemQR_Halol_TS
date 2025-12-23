@@ -7,6 +7,7 @@ export default function QRScanner({ onScan, onError, sound }: QRScannerProps) {
       onScan={onScan}
       onError={onError}
       sound={sound}
+      scanDelay={1000}
       constraints={{
         facingMode: "environment",
       }}
