@@ -12,7 +12,7 @@ export function toastify(type: ToastType, message: string, duration?: number) {
 
   return toast(message, {
     position: "bottom-center",
-    className: "break-words whitespace-normal leading-[2.2rem]",
+    className: "break-words whitespace-normal",
     type: type,
     transition: Bounce,
     autoClose: duration,
