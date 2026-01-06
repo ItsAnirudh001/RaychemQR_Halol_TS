@@ -1,22 +1,46 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: rgba(242, 244, 250, 1);
+  --foreground: black;
+  --header: white;
+
+  --toast-bg-success: darkblue;
+  --toast-bg-error: #f87171;
+  --toast-bg-warning: #facc15;
+
+  --primary-heading: rgba(64, 108, 175, 1);
+  --sideitem-bg: rgba(230, 230, 245, 1);
+  --sideitem-text: rgba(64, 108, 175, 1);
 }
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: rgba(242, 244, 250, 1);
+    --foreground: black;
+    --header: white;
+
+    --toast-bg-success: darkblue;
+    --toast-bg-error: #f87171;
+    --toast-bg-warning: #facc15;
+
+    --primary-heading: rgba(64, 108, 175, 1);
+    --sideitem-bg: rgba(230, 230, 245, 1);
+    --sideitem-text: rgba(64, 108, 175, 1);
+  }
+} */
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-header-bg: var(--header);
+
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-primary-heading: var(--primary-heading);
+  --color-sideitem-bg: var(--sideitem-bg);
+  --color-sideitem-text: var(--sideitem-text);
 }
 
 body {
@@ -25,8 +49,22 @@ body {
   font-family: var(--font-sans);
 }
 
+.page {
+  @apply flex flex-col w-full p-6;
+}
+
 .toast-bar {
   background-color: var(--toast-progress) !important;
+}
+
+.toast-success {
+  background: var(--toast-bg-success) !important;
+}
+.toast-error {
+  background: var(--toast-bg-error);
+}
+.toast-warning {
+  background: var(--toast-bg-warning);
 }
 
 .button {
@@ -34,5 +72,25 @@ body {
 }
 
 .heading {
-  @apply max-w-xs text-3xl font-normal leading-10 tracking-tight text-black dark:text-zinc-50;
+  @apply max-w-xs text-xl font-normal leading-10 tracking-tight;
+}
+
+.animated {
+  @apply transition duration-300 ease-in-out hover:translate-y-1 hover:scale-102;
+}
+
+.hover-shadow {
+  @apply hover:shadow-[0_0_10px_rgba(0,0,0,0.5)] transition duration-300;
+}
+
+.shadowed {
+  @apply shadow-[0_0_10px_rgba(0,0,0,0.25)];
+}
+
+.tablecell {
+  @apply border-none!;
+}
+
+.user-table-btn {
+  @apply border-[1.5px]! py-1.5 rounded-md cursor-pointer w-full;
 }

@@ -1,4 +1,4 @@
-import { ToastItem } from "@/Types/toastTypes";
+import { ToastItem } from "@/types/toastTypes";
 
 export const toastData: ToastItem[] = [
   {
