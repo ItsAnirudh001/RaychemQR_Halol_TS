@@ -1,7 +1,8 @@
-"use client";
-
+import { getDevice } from "@/utils/helpers";
 import { redirect } from "next/navigation";
 
-export default function App() {
-  return redirect("/login")
+export default async function Page() {
+  const isMobile = await getDevice();
+
+  redirect(isMobile ? "/mobile/login" : "/web/login");
 }

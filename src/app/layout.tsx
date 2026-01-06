@@ -1,7 +1,10 @@
-import { fontSans } from "@/Data/layoutData";
+import { fontSans } from "@/data/layoutData";
+import MuiProviders from "@/components/mui-providers";
 import { ToastContainer } from "react-toastify";
 import { Metadata } from "next";
-import Image from "next/image";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import QueryProvider from "./query-provider";
+import DynamicLayout from "@/components/layout";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -19,7 +22,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
       <head>
@@ -36,30 +38,21 @@ export default function RootLayout({
         />
       </head>
 
-      <body className={`${fontSans.variable} antialiased`}>
-        <div className="flex min-h-screen w-full items-start bg-zinc-50 font-sans dark:bg-gray-800 flex-col p-6">
-          <div className="flex flex-row items-center justify-between space-x-4">
-            <Image
-              className="dark:invert"
-              src="/apple-touch-icon.png"
-              alt="Next.js logo"
-              width={100}
-              height={20}
-              priority
-            />
-            <h1 className="heading text-2xl! font-semibold!">
-              RaychemQR
-            </h1>
-          </div>
-          {children}
-        </div>
+      <body className={`antialiased min-h-screen ${fontSans.variable}`}>
+        <QueryProvider>
+          <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+            <MuiProviders>
+              <DynamicLayout>{children}</DynamicLayout>
+            </MuiProviders>
+          </AppRouterCacheProvider>
+        </QueryProvider>
 
         <script
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
-                  navigator.serviceWorker.register('/Helpers/pwaWorker.js');
+                  navigator.serviceWorker.register('/helpers/pwaWorker.js');
                 });
               }
             `,
