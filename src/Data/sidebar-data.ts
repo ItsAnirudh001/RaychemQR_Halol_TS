@@ -6,17 +6,17 @@ import { SideBarItem } from "@/types/sidebar";
 export const sidebarData: SideBarItem[] = [
   {
     name: "User Management",
-    route: "/web/usermanagement",
+    route: "/admin/usermanagement",
     icon: MdGroupAdd,
   },
   {
     name: "Reports",
-    route: "/web/reports",
+    route: "/admin/reports",
     icon: IoNewspaperOutline,
   },
   {
     name: "Audit",
-    route: "/web/audit",
+    route: "/admin/audit",
     icon: AiOutlineAudit,
   },
 ];

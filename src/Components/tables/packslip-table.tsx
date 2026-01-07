@@ -7,10 +7,10 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { tableHeaders } from "@/data/usermanagement/table-data";
-import { tableData } from "@/data/mocks/user-table-mock";
+import { tableHeaders } from "@/data/reports/table-headers";
+import { tableData } from "@/data/mocks/packslip-table-mock";
 
-export default function UsersTable() {
+export default function PackslipTable() {
   return (
     <TableContainer
       component={Paper}
@@ -35,21 +35,19 @@ export default function UsersTable() {
           {tableData?.map((data, i) => (
             <TableRow className="even:bg-gray-50 odd:bg-transparent" key={i + 1}>
               <TableCell className="tablecell">
-                {data.user_name}
-              </TableCell>
-
-              <TableCell className="tablecell">{data.name}</TableCell>
-
-              <TableCell className="tablecell">
-                {data.email_id}
+                {data.order_no}
               </TableCell>
 
               <TableCell className="tablecell">
-                {data.phone_number}
+                {data.po_no}
               </TableCell>
 
-              <TableCell className="tablecell text-center!">
-                {data.role}
+              <TableCell className="tablecell">
+                {data.line_items}
+              </TableCell>
+
+              <TableCell className="tablecell">
+                {data.lot_no}
               </TableCell>
 
               <TableCell className="tablecell flex! justify-center!">
@@ -60,16 +58,6 @@ export default function UsersTable() {
                 </div>
               </TableCell>
 
-              <TableCell className="tablecell">
-                <div className="flex flex-1 w-full justify-evenly cursor-pointer gap-4">
-                  <button className="user-table-btn animated hover-shadow border-primary-heading text-primary-heading">
-                    Edit
-                  </button>
-                  <button className="user-table-btn animated hover-shadow border-red-600 text-red-600">
-                    Delete
-                  </button>
-                </div>
-              </TableCell>
             </TableRow>
           ))}
         </TableBody>

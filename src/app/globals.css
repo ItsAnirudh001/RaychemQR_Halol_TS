@@ -88,7 +88,7 @@ body {
 }
 
 .tablecell {
-  @apply border-none!;
+  @apply border-none! text-sm!;
 }
 
 .user-table-btn {

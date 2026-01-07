@@ -7,10 +7,10 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { tableHeaders } from "@/data/usermanagement/table-data";
-import { tableData } from "@/data/mocks/user-table-mock";
+import { tableHeaders } from "@/data/audit/table-data";
+import { tableData } from "@/data/mocks/audit-table-mock";
 
-export default function UsersTable() {
+export default function AuditTable() {
   return (
     <TableContainer
       component={Paper}
@@ -33,20 +33,17 @@ export default function UsersTable() {
         </TableHead>
         <TableBody>
           {tableData?.map((data, i) => (
-            <TableRow className="even:bg-gray-50 odd:bg-transparent" key={i + 1}>
-              <TableCell className="tablecell">
-                {data.user_name}
-              </TableCell>
+            <TableRow
+              className="even:bg-gray-50 odd:bg-transparent"
+              key={i + 1}
+            >
+              <TableCell className="tablecell">{data.user_name}</TableCell>
 
               <TableCell className="tablecell">{data.name}</TableCell>
 
-              <TableCell className="tablecell">
-                {data.email_id}
-              </TableCell>
+              <TableCell className="tablecell">{data.email_id}</TableCell>
 
-              <TableCell className="tablecell">
-                {data.phone_number}
-              </TableCell>
+              <TableCell className="tablecell">{data.date_time}</TableCell>
 
               <TableCell className="tablecell text-center!">
                 {data.role}
@@ -57,17 +54,6 @@ export default function UsersTable() {
                   <span className="text-green-600 text-xs font-medium">
                     {data.status}
                   </span>
-                </div>
-              </TableCell>
-
-              <TableCell className="tablecell">
-                <div className="flex flex-1 w-full justify-evenly cursor-pointer gap-4">
-                  <button className="user-table-btn animated hover-shadow border-primary-heading text-primary-heading">
-                    Edit
-                  </button>
-                  <button className="user-table-btn animated hover-shadow border-red-600 text-red-600">
-                    Delete
-                  </button>
                 </div>
               </TableCell>
             </TableRow>

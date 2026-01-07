@@ -9,9 +9,10 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 
 export default function Login() {
   const { push } = useRouter();
-  const [form, setForm] = useState<Record<string, string>>({
+  const [form, setForm] = useState<Record<string, string | boolean>>({
     email: "",
     password: "",
+    remember: false,
   });
 
   function updateForm(key: string, value: string) {
@@ -24,7 +25,7 @@ export default function Login() {
   }
 
   function handleSubmit() {
-    push("/web/usermanagement");
+    push("/admin/usermanagement");
   }
 
   return (
@@ -39,7 +40,9 @@ export default function Login() {
       <div className="flex w-full items-center justify-center">
         {/* Login Box */}
         <div className="shadowed flex flex-col bg-white w-[70%] rounded-2xl py-6 px-8 gap-8">
-          <h2 className="text-primary-heading font-semibold text-3xl">Sign In</h2>
+          <h2 className="text-primary-heading font-semibold text-3xl">
+            Sign In
+          </h2>
 
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-8">
