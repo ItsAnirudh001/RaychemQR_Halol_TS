@@ -34,7 +34,7 @@ export default function MuiInput(props: MuiInputProps) {
   ) {
     const { value } = e.target;
 
-    if(onChange) onChange(value);
+    // if(onChange) onChange(value);
   }
 
   return (
