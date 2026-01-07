@@ -46,7 +46,7 @@ export default function Login() {
 
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-8">
-              <MuiInput
+              {/* <MuiInput
                 value={form.email}
                 label="Email"
                 type="string"
@@ -66,7 +66,7 @@ export default function Login() {
                 onChange={(e: MuiInputChangeEvent) =>
                   updateForm("password", e.target.value)
                 }
-              />
+              /> */}
             </div>
 
             <div className="flex gap-1.5">

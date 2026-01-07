@@ -4,7 +4,6 @@ import { ToastContainer } from "react-toastify";
 import { Metadata } from "next";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import QueryProvider from "./query-provider";
-import { getDevice } from "@/utils/helpers";
 import AdminLayout from "@/components/layout/admin";
 import MobileLayout from "@/components/layout/mobile";
 import "./globals.css";
@@ -19,12 +18,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isMobile = await getDevice();
 
   return (
     <html lang="en">
@@ -43,18 +41,15 @@ export default async function RootLayout({
       </head>
 
       <body
-        className={`antialiased min-h-screen ${fontSans.variable} ${
-          isMobile ? "bg-white!" : "bg-background"
+        className={`antialiased min-h-screen ${fontSans.variable} bg-white! lg:bg-background!
         }`}
       >
         <QueryProvider>
           <AppRouterCacheProvider options={{ enableCssLayer: true }}>
             <MuiProviders>
-              {isMobile ? (
-                <MobileLayout>{children}</MobileLayout>
-              ) : (
-                <AdminLayout>{children}</AdminLayout>
-              )}
+              <MobileLayout>{children}</MobileLayout>
+
+              <AdminLayout>{children}</AdminLayout>
             </MuiProviders>
           </AppRouterCacheProvider>
         </QueryProvider>

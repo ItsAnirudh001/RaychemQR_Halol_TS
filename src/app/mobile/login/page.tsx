@@ -28,7 +28,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-4 max-h-full">
+    <div className="flex flex-col gap-6 p-4 overflow-y-hidden">
       <div className="max-h-[42vh] self-center">
         <Image
           src="/login.svg"
@@ -44,7 +44,7 @@ export default function Login() {
 
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-8">
-          <MuiInput
+          {/* <MuiInput
             value={form.email}
             label="Email ID"
             type="string"
@@ -64,7 +64,7 @@ export default function Login() {
             onChange={(e: MuiInputChangeEvent) =>
               updateForm("password", e.target.value)
             }
-          />
+          /> */}
         </div>
 
         <span className="text-sm self-end text-primary-heading font-medium">
