@@ -5,7 +5,7 @@ import Sidebar from "../sidebar";
 export default function AdminLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  // console.log("isMobile",isMobile);
+  
   return (
     <div className="hidden lg:flex lg:flex-col w-screen overflow-x-hidden">
       <Header />

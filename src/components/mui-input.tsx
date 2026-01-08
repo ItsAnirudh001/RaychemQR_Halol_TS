@@ -1,20 +1,25 @@
+"use client";
+
 import React, { useState } from "react";
 import { FormControl, TextField, IconButton } from "@mui/material";
 import { VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material";
 import { fieldProps } from "@/data/material-ui/input-field";
 import { MuiInputChangeEvent, MuiInputProps } from "@/types/mui-input";
+import { useKeyboardScroll } from "@/hooks/useKeyboardScroll";
 
 export default function MuiInput(props: MuiInputProps) {
   const { value, label, onChange, key, type, placeholder, required } = props;
+
+  useKeyboardScroll();
 
   const { input, inputProps } = fieldProps({
     value,
   });
 
-  const [visiblity, setVisiblity] = useState(false);
-  const [focused, setFocused] = useState(false);
+  const [visiblity, setVisiblity] = useState<boolean>(false);
+  const [focused, setFocused] = useState<boolean>(false);
 
-  const Icon = visiblity ? VisibilityOffOutlined : VisibilityOutlined;
+  const Icon = visiblity ? VisibilityOutlined : VisibilityOffOutlined;
 
   function handlePasswordSeen() {
     setVisiblity(true);
@@ -23,18 +28,14 @@ export default function MuiInput(props: MuiInputProps) {
 
   function passwordIcon() {
     return (
-      <IconButton onClick={handlePasswordSeen} sx={{ padding: 0 }}>
-        <Icon sx={{ color: "gray" }} />
+      <IconButton onClick={handlePasswordSeen}>
+        <Icon />
       </IconButton>
     );
   }
 
-  function handleInput(
-    e: MuiInputChangeEvent
-  ) {
-    const { value } = e.target;
-
-    // if(onChange) onChange(value);
+  function handleInput(e: MuiInputChangeEvent) {
+    if (onChange) onChange(e);
   }
 
   return (

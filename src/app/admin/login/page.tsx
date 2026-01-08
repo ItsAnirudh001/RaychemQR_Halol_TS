@@ -6,20 +6,22 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import { LoginForm } from "@/types/login/form";
 
 export default function Login() {
   const { push } = useRouter();
-  const [form, setForm] = useState<Record<string, string | boolean>>({
+
+  const [form, setForm] = useState<LoginForm>({
     email: "",
     password: "",
-    remember: false,
+    required: false,
   });
 
-  function updateForm(key: string, value: string) {
+  function updateForm(key: string, e: MuiInputChangeEvent) {
     setForm((prev) => {
       return {
         ...prev,
-        [key]: value,
+        [key]: e.target.value,
       };
     });
   }
@@ -46,15 +48,13 @@ export default function Login() {
 
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-8">
-              {/* <MuiInput
+              <MuiInput
                 value={form.email}
                 label="Email"
                 type="string"
                 placeholder="Enter Email Address"
                 required={true}
-                onChange={(e: MuiInputChangeEvent) =>
-                  updateForm("email", e.target.value)
-                }
+                onChange={(e: MuiInputChangeEvent) => updateForm("email", e)}
               />
 
               <MuiInput
@@ -63,10 +63,8 @@ export default function Login() {
                 type="password"
                 placeholder="Enter Password"
                 required={true}
-                onChange={(e: MuiInputChangeEvent) =>
-                  updateForm("password", e.target.value)
-                }
-              /> */}
+                onChange={(e: MuiInputChangeEvent) => updateForm("password", e)}
+              />
             </div>
 
             <div className="flex gap-1.5">
