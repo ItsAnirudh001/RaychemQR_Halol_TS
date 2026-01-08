@@ -23,7 +23,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
       <head>
@@ -34,9 +33,10 @@ export default function RootLayout({
         <meta name="theme-color" content="transparent" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="navigation-bar-color" content="transparent" />
         <meta
           name="apple-mobile-web-app-status-bar-style"
-          content="black-translucent"
+          content="transparent"
         />
       </head>
 
