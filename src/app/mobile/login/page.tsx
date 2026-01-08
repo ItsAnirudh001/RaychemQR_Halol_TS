@@ -1,6 +1,7 @@
 "use client";
 
 import MuiInput from "@/components/mui-input";
+import { LoginForm } from "@/types/login/form";
 import { MuiInputChangeEvent } from "@/types/mui-input";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -8,10 +9,11 @@ import { useState } from "react";
 
 export default function Login() {
   const { push } = useRouter();
-  const [form, setForm] = useState<Record<string, string | boolean>>({
+
+  const [form, setForm] = useState<LoginForm>({
     email: "",
     password: "",
-    remember: false,
+    required: false,
   });
 
   function updateForm(key: string, value: string) {
@@ -44,7 +46,7 @@ export default function Login() {
 
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-8">
-          {/* <MuiInput
+          <MuiInput
             value={form.email}
             label="Email ID"
             type="string"
@@ -64,7 +66,7 @@ export default function Login() {
             onChange={(e: MuiInputChangeEvent) =>
               updateForm("password", e.target.value)
             }
-          /> */}
+          />
         </div>
 
         <span className="text-sm self-end text-primary-heading font-medium">

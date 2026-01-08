@@ -5,10 +5,7 @@ export type MuiInputChangeEvent = React.ChangeEvent<
 export interface MuiInputProps {
   value: string | number;
   label: string;
-  onChange?:
-    | ((e: MuiInputChangeEvent) => void)
-    | ((value?: string) => void)
-    | ((key?: string, value?: string | number) => void);
+  onChange?: (e: MuiInputChangeEvent) => void;
   key?: string;
   type: string;
   placeholder: string;
