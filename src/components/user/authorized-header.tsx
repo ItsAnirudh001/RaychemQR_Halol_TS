@@ -8,10 +8,9 @@ import { MdLock } from "react-icons/md";
 
 export default function UserAuthHeader({
   children,
-  searchable,
   setSearchVal,
 }: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   searchable?: boolean;
   setSearchVal?: React.Dispatch<React.SetStateAction<string>>;
 }) {
@@ -40,15 +39,17 @@ export default function UserAuthHeader({
       <div className="flex gap-2 items-center">{children}</div>
 
       <div className="flex gap-3 items-center">
-        <div className="flex bg-[rgba(237,243,247,1)] rounded-3xl p-[1.1vh] placeholder:text-gray-600 gap-2 items-center border border-gray-300 text-xs!">
-          <FaSearch />
-          <input
-            onChange={handleSearch}
-            placeholder="Search"
-            type="search"
-            className="border-none outline-none placeholder-gray-500 font-medium max-w-[27vw]"
-          />
-        </div>
+        {Boolean(setSearchVal) && (
+          <div className="flex bg-[rgba(237,243,247,1)] rounded-3xl p-[1.1vh] placeholder:text-gray-600 gap-2 items-center border border-gray-300 text-xs!">
+            <FaSearch />
+            <input
+              onChange={handleSearch}
+              placeholder="Search"
+              type="search"
+              className="border-none outline-none placeholder-gray-500 font-medium max-w-[27vw]"
+            />
+          </div>
+        )}
 
         <button onClick={showMenu}>
           <FaUserCircle

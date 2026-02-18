@@ -19,7 +19,7 @@ import OrderSubmissionModal from "@/components/user/modals/order-submission-moda
 
 export default function PickslipItemsScreen() {
   const { pickslip_id } = useParams();
-  const { back } = useRouter();
+  const { back, push } = useRouter();
   const slipDetails = JSON.parse(sessionStorage.getItem("pickslip_details")!);
 
   const mockItems = pickslipsData.find(
@@ -107,7 +107,9 @@ export default function PickslipItemsScreen() {
       <div className="flex flex-col bg-[rgba(242,247,252,1)] py-2 px-4 text-xs rounded-2xl gap-2 w-full">
         <div className="flex items-center gap-1">
           {icon}
-          <span className="text-[rgba(98,116,142,1)] font-medium text-[2.65vw]">{label}</span>
+          <span className="text-[rgba(98,116,142,1)] font-medium text-[2.65vw]">
+            {label}
+          </span>
         </div>
         <span className="tracking-wide text-[3vw]">{value}</span>
       </div>
@@ -244,7 +246,10 @@ export default function PickslipItemsScreen() {
                 </div>
 
                 {data.status === "pending" && (
-                  <button className="flex bg-[linear-gradient(180deg,rgba(64,108,175,1)_10%,rgba(79,57,246,1))] place-items-center p-[0.75vh] rounded-lg shadow-2xl shadow-black">
+                  <button
+                    className="flex bg-[linear-gradient(180deg,rgba(64,108,175,1)_10%,rgba(79,57,246,1))] place-items-center p-[0.75vh] rounded-lg shadow-2xl shadow-black"
+                    onClick={() => push(`/user/pickslips/${slipDetails.pickslip_id}/scan`)}
+                  >
                     <LuQrCode className="text-white font-medium text-2xl" />
                   </button>
                 )}
