@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
-export default function Header() {
+export default function AdminHeader() {
   const name = usePathname();
 
   if (name.includes("login")) return <></>;

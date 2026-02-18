@@ -1,22 +1,29 @@
 export function fieldProps(data: { value: string | number }) {
   const { value } = data;
 
-  const mainColor = value ? "rgb(131, 131, 210)" : "rgba(200, 200, 200, 1)";
+  const mainColor = value ? "green" : "rgba(120, 120, 120, 0.5)";
+
+  const commonStyles = {
+    backgroundColor: "transparent",
+    borderRadius: "8px",
+  };
+
+  const borderWidth = "1.4px"
 
   return {
     input: {
       "& .MuiOutlinedInput-root": {
         "& fieldset": {
-          border: `1.5px solid ${mainColor}`,
-          backgroundColor: "transparent",
+          ...commonStyles,
+          border: `${borderWidth} solid ${mainColor}`,
         },
         "&:hover fieldset": {
-          border: "1.5px solid rgb(131, 131, 210)",
-          backgroundColor: "transparent",
+          ...commonStyles,
+          border: `${borderWidth} solid rgb(131, 131, 210)`,
         },
         "&.Mui-focused fieldset": {
-          border: "1.65px solid rgb(131, 131, 210)",
-          backgroundColor: "transparent",
+          ...commonStyles,
+          border: `${borderWidth} solid rgb(131, 131, 210)`,
         },
         "& fieldset>legend": {
           fontSize: "0.64rem",
@@ -32,7 +39,7 @@ export function fieldProps(data: { value: string | number }) {
     inputLabelProps: {
       // shrink : true,
       size: "small",
-      color: mainColor,
+      color: "grey",
     },
     helperProps: {
       sx: {

@@ -1,6 +1,6 @@
 "use client";
 
-import QRScanner from "@/components/QRScanner";
+import QRScanner from "@/components/user/QRScanner";
 import { toastify } from "@/utils/toast";
 import { IDetectedBarcode } from "@yudiel/react-qr-scanner";
 import { useState } from "react";

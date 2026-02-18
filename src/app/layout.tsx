@@ -4,9 +4,14 @@ import { ToastContainer } from "react-toastify";
 import { Metadata } from "next";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import QueryProvider from "./query-provider";
-import AdminLayout from "@/components/layout/admin";
-import MobileLayout from "@/components/layout/mobile";
+import AdminLayout from "@/components/admin/layout";
+import MobileLayout from "@/components/user/layout";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import "./globals.css";
+import Loader from "@/components/loader";
+
+dayjs.extend(customParseFormat);
 
 export const metadata: Metadata = {
   title: "RaychemQR_Halol",
@@ -41,12 +46,13 @@ export default function RootLayout({
       </head>
 
       <body
-        className={`antialiased min-h-screen ${fontSans.variable} bg-white! lg:bg-background!
+        className={`antialiased min-h-screen ${fontSans.variable} lg:bg-background
         }`}
       >
         <QueryProvider>
           <AppRouterCacheProvider options={{ enableCssLayer: true }}>
             <MuiProviders>
+              <Loader />
               <MobileLayout>{children}</MobileLayout>
 
               <AdminLayout>{children}</AdminLayout>

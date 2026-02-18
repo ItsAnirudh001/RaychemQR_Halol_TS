@@ -1,6 +1,6 @@
 "use client";
 
-import UsersTable from "@/components/tables/users-table";
+import UsersTable from "@/components/admin/tables/users-table";
 import { IoMdAdd } from "react-icons/io";
 
 export default function UserManagement() {
