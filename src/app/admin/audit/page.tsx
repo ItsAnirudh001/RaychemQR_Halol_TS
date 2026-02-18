@@ -1,4 +1,4 @@
-import AuditTable from "@/components/tables/audit-table";
+import AuditTable from "@/components/admin/tables/audit-table";
 import React from "react";
 
 export default function AuditPage() {

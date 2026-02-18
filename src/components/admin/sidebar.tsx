@@ -8,7 +8,7 @@ import Drawer from "@mui/material/Drawer";
 // import { IoIosArrowDropright, IoIosArrowDropleft } from "react-icons/io";
 import { sidebarData } from "@/data/sidebar-data";
 
-export default function Sidebar() {
+export default function AdminSidebar() {
   const pathname = usePathname();
 
   if (pathname.includes("login")) return <></>;

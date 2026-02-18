@@ -1,0 +1,112 @@
+Milestone 3
+
+
+
+Task title : FE - Project Directory Configuration
+Dependency : No
+Status : Completed
+
+
+
+Task Title : FE - Dynamic App Layout and Router Configuration
+Dependency : No
+Status : Completed
+
+
+
+Task title : FE - Admin Login
+Dependency : No
+Status : Completed
+
+
+
+Task title : FE - Admin User Management Screen
+Dependency : UI/UX (Nithin)
+Status : In Progress
+
+
+
+Task title : FE - Admin Reports Screen
+Dependency : No
+Status : Completed
+
+
+
+Task title : FE - Admin Audit Screen
+Dependency : No
+Status : Completed
+
+
+
+Task title : FE - User Login
+Dependency : No
+Status : Completed
+
+
+
+Task title : FE - User Forget Password Screen
+Dependency : Client UI/UX Signoff
+Status : Yet to Start
+
+
+
+Task title : FE - User Pickslips screen
+Dependency : Client UI/UX Signoff
+Status : Yet to Start
+
+
+
+Task title : FE - User Pickslip items screen
+Dependency : Client UI/UX Signoff
+Status : Yet to Start
+
+
+
+Task title : FE - User Order Submission Prompt
+Dependency : Client UI/UX Signoff
+Status : Yet to Start
+
+
+
+Task title : FE - UAT Deployment
+Dependency : Completion of development
+Status : Yet to Start
+
+
+
+Task title : FE - Production Deployment
+Dependency : UAT Sign-off
+Status : Yet to Start
+
+
+
+
+Milestone 5
+
+Task title : FE - Admin Add/Edit/Delete User functionalities
+Dependency : Completion of Milestone 3
+Status : Yet to start
+
+Task title : FE - User Reset Password functionality
+Dependency : Completion of Milestone 3
+Status : Yet to start
+
+Task title : FE - User Change Password and Logout functionalities
+Dependency : Completion of Milestone 3
+Status : Yet to start
+
+Task title : FE - User Pickslips Scan, Sort and Search functionalities
+Dependency : Completion of Milestone 3
+Status : Yet to start
+
+Task title : FE - User Pickslip Report Download functionality
+Dependency : Completion of Milestone 3
+Status : Yet to start
+
+Task title : FE - User Pickslip items sort, scan and delete functionalities
+Dependency : Completion of Milestone 3
+Status : Yet to start
+
+Task title : FE - User Order Submission Download functionality
+Dependency : Completion of Milestone 3
+Status : Yet to start

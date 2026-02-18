@@ -13,7 +13,6 @@ export default function Login() {
   const [form, setForm] = useState<LoginForm>({
     email: "",
     password: "",
-    required: false,
   });
 
   function updateForm(key: string, value: string) {
@@ -25,12 +24,16 @@ export default function Login() {
     });
   }
 
+  function handleForgetClick() {
+    push("/user/emailverify");
+  }
+
   function handleSubmit() {
-    push("/mobile/home");
+    push("/user/pickslips");
   }
 
   return (
-    <div className="flex flex-col gap-6 p-4 overflow-y-hidden">
+    <div className="flex flex-col gap-6 p-4 overflow-y-hidden bg-white h-screen">
       <div className="max-h-[42vh] self-center">
         <Image
           src="/login.svg"
@@ -69,13 +72,13 @@ export default function Login() {
           />
         </div>
 
-        <span className="text-sm self-end text-primary-heading font-medium">
+        <span className="text-sm self-end text-primary-heading font-medium" onClick={handleForgetClick}>
           Forgot Password?
         </span>
       </div>
 
       <button
-        className="animated hover-shadow bg-primary-heading w-full text-white rounded-xl py-3 font-semibold"
+        className="animated hover-shadow mobile-btn-main"
         onClick={handleSubmit}
       >
         Sign In

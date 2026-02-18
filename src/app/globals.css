@@ -79,6 +79,10 @@ body {
   @apply transition duration-300 ease-in-out hover:translate-y-1 hover:scale-102;
 }
 
+.box-shadow {
+  @apply shadow-[0_0_20px_rgba(255,255,255,0.5)];
+}
+
 .hover-shadow {
   @apply hover:shadow-[0_0_10px_rgba(0,0,0,0.5)] transition duration-300;
 }
@@ -93,4 +97,16 @@ body {
 
 .user-table-btn {
   @apply border-[1.5px]! py-1.5 rounded-md cursor-pointer w-full;
+}
+
+.mobile-btn-main {
+  @apply bg-primary-heading w-full text-white rounded-xl py-[2.25vh] font-semibold text-[2vh];
+}
+
+.mobile-filter-btn {
+  @apply flex rounded-3xl place-items-center gap-1.5 bg-white py-2 px-3.5 font-medium text-[2.65vw]!;
+}
+
+.mui-menuitem {
+  @apply flex! gap-[2vw]! text-[1.65vh]! font-medium!
 }

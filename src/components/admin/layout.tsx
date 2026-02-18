@@ -1,6 +1,6 @@
 import React from "react";
-import Header from "../header";
-import Sidebar from "../sidebar";
+import AdminHeader from "./header";
+import AdminSidebar from "./sidebar";
 
 export default function AdminLayout({
   children,
@@ -8,10 +8,10 @@ export default function AdminLayout({
   
   return (
     <div className="hidden lg:flex lg:flex-col w-screen overflow-x-hidden">
-      <Header />
+      <AdminHeader />
 
       <div className="flex w-full mt-[10vh]">
-        <Sidebar />
+        <AdminSidebar />
 
         <div className="w-[85vw]">{children}</div>
       </div>

@@ -1,4 +1,4 @@
-import PackslipTable from "@/components/tables/packslip-table";
+import PackslipTable from "@/components/admin/tables/packslip-table";
 import React from "react";
 
 export default function ReportsPage() {
