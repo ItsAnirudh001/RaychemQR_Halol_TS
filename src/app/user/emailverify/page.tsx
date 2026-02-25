@@ -1,7 +1,8 @@
 "use client"
 
-import MuiInput from "@/components/mui-input";
-import { MuiInputChangeEvent } from "@/types/mui-input";
+import MuiInput from "@/components/material-ui/input";
+import UserPreAuthHeader from "@/components/user/preauth-header";
+import { MuiInputChangeEvent } from "@/types/mui-types";
 import { useRouter } from "next/navigation";
 
 import { useState } from "react";
@@ -14,8 +15,10 @@ export default function EmailVerifyScreen() {
     push("/user/reset")
   }
   return (
-    <div className="flex flex-col gap-6 pt-20 px-4 overflow-y-hidden bg-white h-screen">
-      <h2 className="font-semibold text-2xl">Enter E-mail ID</h2>
+    <div className="flex flex-col overflow-y-hidden bg-white h-screen">
+    <UserPreAuthHeader />
+    <div className="flex flex-col gap-6 pt-20 px-10">
+      <h2 className="font-bold text-[1.5rem]">Enter E-mail ID</h2>
 
       <MuiInput
         value={email}
@@ -32,6 +35,7 @@ export default function EmailVerifyScreen() {
       >
         Send Verification Mail
       </button>
+    </div>
     </div>
   );
 }

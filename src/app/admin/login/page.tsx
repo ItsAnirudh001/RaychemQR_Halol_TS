@@ -1,20 +1,24 @@
 "use client";
 
-import MuiInput from "@/components/mui-input";
-import { MuiInputChangeEvent } from "@/types/mui-input";
+import MuiInput from "@/components/material-ui/input";
+import { MuiInputChangeEvent } from "@/types/mui-types";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import { LoginForm } from "@/types/login/form";
+import { LoginForm } from "@/types/login-form";
+import { Login } from "@/api/common-utils";
+import useAppStore from "@/store/app-store";
+import { toastify } from "@/utils/toast";
 
-export default function Login() {
+export default function LoginPage() {
   const { push } = useRouter();
+  const { setUser } = useAppStore();
+  const { setLoading } = useAppStore();
 
   const [form, setForm] = useState<LoginForm>({
-    email: "",
+    username: "",
     password: "",
-    required: false,
   });
 
   function updateForm(key: string, e: MuiInputChangeEvent) {
@@ -26,35 +30,34 @@ export default function Login() {
     });
   }
 
-  function handleSubmit() {
-    push("/admin/usermanagement");
+  async function handleSubmit() {
+    if (!form.username || !form.password)
+      return toastify("warning", "Enter Valid Credentials", 1000);
+
+    await Login(setLoading, form, setUser, () => {
+      push("/admin/usermanagement");
+    });
   }
 
   return (
     <div className="flex w-screen h-screen mt-[-10vh] overflow-hidden">
-      {/* <button
-        className="flex button bg-transparent self-center m-auto"
-        onClick={() => push("home")}
-      >
-        <h1 className="heading">Web</h1>
-      </button> */}
 
       <div className="flex w-full items-center justify-center">
         {/* Login Box */}
-        <div className="shadowed flex flex-col bg-white w-[70%] rounded-2xl py-6 px-8 gap-8">
-          <h2 className="text-primary-heading font-semibold text-3xl">
+        <div className="shadowed flex flex-col bg-white w-[70%] rounded-2xl py-[3vh] px-[2.25vw] gap-[5vh]">
+          <h2 className="text-primary-heading font-semibold text-[1.85rem]">
             Sign In
           </h2>
 
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-[1.5vh]">
+            <div className="flex flex-col gap-[4vh]">
               <MuiInput
-                value={form.email}
-                label="Email"
+                value={form.username}
+                label="Username"
                 type="string"
-                placeholder="Enter Email Address"
+                placeholder="Enter Username"
                 required={true}
-                onChange={(e: MuiInputChangeEvent) => updateForm("email", e)}
+                onChange={(e: MuiInputChangeEvent) => updateForm("username", e)}
               />
 
               <MuiInput
@@ -67,14 +70,16 @@ export default function Login() {
               />
             </div>
 
-            <div className="flex gap-1.5">
+            {/* <div className="flex gap-[0.35vw] items-center">
               <CheckBoxOutlineBlankIcon className="text-gray-400!" />
-              <span className="text-gray-500 font-medium">Remember Me</span>
-            </div>
+              <span className="text-gray-500 font-medium text-[0.91rem]">
+                Remember Me
+              </span>
+            </div> */}
           </div>
 
           <button
-            className="animated hover-shadow bg-primary-heading w-full text-white rounded-xl py-3 font-semibold text-xl"
+            className="animated hover-shadow bg-primary-heading w-full text-white rounded-xl py-[1.5vh] font-semibold text-[1.25rem]"
             onClick={handleSubmit}
           >
             Sign In
@@ -89,6 +94,7 @@ export default function Login() {
           width={420}
           height={0}
           unoptimized
+          className=""
         />
       </div>
     </div>

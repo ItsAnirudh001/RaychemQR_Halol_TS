@@ -11,7 +11,7 @@ export default function UserPreAuthHeader() {
 
   return (
     <div className="p-4">
-      <IoChevronBackCircle size={42} onClick={back} />
+      <IoChevronBackCircle className="text-[2.85rem] text-gray-600" onClick={back} />
     </div>
   );
 }

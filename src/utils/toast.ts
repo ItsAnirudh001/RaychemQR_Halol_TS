@@ -1,11 +1,13 @@
 // import { Close } from "@mui/icons-material";
 import { Bounce, toast } from "react-toastify";
-import { toastData } from "../data/toastData";
-import { ToastType } from "@/types/toastTypes";
+import { toastData } from "../constants/toast-data";
+import { ToastType } from "@/types/toast-types";
 
 export function toastify(type: ToastType, message: string, duration?: number) {
-  const { background, color } =
+  const { background, color, Icon } =
     toastData.find((data) => data.type === type) || {};
+
+  // console.log("back",background);
 
   if (color)
     document.documentElement.style.setProperty("--toast-progress", color);
@@ -20,12 +22,13 @@ export function toastify(type: ToastType, message: string, duration?: number) {
     hideProgressBar: false,
     draggable: true,
     pauseOnHover: false,
-    // icon: <Icon color={color} />,
+    // icon:Icon,
     // closeButton: duration && <Close color={color} />,
     // onClose:() => logConsole("Toast Closed"),
     style: {
       backgroundColor: background,
       color: color,
+      fontFamily: "inherit",
     },
     progressClassName: "toast-bar",
   });

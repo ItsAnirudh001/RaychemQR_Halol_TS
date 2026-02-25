@@ -1,6 +1,6 @@
 "use client";
 
-import UserAuthHeader from "@/components/user/authorized-header";
+import UserAuthHeader from "@/components/user/authd-header";
 import { FaCube, FaRegClock } from "react-icons/fa";
 import { FaRegCircleCheck, FaHashtag } from "react-icons/fa6";
 import { TbArrowsSort } from "react-icons/tb";
@@ -11,18 +11,18 @@ import { IoChevronBackCircle } from "react-icons/io5";
 import { useParams, useRouter } from "next/navigation";
 import { RiErrorWarningLine, RiDeleteBin6Line } from "react-icons/ri";
 import { LuQrCode } from "react-icons/lu";
-import { PickslipItem } from "@/types/user/user-types";
-import { pickslipsData } from "@/data/mocks/user/picklips-mock";
-import AppModal from "@/components/mui-modal";
+import { pickslipsDataMock } from "@/constants/user/mocks/picklips-mock";
+import AppModal from "@/components/material-ui/modal";
 import ItemDeletionModal from "@/components/user/modals/item-delete-modal";
 import OrderSubmissionModal from "@/components/user/modals/order-submission-modal";
+import { PickslipItem } from "@/types/pickslip-type";
 
 export default function PickslipItemsScreen() {
   const { pickslip_id } = useParams();
   const { back, push } = useRouter();
   const slipDetails = JSON.parse(sessionStorage.getItem("pickslip_details")!);
 
-  const mockItems = pickslipsData.find(
+  const mockItems = pickslipsDataMock.find(
     (data) => data.pickslip_id == Number(pickslip_id),
   );
 
@@ -161,7 +161,7 @@ export default function PickslipItemsScreen() {
       </UserAuthHeader>
 
       {/* body */}
-      <div className="flex flex-col p-[2vh] gap-[2vh]">
+      <div className="flex flex-col p-[2vh] gap-[2vh] mt-[6.5vh] mb-[15.5vh]">
         {/* top buttons */}
         <div className="flex justify-between">
           <div className="flex h-[3.5vh] gap-[2.5vw] items-center">

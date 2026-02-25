@@ -1,8 +1,8 @@
 "use client";
 
-import useAppStore from "@/store/app";
+import useAppStore from "@/store/app-store";
 import { FadeLoader } from "react-spinners";
-import AppModal from "./mui-modal";
+import AppModal from "./material-ui/modal";
 
 export default function Loader() {
   const { loading } = useAppStore();

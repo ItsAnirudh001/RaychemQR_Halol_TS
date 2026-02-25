@@ -5,9 +5,9 @@
   --foreground: black;
   --header: white;
 
-  --toast-bg-success: darkblue;
+  /* --toast-bg-success: rgb(251, 239, 239);
   --toast-bg-error: #f87171;
-  --toast-bg-warning: #facc15;
+  --toast-bg-warning: #facc15; */
 
   --primary-heading: rgba(64, 108, 175, 1);
   --sideitem-bg: rgba(230, 230, 245, 1);
@@ -58,13 +58,13 @@ body {
 }
 
 .toast-success {
-  background: var(--toast-bg-success) !important;
+  background: rgb(250, 248, 241) !important;
 }
 .toast-error {
-  background: var(--toast-bg-error);
+  background: rgb(217, 44, 84) !important;
 }
 .toast-warning {
-  background: var(--toast-bg-warning);
+  background: rgb(37, 103, 30) !important;
 }
 
 .button {
@@ -91,22 +91,34 @@ body {
   @apply shadow-[0_0_10px_rgba(0,0,0,0.25)];
 }
 
+.table-container {
+  @apply rounded-xl! border! border-gray-300! shadow-none! px-2! bg-white!
+}
+
 .tablecell {
-  @apply border-none! text-sm!;
+  @apply border-none! text-[0.85rem]!;
+}
+
+.table-row-data {
+  @apply odd:bg-[rgba(242,244,250,1)]! even:bg-transparent!
 }
 
 .user-table-btn {
-  @apply border-[1.5px]! py-1.5 rounded-md cursor-pointer w-full;
+  @apply border-[1.5px] py-[0.85vh]! rounded-md cursor-pointer w-full font-semibold text-[0.80rem]!;
 }
 
 .mobile-btn-main {
-  @apply bg-primary-heading w-full text-white rounded-xl py-[2.25vh] font-semibold text-[2vh];
+  @apply bg-primary-heading w-full text-white rounded-xl py-[2.25vh] font-semibold text-[1rem];
 }
 
 .mobile-filter-btn {
-  @apply flex rounded-3xl place-items-center gap-1.5 bg-white py-2 px-3.5 font-medium text-[2.65vw]!;
+  @apply flex rounded-3xl place-items-center gap-[1.65vw] bg-white py-[1.2vh] px-[3.5vw] font-medium text-[0.65rem] shadow-[0_0_10px_rgba(0,0,0,0.25)]!;
 }
 
 .mui-menuitem {
-  @apply flex! gap-[2vw]! text-[1.65vh]! font-medium!
+  @apply flex! gap-[1vw]! text-[0.85rem]! font-medium!
+}
+
+.mui-menuitem-mobile {
+  @apply flex! gap-[2vw]! text-[0.75rem]! font-medium!
 }

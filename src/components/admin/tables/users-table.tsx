@@ -7,65 +7,89 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { tableHeaders } from "@/data/usermanagement/table-data";
-import { tableData } from "@/data/mocks/user-table-mock";
+import { UserTableItem } from "@/types/table-types";
+import { customAxios } from "@/utils/axios";
+import { adminroutes } from "@/api/admin/admin-routes";
+import { toastify } from "@/utils/toast";
+import useAppStore from "@/store/app-store";
+import { userTableHeaders } from "@/constants/admin/table-headers";
 
-export default function UsersTable() {
+export default function UsersTable(props: {
+  usersData: UserTableItem[];
+  selectedUser: UserTableItem;
+  showModal: (data?: UserTableItem | undefined) => void;
+}) {
+  const { setLoading } = useAppStore();
+  const { usersData, selectedUser, showModal } = props;
+
+  async function postDeleteUser() {
+    setLoading(true);
+    const { user_id } = selectedUser;
+
+    try {
+      const { data } = await customAxios.delete(
+        adminroutes.deleteUser + "/" + user_id,
+      );
+      toastify("success", data?.message, 1000);
+    } catch (error) {
+      console.error("Error in deleteUser", error);
+    } finally {
+      setLoading(true);
+    }
+  }
+
   return (
-    <TableContainer
-      component={Paper}
-      className="rounded-xl! bg-transparent! border! border-gray-300! shadow-none!"
-    >
+    <TableContainer component={Paper} className="table-container">
       <Table className="w-full bg-transparent!">
         <TableHead>
           <TableRow className="bg-white border-b! border-gray-800!">
-            {tableHeaders?.map(({ name, width, align }, i) => (
+            {userTableHeaders?.map(({ name, width, align }, i) => (
               <TableCell
                 key={i + 1}
                 align={(align as "center") || "left"}
                 className="tablecell"
                 style={width ? { width } : {}}
               >
-                <span className="font-semibold! text-sm">{name}</span>
+                <span className="font-semibold! text-[0.85rem]">{name}</span>
               </TableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {tableData?.map((data, i) => (
-            <TableRow className="even:bg-gray-50 odd:bg-transparent" key={i + 1}>
-              <TableCell className="tablecell">
-                {data.user_name}
-              </TableCell>
+          {usersData?.map((data, i) => (
+            <TableRow className="table-row-data" key={i + 1}>
+              <TableCell className="tablecell">{data.user_id}</TableCell>
 
-              <TableCell className="tablecell">{data.name}</TableCell>
+              <TableCell className="tablecell">{data.full_name}</TableCell>
 
-              <TableCell className="tablecell">
-                {data.email_id}
-              </TableCell>
+              <TableCell className="tablecell">{data.email_id}</TableCell>
 
-              <TableCell className="tablecell">
-                {data.phone_number}
-              </TableCell>
+              <TableCell className="tablecell">{data.phone_number}</TableCell>
 
               <TableCell className="tablecell text-center!">
                 {data.role}
               </TableCell>
 
               <TableCell className="tablecell flex! justify-center!">
-                <div className="flex items-center bg-[rgba(213,242,214,1)] py-2 px-8 rounded-2xl cursor-pointer shadow-[0_0_6px_rgba(0,0,0,0.25)]">
-                  <span className="text-green-600 text-xs font-medium">
-                    {data.status}
+                <div className="flex items-center bg-[rgba(213,242,214,1)] py-[1.25vh] px-[2.5vw] rounded-2xl cursor-pointer shadow-[0_0_6px_rgba(0,0,0,0.25)]">
+                  <span className="text-green-600 text-[0.75rem] font-medium">
+                    {data.is_active ? "Active" : "Inactive"}
                   </span>
                 </div>
               </TableCell>
 
               <TableCell className="tablecell">
-                <div className="flex flex-1 w-full justify-evenly cursor-pointer gap-4">
-                  <button className="user-table-btn animated hover-shadow border-primary-heading text-primary-heading">
+                <div className="flex flex-1 w-full justify-evenly cursor-pointer gap-[1.1vw]">
+                  <button
+                    className="user-table-btn animated hover-shadow border-primary-heading text-primary-heading"
+                    onClick={() => showModal(data)}
+                  >
                     Edit
                   </button>
-                  <button className="user-table-btn animated hover-shadow border-red-600 text-red-600">
+                  <button
+                    className="user-table-btn animated hover-shadow border-red-600 text-red-600"
+                    onClick={postDeleteUser}
+                  >
                     Delete
                   </button>
                 </div>
