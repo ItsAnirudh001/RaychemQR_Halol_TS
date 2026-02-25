@@ -1,12 +1,12 @@
-import AppModal from "@/components/mui-modal";
-import { PickslipItem } from "@/types/user/user-types";
+import AppModal from "@/components/material-ui/modal";
+import { PickslipItem } from "@/types/pickslip-type";
 import React from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 export default function ItemDeletionModal(props: {
   viewDelete: boolean;
   hideDelete: () => void;
-  item: PickslipItem | undefined;
+  item: PickslipItem  | undefined;
 }) {
   const { viewDelete, hideDelete, item } = props;
 

@@ -1,5 +1,5 @@
-import AppModal from "@/components/mui-modal";
-import { PickslipItem } from "@/types/user/user-types";
+import AppModal from "@/components/material-ui/modal";
+import { PickslipItem } from "@/types/pickslip-type";
 import React from "react";
 import { FaCube } from "react-icons/fa";
 import { FaRegCircleCheck } from "react-icons/fa6";

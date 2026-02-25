@@ -1,5 +1,4 @@
 import React from "react";
-import UserPreAuthHeader from "./preauth-header";
 
 export default function MobileLayout({
   children,

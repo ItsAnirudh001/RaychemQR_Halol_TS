@@ -1,7 +1,7 @@
 "use client";
 
-import UserAuthHeader from "@/components/user/authorized-header";
-import QRScanner from "@/components/user/QRScanner";
+import UserAuthHeader from "@/components/user/authd-header";
+import QRScanner from "@/components/user/qr-scanner";
 import { toastify } from "@/utils/toast";
 import { IDetectedBarcode } from "@yudiel/react-qr-scanner";
 

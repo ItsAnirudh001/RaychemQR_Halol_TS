@@ -1,5 +1,5 @@
-import { fontSans } from "@/data/layoutData";
-import MuiProviders from "@/components/mui-providers";
+import { fontSans } from "@/constants/layout-data";
+import MuiProviders from "@/components/material-ui/providers";
 import { ToastContainer } from "react-toastify";
 import { Metadata } from "next";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";

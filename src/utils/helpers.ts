@@ -10,6 +10,11 @@ export function handleInputScroll() {
   });
 }
 
+export function getStoredUser() {
+  const user = JSON.parse(sessionStorage.getItem("user")!);
+  return user || {}
+}
+
 // export function handleDownloadFile() {
 //   // if (!files[0]) return;
 //   // const url = URL.createObjectURL(files[0]);

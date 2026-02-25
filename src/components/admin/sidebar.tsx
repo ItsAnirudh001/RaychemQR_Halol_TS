@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import Drawer from "@mui/material/Drawer";
 // import ClickAwayListener from "@mui/material/ClickAwayListener";
 // import { IoIosArrowDropright, IoIosArrowDropleft } from "react-icons/io";
-import { sidebarData } from "@/data/sidebar-data";
+import { sidebarData } from "@/constants/sidebar-data";
 
 export default function AdminSidebar() {
   const pathname = usePathname();

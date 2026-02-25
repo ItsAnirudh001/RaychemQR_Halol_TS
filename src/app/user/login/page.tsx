@@ -1,8 +1,8 @@
 "use client";
 
-import MuiInput from "@/components/mui-input";
-import { LoginForm } from "@/types/login/form";
-import { MuiInputChangeEvent } from "@/types/mui-input";
+import MuiInput from "@/components/material-ui/input";
+import { LoginForm } from "@/types/login-form";
+import { MuiInputChangeEvent } from "@/types/mui-types";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -11,7 +11,7 @@ export default function Login() {
   const { push } = useRouter();
 
   const [form, setForm] = useState<LoginForm>({
-    email: "",
+    username: "",
     password: "",
   });
 
@@ -33,7 +33,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-4 overflow-y-hidden bg-white h-screen">
+    <div className="flex flex-col gap-[3vh] p-4 overflow-y-hidden bg-white h-screen">
       <div className="max-h-[42vh] self-center">
         <Image
           src="/login.svg"
@@ -45,18 +45,18 @@ export default function Login() {
         />
       </div>
 
-      <h2 className="text-primary-heading font-semibold text-2xl">Sign In</h2>
+      <h2 className="text-primary-heading font-semibold text-[1.5rem]">Sign In</h2>
 
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-[1.5vh]">
+        <div className="flex flex-col gap-[4vh]">
           <MuiInput
-            value={form.email}
-            label="Email ID"
+            value={form.username}
+            label="Username"
             type="string"
-            placeholder="Enter Email Address"
+            placeholder="Enter Username"
             required={true}
             onChange={(e: MuiInputChangeEvent) =>
-              updateForm("email", e.target.value)
+              updateForm("username", e.target.value)
             }
           />
 
@@ -72,7 +72,7 @@ export default function Login() {
           />
         </div>
 
-        <span className="text-sm self-end text-primary-heading font-medium" onClick={handleForgetClick}>
+        <span className="text-[0.85rem] self-end text-primary-heading font-medium" onClick={handleForgetClick}>
           Forgot Password?
         </span>
       </div>

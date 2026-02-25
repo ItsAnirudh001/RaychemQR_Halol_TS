@@ -1,8 +1,9 @@
 "use client";
 
-import MuiInput from "@/components/mui-input";
-import { MuiInputChangeEvent } from "@/types/mui-input";
-import { ResetForm } from "@/types/reset/form";
+import MuiInput from "@/components/material-ui/input";
+import UserPreAuthHeader from "@/components/user/preauth-header";
+import { MuiInputChangeEvent } from "@/types/mui-types";
+import { ResetForm } from "@/types/user/user-types";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -29,21 +30,24 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-4 overflow-y-hidden bg-white h-screen">
-      <div className="max-h-[42vh] self-center">
-        <Image
-          src="/reset-password.png"
-          alt="Login"
-          width={300}
-          height={0}
-          className="self-center"
-        />
-      </div>
+    <div className="flex flex-col overflow-y-hidden bg-white h-screen">
+      <UserPreAuthHeader />
+      <div className="flex flex-col gap-[4vh] py-[2vh] px-[8vw]">
+        <div className="max-h-[42vh] self-center">
+          <Image
+            src="/reset-password.png"
+            alt="Login"
+            width={205}
+            height={0}
+            className="self-center"
+          />
+        </div>
 
-      <h2 className="font-semibold text-2xl">Reset Password</h2>
+        <h2 className="font-semibold text-[1.25rem] pt-[1.2vh]">
+          Reset Password
+        </h2>
 
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-[3.6vh]">
           <MuiInput
             value={form.new_password}
             label="New Password"
@@ -66,14 +70,11 @@ export default function Login() {
             }
           />
         </div>
-      </div>
 
-      <button
-        className="animated mobile-btn-main"
-        onClick={handleSubmit}
-      >
-        Confirm
-      </button>
+        <button className="animated mobile-btn-main" onClick={handleSubmit}>
+          Confirm
+        </button>
+      </div>
     </div>
   );
 }
