@@ -1,4 +1,4 @@
-interface UserObject {
+export interface UserObject {
   user_id: number;
   username: string;
   full_name?: string;

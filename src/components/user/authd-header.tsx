@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { FaUserCircle, FaSearch } from "react-icons/fa";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import { MdLock } from "react-icons/md";
+import { useRouter } from "next/navigation";
 
 export default function UserAuthHeader({
   children,
@@ -14,6 +15,8 @@ export default function UserAuthHeader({
   searchable?: boolean;
   setSearchVal?: React.Dispatch<React.SetStateAction<string>>;
 }) {
+  const { push } = useRouter()
+
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 
   function showMenu(event: React.MouseEvent<HTMLButtonElement>) {
@@ -75,7 +78,7 @@ export default function UserAuthHeader({
             },
           }}
         >
-          <MenuItem className="mui-menuitem-mobile">
+          <MenuItem className="mui-menuitem-mobile" onClick={() => push("/user/reset")}>
             <MdLock className="text-[1.25rem]" />
             Change Password
           </MenuItem>

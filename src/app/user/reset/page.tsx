@@ -1,15 +1,20 @@
 "use client";
 
+import { useroutes } from "@/api/user/user-routes";
 import MuiInput from "@/components/material-ui/input";
 import UserPreAuthHeader from "@/components/user/preauth-header";
+import useAppStore from "@/store/app-store";
 import { MuiInputChangeEvent } from "@/types/mui-types";
 import { ResetForm } from "@/types/user/user-types";
+import { customAxios } from "@/utils/axios";
+import { toastify } from "@/utils/toast";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function Login() {
+export default function PasswordResetPage() {
   const { push } = useRouter();
+  const { user } = useAppStore();
 
   const [form, setForm] = useState<ResetForm>({
     new_password: "",
@@ -25,8 +30,38 @@ export default function Login() {
     });
   }
 
-  function handleSubmit() {
-    push("/user/pickslips");
+  async function handleSubmit() {
+    const reset_token = sessionStorage.getItem("reset_token");
+    const { access_token } = user;
+    const { new_password, confirm_password } = form;
+
+    if (!access_token && !reset_token)
+      return toastify("error", "Password Reset Unauthorized", 1500);
+
+    if (!new_password || !confirm_password)
+      return toastify("warning", "All Fields are mandatory", 1500);
+
+    if (new_password === confirm_password)
+      return toastify(
+        "warning",
+        "Confirmed Password not matching with New Password",
+        1500,
+      );
+
+    try {
+      const { data } = await customAxios.post(useroutes.resetPassword, {
+        reset_token,
+        new_password,
+      });
+
+      const { status, message } = data;
+
+      toastify("success", message, 1500);
+      sessionStorage.removeItem("reset_token");
+      push("/user/login");
+    } catch (error) {
+      console.error("Error in resetPassword", error);
+    }
   }
 
   return (

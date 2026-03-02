@@ -13,8 +13,7 @@ import { toastify } from "@/utils/toast";
 
 export default function LoginPage() {
   const { push } = useRouter();
-  const { setUser } = useAppStore();
-  const { setLoading } = useAppStore();
+  const { setUser, setLoading } = useAppStore();
 
   const [form, setForm] = useState<LoginForm>({
     username: "",

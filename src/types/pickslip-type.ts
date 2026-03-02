@@ -7,9 +7,9 @@ export interface PickslipItem {
   material_description: string;
   requested_qty: number;
   lot_no: string | null;
-  serial_no: string | null;
-  box_type: string | null;
-  weight: string | number | null;
+  serial_no: string;
+  box_type: string;
+  weight: string;
   packing_details: string | null;
   no_of_boxes: number | null;
   status: string;
