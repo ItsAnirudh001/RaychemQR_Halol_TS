@@ -14,7 +14,7 @@ export default function AdminHeader() {
   const { push } = useRouter();
   const { setLoading, user } = useAppStore();
 
-  console.log("user", user);
+  // console.log("user", user);
 
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 

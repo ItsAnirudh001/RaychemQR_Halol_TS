@@ -6,57 +6,53 @@ import { FaRegCircleCheck, FaHashtag } from "react-icons/fa6";
 import { TbArrowsSort } from "react-icons/tb";
 import React, { useState } from "react";
 import { TbReload } from "react-icons/tb";
-import dayjs from "dayjs";
 import { IoChevronBackCircle } from "react-icons/io5";
-import { useParams, useRouter } from "next/navigation";
-import { RiErrorWarningLine, RiDeleteBin6Line } from "react-icons/ri";
+import { useRouter } from "next/navigation";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import { LuQrCode } from "react-icons/lu";
 import { pickslipsDataMock } from "@/constants/user/mocks/picklips-mock";
-import AppModal from "@/components/material-ui/modal";
 import ItemDeletionModal from "@/components/user/modals/item-delete-modal";
 import OrderSubmissionModal from "@/components/user/modals/order-submission-modal";
 import { PickslipItem } from "@/types/pickslip-type";
+import NoData from "@/components/no-data";
+import { customAxios } from "@/utils/axios";
+import { usermodroutes, useroutes } from "@/api/user/user-routes";
+import {
+  dynamicClass,
+  getStoredScanSessionID,
+  isAPISuccess,
+} from "@/utils/helpers";
+import { toastify } from "@/utils/toast";
 
 export default function PickslipItemsScreen() {
-  const { pickslip_id } = useParams();
   const { back, push } = useRouter();
-  const slipDetails = JSON.parse(sessionStorage.getItem("pickslip_details")!);
-
-  const mockItems = pickslipsDataMock.find(
-    (data) => data.pickslip_id == Number(pickslip_id),
+  const pickslipDetails = JSON.parse(
+    sessionStorage.getItem("pickslip_details")!,
   );
 
+  const { oa_no, pickslip_id, items, scanned_items } = pickslipDetails;
+
+  // const mockItems = pickslipsDataMock.find(
+  //   (data) => data.pickslip_id == Number(pickslip_id),
+  // );
+
   const [sortKey, setSortKey] = useState<string>("");
-  const [pickslipItems, setPickslipItems] = useState<
-    PickslipItem[] | [] | undefined
-  >(mockItems?.items);
-  const [statusFilter, setstatusFilter] = useState<string>("");
+  const [pickslipItems, setPickslipItems] = useState<PickslipItem[]>(items);
+  const [statusFilter, setStatusFilter] = useState<string>("");
   const [searchVal, setSearchVal] = useState<string>("");
 
   const [viewDelete, setViewDelete] = useState<boolean>(false);
-  const [viewScan, setViewScan] = useState<boolean>(false);
   const [viewDashboard, setViewDashboard] = useState<boolean>(false);
 
   const [selectedItem, setSelectedItem] = useState<PickslipItem>();
 
   // console.log("items", pickslipItems);
 
-  function dynamicClass(condition: boolean) {
-    // console.log("condition", condition);
-    // console.log("color", color);
-
-    return !condition
-      ? `mobile-filter-btn text-[rgba(120,124,130,1)]`
-      : "mobile-filter-btn border! border-green-700! text-green-700!";
-  }
-
   function sortedData() {
     if (!sortKey) return pickslipItems;
 
-    const sorted_data = pickslipItems?.sort(
-      (a, b) =>
-        dayjs(sortKey === "desc" ? b.item_id : a.item_id).valueOf() -
-        dayjs(sortKey === "desc" ? a.item_id : b.item_id).valueOf(),
+    const sorted_data = pickslipItems?.sort((a, b) =>
+      sortKey === "desc" ? b.item_id - a.item_id : a.item_id - b.item_id,
     );
 
     return sorted_data;
@@ -64,7 +60,6 @@ export default function PickslipItemsScreen() {
 
   function filteredData() {
     const data = sortedData();
-
     const filteredData = data?.filter((slip) => slip.status === statusFilter);
 
     return statusFilter ? filteredData : data;
@@ -134,177 +129,223 @@ export default function PickslipItemsScreen() {
     setViewDashboard(false);
   }
 
-  function handleSubmitOrder() {
-    setViewDashboard(true);
+  function handleScanClick(data: PickslipItem) {
+    sessionStorage.setItem("scan_item", JSON.stringify(data));
+    push(`/user/pickslips/${pickslip_id}/scan/${data.item_id}`);
+  }
+
+  async function postAbortSession() {
+    try {
+      const { data } = await customAxios.post(useroutes.abortScanSession, {
+        session_id: getStoredScanSessionID(),
+      });
+
+      const { status, message } = data;
+      const success = isAPISuccess(status);
+      toastify(success ? "success" : "warning", message, 1500);
+
+      if (!success) return;
+
+      back();
+    } catch (error) {
+      console.error("Error in abortScanSession", error);
+      toastify("error", "Unable to abort scan session", 1500);
+    }
+  }
+
+  async function postSubmitPickslip() {
+    try {
+      const { data } = await customAxios.post(
+        usermodroutes({ pickslip_id }).submitPickslipItems,
+        {
+          params: {
+            session_id: getStoredScanSessionID(),
+          },
+        },
+      );
+
+      const { status, message } = data;
+      const success = isAPISuccess(status);
+      toastify(success ? "success" : "warning", message, 1500);
+
+      if (!success) return;
+
+      showDashboard();
+    } catch (error) {
+      console.error("Error in abortScanSession", error);
+      toastify("error", "Unable to submit pickslip", 1500);
+    }
   }
 
   const deleteModalProps = { viewDelete, hideDelete, item: selectedItem };
-
   const submitModalProps = { viewDashboard, hideDashboard, item: selectedItem };
+
+  const validData = Array.isArray(items) && items?.length > 0;
+  const allScanned = scanned_items?.length === items?.length;
 
   return (
     <>
       {/* header */}
       <UserAuthHeader {...headerProps}>
         <div className="flex items-center gap-2 text-[rgba(64,108,175,1)]">
-          <IoChevronBackCircle className="text-3xl" onClick={back} />
+          <IoChevronBackCircle
+            className="text-3xl"
+            onClick={postAbortSession}
+          />
 
           <div className="flex flex-col font-medium">
             <span className="text-[rgba(144,161,185,1)] text-xs">Order ID</span>
             <textarea
               disabled
               className="text-[3.25vw] w-[24vw] field-sizing-content"
-              value={slipDetails?.oa_no}
+              value={oa_no}
             />
           </div>
         </div>
       </UserAuthHeader>
 
       {/* body */}
-      <div className="flex flex-col p-[2vh] gap-[2vh] mt-[6.5vh] mb-[15.5vh]">
+      <div
+        className={`flex flex-col p-[2vh] gap-[2vh] mt-[6.5vh] mb-[${allScanned ? "15.5vh" : "2.2vh"}]"`}
+      >
         {/* top buttons */}
-        <div className="flex justify-between">
-          <div className="flex h-[3.5vh] gap-[2.5vw] items-center">
-            {/* <button
-              className={dynamicClass(Boolean(sortKey), "rgba(78,82,87,1)")}
-              onClick={handleSort}
-            >
-              <span>Sort</span>
-              <TbArrowsSort />
-            </button>
+        {validData ? (
+          <>
+            <div className="flex justify-between">
+              <div className="flex h-[3.5vh] gap-[2.5vw] items-center">
+                <button
+                  className={dynamicClass(Boolean(sortKey))}
+                  onClick={handleSort}
+                >
+                  <span>Sort</span>
+                  <TbArrowsSort />
+                </button>
 
-            <div className="h-[90%] w-0.5 bg-[rgba(171,181,194,1)]" /> */}
+                <div className="h-[90%] w-0.5 bg-[rgba(171,181,194,1)]" />
 
-            <button
-              className={dynamicClass(
-                statusFilter === "pending",
-                "rgba(78,82,87,1)",
-              )}
-              onClick={() => setstatusFilter("pending")}
-            >
-              <FaRegClock />
-              <span>Pending</span>
-            </button>
+                <button
+                  className={dynamicClass(statusFilter === "pending")}
+                  onClick={() => setStatusFilter("pending")}
+                >
+                  <FaRegClock />
+                  <span>Pending</span>
+                </button>
 
-            <button
-              className={dynamicClass(
-                statusFilter === "verified",
-                "rgba(120,124,130,1)",
-              )}
-              onClick={() => setstatusFilter("verified")}
-            >
-              <FaRegCircleCheck />
-              <span>Verified</span>
-            </button>
+                <button
+                  className={dynamicClass(statusFilter === "verified")}
+                  onClick={() => setStatusFilter("verified")}
+                >
+                  <FaRegCircleCheck />
+                  <span>Verified</span>
+                </button>
+              </div>
 
-            {/* <button
-              className={dynamicClass(
-                statusFilter === "aborted",
-                "rgba(120,124,130,1)",
-              )}
-              onClick={() => setstatusFilter("completed")}
-            >
-              <RiErrorWarningLine className="text-sm" />
-              <span>Aborted</span>
-            </button> */}
-          </div>
+              {/* <TbReload className="text-3xl self-center" onClick={handleReset} /> */}
+            </div>
 
-          {/* <TbReload className="text-3xl self-center" onClick={handleReset} /> */}
-        </div>
+            {/* order cards */}
+            {searchedData()?.map((data, index) => (
+              <div
+                className={`flex flex-col bg-white w-full rounded-3xl border-2 overflow-hidden ${data.status === "completed" ? "border-green-600" : "border-gray-200"}`}
+                key={data.item_id}
+              >
+                <div
+                  className={`h-[0.85vh] w-full ${
+                    data.status === "verified"
+                      ? "bg-[linear-gradient(90deg,rgba(218,255,224,1)_10%,rgba(6,191,133,1))]"
+                      : "bg-[linear-gradient(90deg,rgba(202,213,226,1)_10%,rgba(144,161,185,1))]"
+                  } rounded-3xl`}
+                />
 
-        {/* order cards */}
-        {searchedData()?.map((data, index) => (
-          <div
-            className={`flex flex-col bg-white w-full rounded-3xl border-2 overflow-hidden ${data.status === "completed" ? "border-green-600" : "border-gray-200"}`}
-            key={data.item_id}
-          >
-            <div
-              className={`h-[0.85vh] w-full ${
-                data.status === "verified"
-                  ? "bg-[linear-gradient(90deg,rgba(218,255,224,1)_10%,rgba(6,191,133,1))]"
-                  : "bg-[linear-gradient(90deg,rgba(202,213,226,1)_10%,rgba(144,161,185,1))]"
-              } rounded-3xl`}
-            />
+                {/* order info */}
+                <div className="flex flex-col p-[1.75vh] gap-[1.75vh]">
+                  <div className="flex items-center justify-between w-full">
+                    {/* order id */}
+                    <div className="flex items-center gap-[1.75vw]">
+                      <div className="flex bg-[rgba(215,231,255,1)] rounded-lg px-[1.15vw] py-[0.65vh] items-center text-[rgba(64,108,175,1)] gap-[0.75vw] text-[3.5vw]">
+                        <span>#</span>
+                        <span>{index + 1}</span>
+                      </div>
 
-            {/* order info */}
-            <div className="flex flex-col p-[1.75vh] gap-[1.75vh]">
-              <div className="flex items-center justify-between w-full">
-                {/* order id */}
-                <div className="flex items-center gap-[1.75vw]">
-                  <div className="flex bg-[rgba(215,231,255,1)] rounded-lg px-[1.15vw] py-[0.65vh] items-center text-[rgba(64,108,175,1)] gap-[0.75vw] text-[3.5vw]">
-                    <span>#</span>
-                    <span>{index + 1}</span>
+                      <div className="flex flex-col font-medium">
+                        <textarea
+                          disabled
+                          className="text-[3.25vw] w-[50vw] field-sizing-content max-h-fit"
+                          value={data.item_name}
+                        />
+                      </div>
+                    </div>
+
+                    {data.status === "pending" && (
+                      <button
+                        className="flex bg-[linear-gradient(180deg,rgba(64,108,175,1)_10%,rgba(79,57,246,1))] place-items-center p-[0.75vh] rounded-lg shadow-2xl shadow-black"
+                        onClick={handleScanClick}
+                      >
+                        <LuQrCode className="text-white font-medium text-2xl" />
+                      </button>
+                    )}
+
+                    {data.status === "verified" && (
+                      <button
+                        className="flex bg-[linear-gradient(90deg,rgba(250,92,92,1)_10%,rgba(188,0,0,1))] place-items-center p-[0.75vh] rounded-lg shadow-2xl shadow-black"
+                        onClick={() => showDelete(data)}
+                      >
+                        <RiDeleteBin6Line className="text-white font-medium text-2xl" />
+                      </button>
+                    )}
                   </div>
 
-                  <div className="flex flex-col font-medium">
-                    <textarea
-                      disabled
-                      className="text-[3.25vw] w-[50vw] field-sizing-content max-h-fit"
-                      value={data.item_name}
-                    />
+                  <div className="flex w-full gap-[2.5vw]">
+                    {infoCard(
+                      "Item Code",
+                      data.item_code,
+                      <FaHashtag className={iconClass} />,
+                    )}
+                    {infoCard(
+                      "Serial Number",
+                      data.serial_no,
+                      <FaHashtag className={iconClass} />,
+                    )}
+                  </div>
+
+                  <div className="flex w-full gap-[2.5vw]">
+                    {infoCard(
+                      "Batch No.",
+                      "NA",
+                      <FaHashtag className={iconClass} />,
+                    )}
+                    {infoCard(
+                      "Weight",
+                      data.weight,
+                      <FaHashtag className={iconClass} />,
+                    )}
+                    {infoCard(
+                      "Box Type",
+                      data.box_type,
+                      <FaHashtag className={iconClass} />,
+                    )}
                   </div>
                 </div>
-
-                {data.status === "pending" && (
-                  <button
-                    className="flex bg-[linear-gradient(180deg,rgba(64,108,175,1)_10%,rgba(79,57,246,1))] place-items-center p-[0.75vh] rounded-lg shadow-2xl shadow-black"
-                    onClick={() => push(`/user/pickslips/${slipDetails.pickslip_id}/scan`)}
-                  >
-                    <LuQrCode className="text-white font-medium text-2xl" />
-                  </button>
-                )}
-
-                {data.status === "verified" && (
-                  <button
-                    className="flex bg-[linear-gradient(90deg,rgba(250,92,92,1)_10%,rgba(188,0,0,1))] place-items-center p-[0.75vh] rounded-lg shadow-2xl shadow-black"
-                    onClick={() => showDelete(data)}
-                  >
-                    <RiDeleteBin6Line className="text-white font-medium text-2xl" />
-                  </button>
-                )}
               </div>
+            ))}
+          </>
+        ) : (
+          <NoData />
+        )}
 
-              <div className="flex w-full gap-[2.5vw]">
-                {infoCard("PCN", "NA", <FaHashtag className={iconClass} />)}
-                {infoCard(
-                  "Serial Number",
-                  data.serial_no,
-                  <FaHashtag className={iconClass} />,
-                )}
-              </div>
+        {allScanned && (
+          <div className="fixed bottom-[1.5vh] left-0 right-0 p-[5vw] bg-[rgba(255,255,255,0.5)] text-white text-center space-y-[0.75vh]">
+            <button
+              className="flex items-center justify-center gap-[2vw] mobile-btn-main bg-[rgba(6,140,95,1)]! font-normal! rounded-2xl! shadow-[4px_55px_24px_rgba(0,0,0,0.8)] text-[4.5vw]"
+              onClick={postSubmitPickslip}
+            >
+              <FaRegCircleCheck className="text-[5.5vw]" />
+              Submit Order
+            </button>
 
-              <div className="flex w-full gap-[2.5vw]">
-                {infoCard(
-                  "Batch No.",
-                  "NA",
-                  <FaHashtag className={iconClass} />,
-                )}
-                {infoCard(
-                  "Weight",
-                  data.weight,
-                  <FaHashtag className={iconClass} />,
-                )}
-                {infoCard(
-                  "Box Type",
-                  data.box_type,
-                  <FaHashtag className={iconClass} />,
-                )}
-              </div>
-            </div>
+            <span className="text-[3.25vw]">{`Validated all items to submit (5/5 completed)`}</span>
           </div>
-        ))}
-
-        <div className="fixed bottom-[1.5vh] left-0 right-0 p-[5vw] bg-[rgba(255,255,255,0.5)] text-white text-center space-y-[0.75vh]">
-          <button
-            className="flex items-center justify-center gap-[2vw] mobile-btn-main bg-[rgba(6,140,95,1)]! font-normal! rounded-2xl! shadow-[4px_55px_24px_rgba(0,0,0,0.8)] text-[4.5vw]"
-            onClick={showDashboard}
-          >
-            <FaRegCircleCheck className="text-[5.5vw]" />
-            Submit Order
-          </button>
-
-          <span className="text-[3.25vw]">{`Validated all items to submit (5/5 completed)`}</span>
-        </div>
+        )}
       </div>
 
       <ItemDeletionModal {...deleteModalProps} />

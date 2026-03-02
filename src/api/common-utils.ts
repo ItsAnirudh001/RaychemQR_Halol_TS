@@ -4,11 +4,13 @@ import { LoginForm } from "@/types/login-form";
 import qs from "qs";
 import { NavigateOptions } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { toastify } from "@/utils/toast";
+import { UserObject } from "@/types/store-types";
+import { handleFileDownload } from "@/utils/helpers";
 
 export async function Login(
   setLoading: (value: boolean) => void,
   reqBody: LoginForm,
-  setUser: (data: object) => void,
+  setUser: (data: UserObject) => void,
   callback: () => void,
 ) {
   setLoading(true);
@@ -20,6 +22,8 @@ export async function Login(
     );
 
     const {
+      status,
+      message,
       username,
       user_id,
       first_login,
@@ -42,6 +46,8 @@ export async function Login(
     setUser(userObject);
 
     sessionStorage.setItem("user", JSON.stringify(userObject));
+
+    if (status !== "success") return toastify("error", message, 1500);
 
     callback();
   } catch (error) {
@@ -75,5 +81,18 @@ export async function GetAllPickslips() {
     return data?.data;
   } catch (error) {
     console.error("Error in getAllpickslips", error);
+  }
+}
+
+export async function GetFileForDownload() {
+  try {
+    const { data } = await customAxios.get(commonroutes.downloadReport);
+
+    const { file } = data;
+
+    handleFileDownload(file);
+  } catch (error) {
+    console.error("Error getting download file",error);
+    toastify("error","Unable to get File for download")
   }
 }

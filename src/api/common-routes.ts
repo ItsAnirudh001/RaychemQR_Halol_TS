@@ -4,5 +4,6 @@ export const commonroutes = {
   refreshToken: "/api/auth/refresh-token", //post
   logout: "/api/auth/logout", //post
 
-  getAllPickslips : "/pickslips/get-all-pickslips" //get
+  getAllPickslips: "/pickslips/get-all-pickslips", //get,
+  downloadReport: "", //post
 };
