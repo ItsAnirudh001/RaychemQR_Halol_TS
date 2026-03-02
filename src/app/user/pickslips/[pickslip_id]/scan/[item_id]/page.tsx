@@ -10,7 +10,7 @@ import { toastify } from "@/utils/toast";
 import { IDetectedBarcode } from "@yudiel/react-qr-scanner";
 import { useRouter } from "next/navigation";
 
-export default function ScanItemPage() {
+export default function ItemScanPage() {
   const { back } = useRouter();
   const pickslip = JSON.parse(sessionStorage.getItem("pickslip_details")!);
   const item = JSON.parse(sessionStorage.getItem("scan_item")!);
