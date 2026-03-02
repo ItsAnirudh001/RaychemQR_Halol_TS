@@ -15,9 +15,9 @@ export function toastify(type: ToastType, message: string, duration?: number) {
   return toast(message, {
     position: "top-center",
     className: `toast-${type} flex text-base! m-6! rounded-xl! w-[80vw]! md:w-[30vw]!`,
-    type: type,
+    type,
     transition: Bounce,
-    autoClose: duration || false,
+    autoClose: duration == null ? false : 1500,
     closeOnClick: !Boolean(duration),
     hideProgressBar: false,
     draggable: true,
