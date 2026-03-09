@@ -11,7 +11,7 @@ export interface UserObject {
 
 export type AppState = {
   loading: boolean;
-  user: UserObject;
+  user: UserObject | object;
 };
 
 export type AppStore = AppState & {

@@ -6,6 +6,7 @@ export function proxy(req: NextRequest) {
     /(mobile|android|iphone|ipad|playbook|silk)|(android(?!.*mobile))/i.test(
       userAgent,
     );
+  // const isMobile:boolean = /mobile|android|iphone/i.test(userAgent);
 
   const { pathname }: { pathname: string } = req.nextUrl;
 

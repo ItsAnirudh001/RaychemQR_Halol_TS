@@ -9,12 +9,12 @@ import Drawer from "@mui/material/Drawer";
 import { sidebarData } from "@/constants/sidebar-data";
 
 export default function AdminSidebar() {
-  const pathname = usePathname();
+  const path = usePathname();
 
-  if (pathname.includes("login")) return <></>;
+  if (path.includes("login") || path.startsWith("/user")) return <></>;
   //   const { sidebarOpen, setSidebarOpen } = useAppStore();
 
-  // console.log("name", pathname);
+  // console.log("name", path);
 
   //   function handleSidebar() {
   //     setSidebarOpen(!sidebarOpen);
@@ -55,7 +55,7 @@ export default function AdminSidebar() {
       >
         <div className="flex flex-col px-3 gap-2.5 mt-3">
           {sidebarData.map((data, i) => {
-            const selected: boolean = pathname.startsWith(data.route);
+            const selected: boolean = path.startsWith(data.route);
             const color = selected
               ? "bg-sideitem-bg! text-sideitem-text! font-bold"
               : "hover-shadow text-gray-500! font-medium";

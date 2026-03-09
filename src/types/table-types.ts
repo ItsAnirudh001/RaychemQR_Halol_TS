@@ -12,6 +12,7 @@ export const userTableObject = {
   phone_number: "",
   role: "",
   is_active: true,
+  password: "",
 };
 
 export interface UserTableItem {
@@ -22,6 +23,7 @@ export interface UserTableItem {
   phone_number: string | number;
   role: string;
   is_active: boolean;
+  password:string
 }
 
 export interface AuditTableItem {
@@ -39,4 +41,13 @@ export interface PickslipTableItem {
   line_items: number;
   lot_no: number;
   status: string;
+}
+
+export interface UserLogsItem {
+  slno: number;
+  username: string;
+  user_id: number;
+  login_flag: string;
+  login_success: boolean;
+  login_time: string;
 }

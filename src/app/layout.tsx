@@ -33,7 +33,7 @@ export default function RootLayout({
       <head>
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1, user-scalable=no"
+          content="width=375, initial-scale=1, user-scalable=no"
         />
         <meta name="theme-color" content="transparent" />
         <meta name="mobile-web-app-capable" content="yes" />

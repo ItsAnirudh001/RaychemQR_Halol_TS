@@ -10,8 +10,8 @@ export default function UserPreAuthHeader() {
   if (path.endsWith("login")) return <></>;
 
   return (
-    <div className="p-4">
+    <button className="animated2 p-4">
       <IoChevronBackCircle className="text-[2.85rem] text-gray-600" onClick={back} />
-    </div>
+    </button>
   );
 }

@@ -1,5 +1,5 @@
 import { SelectProps } from "@/types/mui-types";
-import { FormControl, InputBase, MenuItem, Select } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { FaChevronDown } from "react-icons/fa";
 
 export default function MuiSingleSelect(props: SelectProps) {
@@ -7,8 +7,10 @@ export default function MuiSingleSelect(props: SelectProps) {
 
   return (
     <FormControl fullWidth>
+      {label && <InputLabel id={label} className="text-sm! font-medium!">{label}</InputLabel>}
       <Select
         id={label}
+        labelId={label}
         value={value}
         label={label}
         onChange={handleChange}

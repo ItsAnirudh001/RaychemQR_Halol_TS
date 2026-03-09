@@ -1,10 +1,10 @@
 export const useroutes = {
-  forgetPassword: "/api/reset/forgot-password", //done
-  resetPassword: "/api/reset/reset-password", //done
+  forgetPassword: "/api/reset/forgot-password", //tested
+  resetPassword: "/api/reset/reset-password", //tested
 
-  scanItem: "/api/scan-items/scan-item",
-  startScanSession: "/scan-sessions/start", //done
-  abortScanSession: "/scan-sessions/abort-session", //done
+  scanItem: "/api/scan-items/scan-item", //tested
+  startScanSession: "/scan-sessions/start", //tested
+  abortScanSession: "/scan-sessions/abort-session", //tested
 };
 
 export const usermodroutes = (data: {
@@ -14,8 +14,8 @@ export const usermodroutes = (data: {
   const { pickslip_id, scan_item_id } = data;
 
   const routes = {
-    submitPickslipItems: `/api/scan-items/pickslip/${pickslip_id}/submit`, //done
-    deleteScanItem: `/api/scan-items/scan-items/${scan_item_id}`, //done
+    submitPickslipItems: `/api/scan-items/pickslip/${pickslip_id}/submit`, //tested
+    deleteScanItem: `/api/scan-items/scan-items/${scan_item_id}`, //tested
   };
 
   return routes;

@@ -87,23 +87,23 @@ export const pickslipItemsTableHeaders: TableHeaderItem[] = [
 
 export const auditTableHeaders: TableHeaderItem[] = [
   {
-    name: "User ID",
+    name: "SL No",
     width: "10%",
   },
   {
-    name: "Name",
+    name: "User ID",
     width: "12.5%",
   },
   {
-    name: "Email ID",
+    name: "Username",
     width: "17.5%",
   },
   {
-    name: "Date and Time",
+    name: "Login Time",
     width: "15%",
   },
     {
-    name: "Role",
+    name: "Success",
     width: "10%",
     align: "center",
   },

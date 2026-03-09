@@ -4,7 +4,7 @@ import { GetAllPickslips } from "@/api/common-utils";
 import PickslipTable from "@/components/admin/tables/pickslip-table";
 import useAppStore from "@/store/app-store";
 import { Pickslip } from "@/types/pickslip-type";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function PickslipsPage() {
   const {setLoading } = useAppStore();
@@ -13,7 +13,7 @@ export default function PickslipsPage() {
   async function fetchPickslips() {
     setLoading(true);
     try {
-      const data = await GetAllPickslips();
+      const data = await GetAllPickslips(setLoading);
       setPickslips(data);
     } catch (error) {
       console.error("Error fetching pickslips", error);
@@ -25,6 +25,8 @@ export default function PickslipsPage() {
   useEffect(() => {
     fetchPickslips();
   }, []);
+
+  // console.log("Pickslips",pickslips);
 
   const tableProps = { pickslips };
 

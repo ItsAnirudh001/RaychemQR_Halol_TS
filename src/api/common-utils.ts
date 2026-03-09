@@ -1,11 +1,35 @@
 import { customAxios } from "@/utils/axios";
-import { commonroutes } from "./common-routes";
+import { commonmodroutes, commonroutes } from "./common-routes";
 import { LoginForm } from "@/types/login-form";
 import qs from "qs";
 import { NavigateOptions } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { toastify } from "@/utils/toast";
 import { UserObject } from "@/types/store-types";
-import { handleFileDownload } from "@/utils/helpers";
+import { handleFileDownload, isAPISuccess } from "@/utils/helpers";
+import dayjs from "dayjs";
+import { Pickslip } from "@/types/pickslip-type";
+
+export function apiErrorPrompter(error: unknown | Error) {
+  const detail = error?.response?.data?.detail;
+
+  switch (true) {
+    case typeof detail === "string":
+      toastify("error", detail);
+      break;
+
+    case Array.isArray(detail):
+      const messages = detail.map(
+        ({ field, message }: { field?: string; message: string }) =>
+          field ? field + " " + message : message,
+      );
+
+      for (const message of messages) toastify("error", message);
+      break;
+
+    default:
+      toastify("error", "Unknown error");
+  }
+}
 
 export async function Login(
   setLoading: (value: boolean) => void,
@@ -47,11 +71,21 @@ export async function Login(
 
     sessionStorage.setItem("user", JSON.stringify(userObject));
 
-    if (status !== "success") return toastify("error", message, 1500);
+    const success = isAPISuccess(status);
+
+    toastify(success ? "success" : "warning", message);
+
+    if (!success) return;
+
+    localStorage.setItem(
+      "login",
+      `Login at ${dayjs().format("DD-MM-YYYY hh:mm:ss")}`,
+    );
 
     callback();
   } catch (error) {
-    console.error("Error in Login", error);
+    console.error("Error2 in Login", error);
+    apiErrorPrompter(error);
   } finally {
     setLoading(false);
   }
@@ -64,35 +98,92 @@ export async function Logout(
   setLoading(true);
   try {
     const { data } = await customAxios.post(commonroutes.logout);
-    sessionStorage.clear();
     push("/");
-    toastify("success", data?.message, 1200);
+    toastify("success", data?.message);
+    sessionStorage.clear();
   } catch (error) {
     console.error("Error in logout", error);
+    apiErrorPrompter(error);
   } finally {
     setLoading(false);
   }
 }
 
-export async function GetAllPickslips() {
+export async function GetAllPickslips(setLoading: (value: boolean) => void) {
+  setLoading(true);
   try {
     const { data } = await customAxios.get(commonroutes.getAllPickslips);
     console.log("getAllPickslips data", data);
     return data?.data;
   } catch (error) {
     console.error("Error in getAllpickslips", error);
+    apiErrorPrompter(error);
+  } finally {
+    setLoading(false);
   }
 }
 
-export async function GetFileForDownload() {
+export async function GetPickslipItems(
+  pickslip_id: number,
+  setLoading: (value: boolean) => void,
+) {
+  console.log("Pickslip ID for getItems", pickslip_id);
+  setLoading(true);
+  const url = commonmodroutes({ pickslip_id }).getPickslipitems;
+
+  console.log("items url", url);
+
   try {
-    const { data } = await customAxios.get(commonroutes.downloadReport);
+    const { data } = await customAxios.get(url);
+    console.log("getPickslipItems data", data);
+    const success = isAPISuccess(data.status);
 
-    const { file } = data;
-
-    handleFileDownload(file);
+    if (!success) return;
+    return data?.data;
   } catch (error) {
-    console.error("Error getting download file",error);
-    toastify("error","Unable to get File for download")
+    console.error("Error in getPickslipItems", error);
+    apiErrorPrompter(error);
+  } finally {
+    setLoading(false);
+  }
+}
+
+export async function GetFileForDownload(
+  pickslip: Pickslip,
+  setLoading: (value: boolean) => void,
+) {
+  setLoading(true);
+
+  const { pickslip_id } = pickslip;
+
+  try {
+    const { data, headers } = await customAxios.get(
+      commonmodroutes({ pickslip_id }).downloadPickslip,
+      {
+        responseType: "blob",
+      },
+    );
+
+    const contentDisposition = headers["content-disposition"];
+
+    let filename: string = "";
+
+    // console.log("headers", headers);
+
+    // console.log("contentDisposition", contentDisposition);
+
+    if (contentDisposition) {
+      const match = contentDisposition.match(/filename="(.+)"/);
+      if (match?.[1]) filename = match[1];
+    }
+
+    //  console.log("filey", filename);
+
+    handleFileDownload(data, filename);
+  } catch (error) {
+    console.error("Error getting download file", error);
+    apiErrorPrompter(error);
+  } finally {
+    setLoading(false);
   }
 }

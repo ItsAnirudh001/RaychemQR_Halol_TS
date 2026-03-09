@@ -1,24 +1,31 @@
 "use client";
 
 import { Logout } from "@/api/common-utils";
+import useAutoCall from "@/hooks/useAutoCall";
 import useAppStore from "@/store/app-store";
+import { getStoredUser } from "@/utils/helpers";
 import { Menu, MenuItem } from "@mui/material";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
-import { FaUserCircle } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { PiUserCircleFill } from "react-icons/pi";
 import { RiLogoutCircleLine } from "react-icons/ri";
 
 export default function AdminHeader() {
-  const name = usePathname();
+  const path = usePathname();
   const { push } = useRouter();
-  const { setLoading, user } = useAppStore();
+  const { setLoading } = useAppStore();
 
   // console.log("user", user);
 
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 
-  if (name.includes("login")) return <></>;
+  async function postLogout() {
+    await Logout(setLoading, push);
+    setMenuAnchor(null);
+  }
+
+  useAutoCall(postLogout);
 
   function showMenu(event: React.MouseEvent<HTMLButtonElement>) {
     setMenuAnchor(event.currentTarget);
@@ -28,10 +35,9 @@ export default function AdminHeader() {
     setMenuAnchor(null);
   }
 
-  async function postLogout() {
-    await Logout(setLoading, push);
-    setMenuAnchor(null);
-  }
+  // console.log("user",user);
+
+  if (path.includes("login") || path.startsWith("/user")) return <></>;
 
   return (
     <div className="fixed top-0 left-0 w-full z-50 flex flex-row py-4 px-8 items-center gap-4 bg-header-bg h-[10vh] justify-between">
@@ -45,14 +51,14 @@ export default function AdminHeader() {
 
       <div className="flex gap-[0.85vw]">
         <div className="flex flex-col text-end text-[0.8rem]">
-          <span className="font-bold">{user?.full_name}</span>
-          <span className="font-medium">{user.username}</span>
+          <span className="font-bold">{getStoredUser()?.full_name}</span>
+          <span className="font-medium">{getStoredUser()?.username}</span>
         </div>
 
-        <button onClick={showMenu}>
-          <FaUserCircle
+        <button onClick={showMenu} className="animated">
+          <PiUserCircleFill
             color="rgba(108, 107, 110, 1)"
-            className="text-[2rem]"
+            className="text-[2.4rem]"
           />
         </button>
       </div>
@@ -74,7 +80,7 @@ export default function AdminHeader() {
           },
         }}
       >
-        <MenuItem className="mui-menuitem" onClick={postLogout}>
+        <MenuItem className="animated2 mui-menuitem" onClick={postLogout}>
           <RiLogoutCircleLine className="text-[1.4rem]" />
           Logout
         </MenuItem>

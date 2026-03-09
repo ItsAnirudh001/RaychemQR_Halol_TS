@@ -4,7 +4,7 @@ import UserAuthHeader from "@/components/user/authd-header";
 import { FaCube, FaRegClock } from "react-icons/fa";
 import { FaRegCircleCheck, FaHashtag } from "react-icons/fa6";
 import { TbArrowsSort } from "react-icons/tb";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TbReload } from "react-icons/tb";
 import { IoChevronBackCircle } from "react-icons/io5";
 import { useRouter } from "next/navigation";
@@ -19,25 +19,34 @@ import { customAxios } from "@/utils/axios";
 import { usermodroutes, useroutes } from "@/api/user/user-routes";
 import {
   dynamicClass,
+  getStoredPickslip,
   getStoredScanSessionID,
   isAPISuccess,
+  smallHeight,
 } from "@/utils/helpers";
 import { toastify } from "@/utils/toast";
+import useAppStore from "@/store/app-store";
+import { apiErrorPrompter, GetPickslipItems } from "@/api/common-utils";
+import useAutoCall from "@/hooks/useAutoCall";
 
 export default function PickslipItemsScreen() {
   const { back, push } = useRouter();
-  const pickslipDetails = JSON.parse(
-    sessionStorage.getItem("pickslip_details")!,
-  );
+  const { setLoading } = useAppStore();
+  const pickslip = getStoredPickslip();
 
-  const { oa_no, pickslip_id, items, scanned_items } = pickslipDetails;
+  // console.log("pickslip", pickslip);
+
+  const created = pickslip?.status === "created";
+  const submitted = pickslip?.status === "submitted";
+
+  const { oa_no, pickslip_id } = pickslip;
 
   // const mockItems = pickslipsDataMock.find(
   //   (data) => data.pickslip_id == Number(pickslip_id),
   // );
 
   const [sortKey, setSortKey] = useState<string>("");
-  const [pickslipItems, setPickslipItems] = useState<PickslipItem[]>(items);
+  const [pickslipItems, setPickslipItems] = useState<PickslipItem[]>();
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [searchVal, setSearchVal] = useState<string>("");
 
@@ -45,6 +54,28 @@ export default function PickslipItemsScreen() {
   const [viewDashboard, setViewDashboard] = useState<boolean>(false);
 
   const [selectedItem, setSelectedItem] = useState<PickslipItem>();
+
+  const scannedItems = pickslipItems?.filter(
+    (item: PickslipItem) => item.is_scanned == true,
+  );
+
+  async function fetchPickslipItems() {
+    setLoading(true);
+    const { pickslip_id } = pickslip;
+
+    try {
+      const items = await GetPickslipItems(pickslip_id, setLoading);
+      setPickslipItems(items);
+    } catch (error) {
+      console.error("Error in fetchPickslipItems", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchPickslipItems();
+  }, []);
 
   // console.log("items", pickslipItems);
 
@@ -65,10 +96,6 @@ export default function PickslipItemsScreen() {
     return statusFilter ? filteredData : data;
   }
 
-  function handleReset() {
-    window.location.reload();
-  }
-
   function handleSort() {
     setSortKey((prev) => {
       return prev === "desc" ? "asc" : "desc";
@@ -87,7 +114,11 @@ export default function PickslipItemsScreen() {
     const searched = data?.filter(
       (d) =>
         searchParam(d.item_code).includes(searchParam(searchVal)) ||
-        searchParam(d.material_description).includes(searchParam(searchVal)),
+        searchParam(d.material_description).includes(searchParam(searchVal)) ||
+        searchParam(d.item_name).includes(searchParam(searchVal)) ||
+        searchParam(d.serial_no).includes(searchParam(searchVal)) ||
+        searchParam(d.batch_no).includes(searchParam(searchVal)) ||
+        searchParam(d.box_type).includes(searchParam(searchVal)),
     );
 
     return searched;
@@ -134,7 +165,50 @@ export default function PickslipItemsScreen() {
     push(`/user/pickslips/${pickslip_id}/scan/${data.item_id}`);
   }
 
+  // async function handleScanClick(item: PickslipItem) {
+  //   setLoading(true);
+  //   const { item_id, item_code, batch_no, box_type } = item;
+
+  //   try {
+  //     const { data } = await customAxios.post(useroutes.scanItem, {
+  //       session_id: getStoredScanSessionID(),
+  //       pick_slip_item_id: item_id,
+  //       item_code,
+  //       serial_number: "S6547562",
+  //       batch: "567870",
+  //       box_type: "J8",
+  //       notes: "",
+  //     });
+
+  //     const { status, message } = data;
+  //     const success = isAPISuccess(status);
+  //     toastify(success ? "success" : "warning", message);
+
+  //     if (!success) return;
+
+  //     await fetchPickslipItems();
+
+  //     // back();
+  //   } catch (error) {
+  //     console.error("Error in scanItem", error);
+  //     apiErrorPrompter(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
+
+  function directToPickslips() {
+    back();
+    setTimeout(() => {
+      sessionStorage.removeItem("pickslip");
+      sessionStorage.removeItem("scan_session_id");
+    }, 1000);
+  }
+
   async function postAbortSession() {
+    if (!created) return directToPickslips();
+
+    setLoading(true);
     try {
       const { data } = await customAxios.post(useroutes.abortScanSession, {
         session_id: getStoredScanSessionID(),
@@ -142,63 +216,89 @@ export default function PickslipItemsScreen() {
 
       const { status, message } = data;
       const success = isAPISuccess(status);
-      toastify(success ? "success" : "warning", message, 1500);
+      toastify(success ? "success" : "warning", message);
 
       if (!success) return;
 
-      back();
+      directToPickslips();
     } catch (error) {
       console.error("Error in abortScanSession", error);
-      toastify("error", "Unable to abort scan session", 1500);
+      apiErrorPrompter(error);
+    } finally {
+      setLoading(false);
     }
   }
 
+  useAutoCall(postAbortSession);
+
   async function postSubmitPickslip() {
+    setLoading(true);
+
+    const params = {
+      session_id: getStoredScanSessionID(),
+    };
+
+    // return console.log("params",JSON.stringify(params))
+
     try {
       const { data } = await customAxios.post(
         usermodroutes({ pickslip_id }).submitPickslipItems,
+        null,
         {
-          params: {
-            session_id: getStoredScanSessionID(),
-          },
+          params,
         },
       );
 
       const { status, message } = data;
       const success = isAPISuccess(status);
-      toastify(success ? "success" : "warning", message, 1500);
+      toastify(success ? "success" : "warning", message);
 
       if (!success) return;
 
       showDashboard();
     } catch (error) {
       console.error("Error in abortScanSession", error);
-      toastify("error", "Unable to submit pickslip", 1500);
+      apiErrorPrompter(error);
+    } finally {
+      setLoading(false);
     }
   }
 
-  const deleteModalProps = { viewDelete, hideDelete, item: selectedItem };
-  const submitModalProps = { viewDashboard, hideDashboard, item: selectedItem };
+  const deleteModalProps = {
+    viewDelete,
+    hideDelete,
+    item: selectedItem,
+    fetchPickslipItems,
+  };
 
-  const validData = Array.isArray(items) && items?.length > 0;
-  const allScanned = scanned_items?.length === items?.length;
+  const submitModalProps = {
+    viewDashboard,
+    hideDashboard,
+    scannedItems,
+    pickslipItems,
+    postAbortSession,
+  };
+
+  const validData = Array.isArray(pickslipItems) && pickslipItems?.length > 0;
+  const allScanned = scannedItems?.length == pickslipItems?.length;
+
+  // console.log("items", pickslipItems);
 
   return (
     <>
       {/* header */}
       <UserAuthHeader {...headerProps}>
         <div className="flex items-center gap-2 text-[rgba(64,108,175,1)]">
-          <IoChevronBackCircle
-            className="text-3xl"
-            onClick={postAbortSession}
-          />
+          <button className="animated2 text-3xl" onClick={postAbortSession}>
+            <IoChevronBackCircle />
+          </button>
 
           <div className="flex flex-col font-medium">
             <span className="text-[rgba(144,161,185,1)] text-xs">Order ID</span>
             <textarea
               disabled
               className="text-[3.25vw] w-[24vw] field-sizing-content"
-              value={oa_no}
+              value={oa_no || ""}
             />
           </div>
         </div>
@@ -206,7 +306,7 @@ export default function PickslipItemsScreen() {
 
       {/* body */}
       <div
-        className={`flex flex-col p-[2vh] gap-[2vh] mt-[6.5vh] mb-[${allScanned ? "15.5vh" : "2.2vh"}]"`}
+        className={`flex flex-col p-[2vh] gap-[2vh] ${smallHeight() ? "mt-[10vh]" : "mt-[6.5vh]"} ${allScanned ? "mb-[15.5vh]" : "mb-[2.2vh]"}`}
       >
         {/* top buttons */}
         {validData ? (
@@ -221,23 +321,27 @@ export default function PickslipItemsScreen() {
                   <TbArrowsSort />
                 </button>
 
-                <div className="h-[90%] w-0.5 bg-[rgba(171,181,194,1)]" />
+                {created && (
+                  <>
+                    <div className="h-[90%] w-0.5 bg-[rgba(171,181,194,1)]" />
 
-                <button
-                  className={dynamicClass(statusFilter === "pending")}
-                  onClick={() => setStatusFilter("pending")}
-                >
-                  <FaRegClock />
-                  <span>Pending</span>
-                </button>
+                    <button
+                      className={dynamicClass(statusFilter === "pending")}
+                      onClick={() => setStatusFilter("pending")}
+                    >
+                      <FaRegClock />
+                      <span>Pending</span>
+                    </button>
 
-                <button
-                  className={dynamicClass(statusFilter === "verified")}
-                  onClick={() => setStatusFilter("verified")}
-                >
-                  <FaRegCircleCheck />
-                  <span>Verified</span>
-                </button>
+                    <button
+                      className={dynamicClass(statusFilter === "verified")}
+                      onClick={() => setStatusFilter("verified")}
+                    >
+                      <FaRegCircleCheck />
+                      <span>Verified</span>
+                    </button>
+                  </>
+                )}
               </div>
 
               {/* <TbReload className="text-3xl self-center" onClick={handleReset} /> */}
@@ -246,7 +350,7 @@ export default function PickslipItemsScreen() {
             {/* order cards */}
             {searchedData()?.map((data, index) => (
               <div
-                className={`flex flex-col bg-white w-full rounded-3xl border-2 overflow-hidden ${data.status === "completed" ? "border-green-600" : "border-gray-200"}`}
+                className={`flex flex-col bg-white w-full rounded-3xl border-2 overflow-hidden ${data.status === "pending" ? "border-gray-200" : "border-green-600"}`}
                 key={data.item_id}
               >
                 <div
@@ -271,27 +375,31 @@ export default function PickslipItemsScreen() {
                         <textarea
                           disabled
                           className="text-[3.25vw] w-[50vw] field-sizing-content max-h-fit"
-                          value={data.item_name}
+                          value={data.item_name || ""}
                         />
                       </div>
                     </div>
 
-                    {data.status === "pending" && (
-                      <button
-                        className="flex bg-[linear-gradient(180deg,rgba(64,108,175,1)_10%,rgba(79,57,246,1))] place-items-center p-[0.75vh] rounded-lg shadow-2xl shadow-black"
-                        onClick={handleScanClick}
-                      >
-                        <LuQrCode className="text-white font-medium text-2xl" />
-                      </button>
-                    )}
+                    {!submitted && (
+                      <>
+                        {data.status === "pending" && (
+                          <button
+                            className="animated2 flex bg-[linear-gradient(180deg,rgba(64,108,175,1)_10%,rgba(79,57,246,1))] place-items-center p-[0.75vh] rounded-lg shadow-2xl shadow-black"
+                            onClick={() => handleScanClick(data)}
+                          >
+                            <LuQrCode className="text-white font-medium text-2xl" />
+                          </button>
+                        )}
 
-                    {data.status === "verified" && (
-                      <button
-                        className="flex bg-[linear-gradient(90deg,rgba(250,92,92,1)_10%,rgba(188,0,0,1))] place-items-center p-[0.75vh] rounded-lg shadow-2xl shadow-black"
-                        onClick={() => showDelete(data)}
-                      >
-                        <RiDeleteBin6Line className="text-white font-medium text-2xl" />
-                      </button>
+                        {data.status === "verified" && (
+                          <button
+                            className="animated2 flex bg-[linear-gradient(90deg,rgba(250,92,92,1)_10%,rgba(188,0,0,1))] place-items-center p-[0.75vh] rounded-lg shadow-2xl shadow-black"
+                            onClick={() => showDelete(data)}
+                          >
+                            <RiDeleteBin6Line className="text-white font-medium text-2xl" />
+                          </button>
+                        )}
+                      </>
                     )}
                   </div>
 
@@ -333,17 +441,17 @@ export default function PickslipItemsScreen() {
           <NoData />
         )}
 
-        {allScanned && (
+        {allScanned && pickslip?.status !== "submitted" && (
           <div className="fixed bottom-[1.5vh] left-0 right-0 p-[5vw] bg-[rgba(255,255,255,0.5)] text-white text-center space-y-[0.75vh]">
             <button
-              className="flex items-center justify-center gap-[2vw] mobile-btn-main bg-[rgba(6,140,95,1)]! font-normal! rounded-2xl! shadow-[4px_55px_24px_rgba(0,0,0,0.8)] text-[4.5vw]"
+              className="animated2 flex items-center justify-center gap-[2vw] mobile-btn-main bg-[rgba(6,140,95,1)]! font-normal! rounded-2xl! shadow-[4px_55px_24px_rgba(0,0,0,0.8)] text-[4.5vw]"
               onClick={postSubmitPickslip}
             >
               <FaRegCircleCheck className="text-[5.5vw]" />
               Submit Order
             </button>
 
-            <span className="text-[3.25vw]">{`Validated all items to submit (5/5 completed)`}</span>
+            <span className="text-[3.25vw]">{`Validated all items to submit (${scannedItems?.length}/${pickslipItems?.length} completed)`}</span>
           </div>
         )}
       </div>

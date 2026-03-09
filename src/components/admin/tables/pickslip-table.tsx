@@ -21,7 +21,7 @@ export default function PickslipTable(props: {
   const { setLoading } = useAppStore();
 
   function handleOrderClick(data: Pickslip) {
-    sessionStorage.setItem("pickslip_items", JSON.stringify(data.items));
+    sessionStorage.setItem("pickslip", JSON.stringify(data));
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -73,7 +73,7 @@ export default function PickslipTable(props: {
               <TableCell className="tablecell flex! justify-center!">
                 <div className="flex items-center bg-[rgba(213,242,214,1)] py-[1.1vh] px-[2.25vw] rounded-2xl cursor-pointer shadow-[0_0_6px_rgba(0,0,0,0.25)]">
                   <span className="text-green-600 text-[0.75rem] font-medium">
-                    {data.status.toUpperCase()}
+                    {data.status}
                   </span>
                 </div>
               </TableCell>

@@ -20,21 +20,27 @@ export default function UsersTable(props: {
   showModal: (data?: UserTableItem | undefined) => void;
 }) {
   const { setLoading } = useAppStore();
-  const { usersData, selectedUser, showModal } = props;
+  const { usersData, showModal } = props;
 
-  async function postDeleteUser() {
+  async function postDeleteUser(data:UserTableItem) {
     setLoading(true);
-    const { user_id } = selectedUser;
+    const { user_id } = data;
+
+    console.log("user_id",data);
 
     try {
-      const { data } = await customAxios.delete(
+      const { data, status } = await customAxios.delete(
         adminroutes.deleteUser + "/" + user_id,
       );
-      toastify("success", data?.message, 1000);
+
+      const success = status == 200;
+
+      if(!success) return;
+      toastify("success", data?.message);
     } catch (error) {
       console.error("Error in deleteUser", error);
     } finally {
-      setLoading(true);
+      setLoading(false);
     }
   }
 
@@ -88,7 +94,7 @@ export default function UsersTable(props: {
                   </button>
                   <button
                     className="user-table-btn animated hover-shadow border-red-600 text-red-600"
-                    onClick={postDeleteUser}
+                    onClick={() => postDeleteUser(data)}
                   >
                     Delete
                   </button>
