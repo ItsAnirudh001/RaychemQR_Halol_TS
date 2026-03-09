@@ -7,6 +7,7 @@ import useAppStore from "@/store/app-store";
 import { MuiInputChangeEvent } from "@/types/mui-types";
 import { ResetForm } from "@/types/user/user-types";
 import { customAxios } from "@/utils/axios";
+import { getStoredUser, isAPISuccess } from "@/utils/helpers";
 import { toastify } from "@/utils/toast";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -14,7 +15,7 @@ import { useState } from "react";
 
 export default function PasswordResetPage() {
   const { push } = useRouter();
-  const { user } = useAppStore();
+  const { setLoading } = useAppStore();
 
   const [form, setForm] = useState<ResetForm>({
     new_password: "",
@@ -30,23 +31,24 @@ export default function PasswordResetPage() {
     });
   }
 
-  async function handleSubmit() {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
     const reset_token = sessionStorage.getItem("reset_token");
+    const user = getStoredUser();
     const { access_token } = user;
     const { new_password, confirm_password } = form;
 
     if (!access_token && !reset_token)
-      return toastify("error", "Password Reset Unauthorized", 1500);
+      return toastify("error", "Password Reset Unauthorized");
 
-    if (!new_password || !confirm_password)
-      return toastify("warning", "All Fields are mandatory", 1500);
-
-    if (new_password === confirm_password)
+    if (new_password !== confirm_password)
       return toastify(
         "warning",
         "Confirmed Password not matching with New Password",
-        1500,
       );
+
+    setLoading(true);
 
     try {
       const { data } = await customAxios.post(useroutes.resetPassword, {
@@ -56,11 +58,17 @@ export default function PasswordResetPage() {
 
       const { status, message } = data;
 
-      toastify("success", message, 1500);
-      sessionStorage.removeItem("reset_token");
+      const success = isAPISuccess(status);
+
+      if (!success) return;
+
+      toastify("success", message);
       push("/user/login");
+      sessionStorage.removeItem("reset_token");
     } catch (error) {
       console.error("Error in resetPassword", error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -82,33 +90,37 @@ export default function PasswordResetPage() {
           Reset Password
         </h2>
 
-        <div className="flex flex-col gap-[3.6vh]">
-          <MuiInput
-            value={form.new_password}
-            label="New Password"
-            type="password"
-            placeholder="Enter Password"
-            required={true}
-            onChange={(e: MuiInputChangeEvent) =>
-              updateForm("password", e.target.value)
-            }
-          />
+        <form onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-[3.6vh]">
+            <MuiInput
+              value={form.new_password}
+              label="New Password"
+              type="password"
+              placeholder="Enter Password"
+              required={true}
+              min={8}
+              onChange={(e: MuiInputChangeEvent) =>
+                updateForm("new_password", e.target.value)
+              }
+            />
 
-          <MuiInput
-            value={form.confirm_password}
-            label="Confirm Password"
-            type="password"
-            placeholder="Enter Password"
-            required={true}
-            onChange={(e: MuiInputChangeEvent) =>
-              updateForm("password", e.target.value)
-            }
-          />
-        </div>
+            <MuiInput
+              value={form.confirm_password}
+              label="Confirm Password"
+              type="password"
+              placeholder="Enter Password"
+              required={true}
+              min={8}
+              onChange={(e: MuiInputChangeEvent) =>
+                updateForm("confirm_password", e.target.value)
+              }
+            />
+          </div>
 
-        <button className="animated mobile-btn-main" onClick={handleSubmit}>
-          Confirm
-        </button>
+          <button type="submit" className="animated2 mobile-btn-main mt-[4vh]">
+            Confirm
+          </button>
+        </form>
       </div>
     </div>
   );

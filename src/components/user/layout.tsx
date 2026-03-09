@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 
 export default function MobileLayout({
@@ -5,8 +7,6 @@ export default function MobileLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <div>
-      {/* <UserPreAuthHeader /> */}
-
       <div className="lg:hidden flex flex-col w-screen overflow-x-hidden">
         {children}
       </div>

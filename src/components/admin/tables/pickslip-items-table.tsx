@@ -11,9 +11,35 @@ import {
 } from "@mui/material";
 import { PickslipItem } from "@/types/pickslip-type";
 import { pickslipItemsTableHeaders } from "@/constants/admin/table-headers";
+import { useEffect, useState } from "react";
+import useAppStore from "@/store/app-store";
+import { GetPickslipItems } from "@/api/common-utils";
+import { getStoredPickslip } from "@/utils/helpers";
 
 export default function PickslipItemsTable() {
-  const items = JSON.parse(sessionStorage.getItem("pickslip_items")!);
+  const { setLoading } = useAppStore();
+
+  const pickslip = getStoredPickslip();
+
+  const [pickslipItems, setPickslipItems] = useState<PickslipItem[]>();
+
+  async function fetchPickslipItems() {
+    setLoading(true);
+    const { pickslip_id } = pickslip;
+
+    try {
+      const items = await GetPickslipItems(pickslip_id, setLoading);
+      setPickslipItems(items);
+    } catch (error) {
+      console.error("Error in fetchPickslipItems", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchPickslipItems();
+  }, []);
 
   return (
     <TableContainer component={Paper} className="table-container">
@@ -33,7 +59,7 @@ export default function PickslipItemsTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {items?.map((data: PickslipItem) => (
+          {pickslipItems?.map((data: PickslipItem) => (
             <TableRow className="table-row-data" key={data.item_id}>
               <TableCell className="tablecell">{data.item_name}</TableCell>
 

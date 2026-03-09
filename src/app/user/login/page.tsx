@@ -32,9 +32,8 @@ export default function LoginPage() {
     push("/user/emailverify");
   }
 
-  async function handleSubmit() {
-    if (!form.username || !form.password)
-      return toastify("warning", "Enter Valid Credentials", 1000);
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
 
     await Login(setLoading, form, setUser, () => {
       push("/user/pickslips");
@@ -50,6 +49,7 @@ export default function LoginPage() {
           width={300}
           height={0}
           unoptimized
+          loading="eager"
           className="self-center"
         />
       </div>
@@ -58,45 +58,45 @@ export default function LoginPage() {
         Sign In
       </h2>
 
-      <div className="flex flex-col gap-[1.5vh]">
-        <div className="flex flex-col gap-[4vh]">
-          <MuiInput
-            value={form.username}
-            label="Username"
-            type="string"
-            placeholder="Enter Username"
-            required={true}
-            onChange={(e: MuiInputChangeEvent) =>
-              updateForm("username", e.target.value)
-            }
-          />
+      <form onSubmit={handleSubmit}>
+        <div className="flex flex-col gap-[2.5vh]">
+          <div className="flex flex-col gap-[3vh]">
+            <MuiInput
+              value={form.username}
+              label="Username"
+              type="username"
+              placeholder="Enter Username"
+              required={true}
+              onChange={(e: MuiInputChangeEvent) =>
+                updateForm("username", e.target.value)
+              }
+            />
 
-          <MuiInput
-            value={form.password}
-            label="Password"
-            type="password"
-            placeholder="Enter Password"
-            required={true}
-            onChange={(e: MuiInputChangeEvent) =>
-              updateForm("password", e.target.value)
-            }
-          />
+            <MuiInput
+              value={form.password}
+              label="Password"
+              type="password"
+              placeholder="Enter Password"
+              required={true}
+              min={8}
+              onChange={(e: MuiInputChangeEvent) =>
+                updateForm("password", e.target.value)
+              }
+            />
+          </div>
+
+          <button
+            className="animated2 text-[0.85rem] self-end text-primary-heading font-medium"
+            onClick={handleForgetClick}
+          >
+            Forgot Password?
+          </button>
+
+          <button type="submit" className="animated2 mobile-btn-main">
+            Sign In
+          </button>
         </div>
-
-        <span
-          className="text-[0.85rem] self-end text-primary-heading font-medium"
-          onClick={handleForgetClick}
-        >
-          Forgot Password?
-        </span>
-      </div>
-
-      <button
-        className="animated hover-shadow mobile-btn-main"
-        onClick={handleSubmit}
-      >
-        Sign In
-      </button>
+      </form>
     </div>
   );
 }

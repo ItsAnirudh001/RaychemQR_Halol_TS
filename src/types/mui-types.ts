@@ -3,27 +3,27 @@ import React from "react";
 
 export type SelectEvent =
   | React.ChangeEvent<
-    Omit<HTMLInputElement, "value"> & {
-      value: string;
-    }
-  >
+      Omit<HTMLInputElement, "value"> & {
+        value: string;
+      }
+    >
   | (Event & {
-    target: {
-      value: string;
-      name: string;
-    };
-  })
+      target: {
+        value: string;
+        name: string;
+      };
+    })
   | React.ChangeEvent<
-    Omit<HTMLInputElement, "value"> & {
-      value: number;
-    }
-  >
+      Omit<HTMLInputElement, "value"> & {
+        value: number;
+      }
+    >
   | (Event & {
-    target: {
-      value: number;
-      name: string;
-    };
-  });
+      target: {
+        value: number;
+        name: string;
+      };
+    });
 
 export interface SelectItem {
   label: string | number;
@@ -52,5 +52,12 @@ export interface MuiInputProps {
   required: boolean;
   background?: string;
   noBorder?: boolean;
-  radius?:number
+  radius?: number;
+  min?: number;
+  max?: number;
+}
+
+export interface SelectItemType {
+  label: string;
+  value: string;
 }

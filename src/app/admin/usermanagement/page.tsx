@@ -7,10 +7,11 @@ import { UserTableItem, userTableObject } from "@/types/table-types";
 import { customAxios } from "@/utils/axios";
 import { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
-import qs from "qs";
 import useAppStore from "@/store/app-store";
 import { toastify } from "@/utils/toast";
 import { MuiInputChangeEvent, SelectEvent } from "@/types/mui-types";
+import { apiErrorPrompter } from "@/api/common-utils";
+import { isAPISuccess } from "@/utils/helpers";
 
 export default function UserManagementPage() {
   const { setLoading } = useAppStore();
@@ -40,6 +41,7 @@ export default function UserManagementPage() {
       setUsersData(data.users);
     } catch (error) {
       console.error("Error in getUsersList", error);
+      apiErrorPrompter(error);
     } finally {
       setLoading(false);
     }
@@ -47,21 +49,25 @@ export default function UserManagementPage() {
 
   async function postUserSubmit() {
     setLoading(true);
+
     try {
       const { data } = isEdit
-        ? await customAxios.put(
-            adminroutes.updateUser,
-            qs.stringify(selectedUser),
-          )
-        : await customAxios.post(
-            adminroutes.createUser,
-            qs.stringify(selectedUser),
-          );
+        ? await customAxios.put(adminroutes.updateUser, selectedUser)
+        : await customAxios.post(adminroutes.createUser, selectedUser);
 
-      toastify("success", data?.message, 1000);
+      const { status, message } = data;
+
+      const success = isAPISuccess(data.status) || status == 200;
+
+      toastify(success ? "success" : "warning", message);
+
+      if (!success) return;
+
+      hideModal();
       await handleRefresh();
     } catch (error) {
       console.error(`Error in user submit`, error);
+      apiErrorPrompter(error);
     } finally {
       setLoading(false);
     }
@@ -78,7 +84,9 @@ export default function UserManagementPage() {
 
   function showModal(data?: UserTableItem) {
     // console.log("modal data", data);
-    setSelectedUser(data || userTableObject);
+    const object = data || userTableObject;
+    console.log("object", object);
+    setSelectedUser(object);
     setUserModal(true);
   }
 
@@ -94,7 +102,6 @@ export default function UserManagementPage() {
     onClose: hideModal,
     selectedUser,
     updateUser,
-    isEdit,
     postUserSubmit,
   };
 

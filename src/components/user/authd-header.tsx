@@ -2,10 +2,14 @@
 
 import { Menu, MenuItem } from "@mui/material";
 import React, { useState } from "react";
-import { FaUserCircle, FaSearch } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { RiLogoutCircleLine } from "react-icons/ri";
+import { PiUserCircleFill } from "react-icons/pi";
 import { MdLock } from "react-icons/md";
 import { useRouter } from "next/navigation";
+import { Logout } from "@/api/common-utils";
+import useAppStore from "@/store/app-store";
+import useAutoCall from "@/hooks/useAutoCall";
 
 export default function UserAuthHeader({
   children,
@@ -15,7 +19,8 @@ export default function UserAuthHeader({
   searchable?: boolean;
   setSearchVal?: React.Dispatch<React.SetStateAction<string>>;
 }) {
-  const { push } = useRouter()
+  const { push } = useRouter();
+  const { setLoading } = useAppStore();
 
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 
@@ -34,6 +39,13 @@ export default function UserAuthHeader({
     setSearchVal(value);
   }
 
+  async function postLogout() {
+    await Logout(setLoading, push);
+    setMenuAnchor(null);
+  }
+
+  useAutoCall(postLogout);
+
   return (
     <div
       className="shadowed flex p-3 items-center justify-between box-shadow bg-white
@@ -43,7 +55,7 @@ export default function UserAuthHeader({
 
       <div className="flex gap-3 items-center">
         {Boolean(setSearchVal) && (
-          <div className="flex bg-[rgba(237,243,247,1)] rounded-3xl p-2 placeholder:text-gray-600 gap-2 items-center border border-gray-300 text-[0.75rem]">
+          <div className="flex bg-[rgba(237,243,247,1)] rounded-3xl p-2 placeholder:text-gray-600 gap-2 items-center border border-gray-300 text-[0.75rem]!">
             <FaSearch />
             <input
               onChange={handleSearch}
@@ -54,10 +66,10 @@ export default function UserAuthHeader({
           </div>
         )}
 
-        <button onClick={showMenu}>
-          <FaUserCircle
+        <button className="animated2" onClick={showMenu}>
+          <PiUserCircleFill
             color="rgba(108, 107, 110, 1)"
-            className="text-[2rem]"
+            className="text-[2.4rem]"
           />
         </button>
 
@@ -78,11 +90,14 @@ export default function UserAuthHeader({
             },
           }}
         >
-          <MenuItem className="mui-menuitem-mobile" onClick={() => push("/user/reset")}>
+          <MenuItem
+            className="animated2 mui-menuitem-mobile"
+            onClick={() => push("/user/reset")}
+          >
             <MdLock className="text-[1.25rem]" />
             Change Password
           </MenuItem>
-          <MenuItem className="mui-menuitem-mobile">
+          <MenuItem className="animated2 mui-menuitem-mobile" onClick={postLogout}>
             <RiLogoutCircleLine className="text-[1.1rem]" />
             Logout
           </MenuItem>

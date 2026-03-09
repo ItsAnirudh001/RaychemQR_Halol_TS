@@ -1,5 +1,6 @@
-import { usermodroutes, useroutes } from "@/api/user/user-routes";
+import { usermodroutes } from "@/api/user/user-routes";
 import AppModal from "@/components/material-ui/modal";
+import useAppStore from "@/store/app-store";
 import { PickslipItem } from "@/types/pickslip-type";
 import { customAxios } from "@/utils/axios";
 import { isAPISuccess } from "@/utils/helpers";
@@ -11,24 +12,36 @@ export default function ItemDeletionModal(props: {
   viewDelete: boolean;
   hideDelete: () => void;
   item: PickslipItem | undefined;
+  fetchPickslipItems: () => Promise<void>;
 }) {
-  const { viewDelete, hideDelete, item } = props;
+  const { setLoading } = useAppStore();
+  const { viewDelete, hideDelete, item, fetchPickslipItems } = props;
 
   async function postDeleteItem() {
-    const { scan_item_id } = item;
+    if (!item) return;
+
+    const { item_id } = item;
+    setLoading(true);
 
     try {
       const { data } = await customAxios.delete(
-        usermodroutes({ scan_item_id }).deleteScanItem,
+        usermodroutes({ scan_item_id: item_id }).deleteScanItem,
       );
 
       const { status, message } = data;
       const success = isAPISuccess(status);
 
-      toastify(success ? "success" : "error", message, 1500);
+      toastify(success ? "success" : "error", message);
+
+      if(!success) return;
+
+      hideDelete()
+      await fetchPickslipItems();
     } catch (error) {
       console.error("Error in deleteScanItem", error);
-      toastify("error", "Unable to delete item", 1500);
+      toastify("error", "Unable to delete item");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -43,14 +56,14 @@ export default function ItemDeletionModal(props: {
 
         <div className="flex w-full justify-between gap-[6vw]">
           <button
-            className="mobile-btn-main py-[1.5vh]! font-medium! text-[0.85vh] text-[rgba(91,92,93,1)]! border border-[rgba(91,92,93,1)] bg-transparent! w-full rounded-xl"
+            className="animated2 mobile-btn-main py-[1.5vh]! font-medium! text-[0.85vh] text-[rgba(91,92,93,1)]! border border-[rgba(91,92,93,1)] bg-transparent! w-full rounded-xl"
             onClick={hideDelete}
           >
             Cancel
           </button>
 
           <button
-            className="mobile-btn-main flex items-center justify-center py-[1.5vh]! font-medium! text-[0.85vh] gap-[2vw] bg-[rgba(175,64,64,1)]!"
+            className="animated2 mobile-btn-main flex items-center justify-center py-[1.5vh]! font-medium! text-[0.85vh] gap-[2vw] bg-[rgba(175,64,64,1)]!"
             onClick={postDeleteItem}
           >
             <RiDeleteBin6Line className="text-white font-medium text-[3vh]" />

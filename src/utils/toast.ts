@@ -3,7 +3,7 @@ import { Bounce, toast } from "react-toastify";
 import { toastData } from "../constants/toast-data";
 import { ToastType } from "@/types/toast-types";
 
-export function toastify(type: ToastType, message: string, duration?: number) {
+export function toastify(type: ToastType, message: string, duration?: boolean) {
   const { background, color, Icon } =
     toastData.find((data) => data.type === type) || {};
 
@@ -17,8 +17,8 @@ export function toastify(type: ToastType, message: string, duration?: number) {
     className: `toast-${type} flex text-base! m-6! rounded-xl! w-[80vw]! md:w-[30vw]!`,
     type,
     transition: Bounce,
-    autoClose: duration == null ? false : 1500,
-    closeOnClick: !Boolean(duration),
+    autoClose: duration ? false : 2200,
+    closeOnClick: duration,
     hideProgressBar: false,
     draggable: true,
     pauseOnHover: false,

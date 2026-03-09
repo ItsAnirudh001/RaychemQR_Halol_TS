@@ -9,7 +9,6 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import { LoginForm } from "@/types/login-form";
 import { Login } from "@/api/common-utils";
 import useAppStore from "@/store/app-store";
-import { toastify } from "@/utils/toast";
 
 export default function LoginPage() {
   const { push } = useRouter();
@@ -29,10 +28,8 @@ export default function LoginPage() {
     });
   }
 
-  async function handleSubmit() {
-    if (!form.username || !form.password)
-      return toastify("warning", "Enter Valid Credentials", 1000);
-
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     await Login(setLoading, form, setUser, () => {
       push("/admin/usermanagement");
     });
@@ -48,12 +45,12 @@ export default function LoginPage() {
             Sign In
           </h2>
 
-          <div className="flex flex-col gap-[1.5vh]">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-10 w-full">
             <div className="flex flex-col gap-[4vh]">
               <MuiInput
                 value={form.username}
                 label="Username"
-                type="string"
+                type="username"
                 placeholder="Enter Username"
                 required={true}
                 onChange={(e: MuiInputChangeEvent) => updateForm("username", e)}
@@ -64,7 +61,8 @@ export default function LoginPage() {
                 label="Password"
                 type="password"
                 placeholder="Enter Password"
-                required={true}
+                required={true}             
+                min={8}
                 onChange={(e: MuiInputChangeEvent) => updateForm("password", e)}
               />
             </div>
@@ -75,14 +73,14 @@ export default function LoginPage() {
                 Remember Me
               </span>
             </div> */}
-          </div>
 
-          <button
-            className="animated hover-shadow bg-primary-heading w-full text-white rounded-xl py-[1.5vh] font-semibold text-[1.25rem]"
-            onClick={handleSubmit}
-          >
-            Sign In
-          </button>
+            <button
+              type="submit"
+              className="animated hover-shadow bg-primary-heading w-full text-white rounded-xl py-[1.5vh] font-semibold text-[1.25rem]"
+            >
+              Sign In
+            </button>
+          </form>
         </div>
       </div>
 

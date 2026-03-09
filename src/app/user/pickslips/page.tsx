@@ -10,11 +10,20 @@ import { pickslipsDataMock } from "@/constants/user/mocks/picklips-mock";
 import { useRouter } from "next/navigation";
 import { Pickslip } from "@/types/pickslip-type";
 import useAppStore from "@/store/app-store";
-import { GetAllPickslips } from "@/api/common-utils";
+import {
+  apiErrorPrompter,
+  GetAllPickslips,
+  GetFileForDownload,
+} from "@/api/common-utils";
 import NoData from "@/components/no-data";
 import { customAxios } from "@/utils/axios";
 import { useroutes } from "@/api/user/user-routes";
-import { dynamicClass, isAPISuccess } from "@/utils/helpers";
+import {
+  dynamicClass,
+  getScannedItems,
+  isAPISuccess,
+  smallHeight,
+} from "@/utils/helpers";
 import { toastify } from "@/utils/toast";
 
 export default function PickslipsScreen() {
@@ -32,7 +41,7 @@ export default function PickslipsScreen() {
   async function fetchPickslips() {
     setLoading(true);
     try {
-      const data = await GetAllPickslips();
+      const data = await GetAllPickslips(setLoading);
       setPickslips(data);
     } catch (error) {
       console.error("Error fetching pickslips", error);
@@ -92,16 +101,16 @@ export default function PickslipsScreen() {
   }
 
   function handleViewItems(data: Pickslip) {
-    sessionStorage.setItem("pickslip_items", JSON.stringify(data.items));
-    setLoading(true);
+    sessionStorage.setItem("pickslip", JSON.stringify(data));
     setTimeout(() => {
-      setLoading(false);
       push(`/user/pickslips/${data.pickslip_id}`);
     }, 400);
   }
 
   async function postStartScan(pickslip: Pickslip) {
     const { pickslip_id } = pickslip;
+
+    setLoading(true);
 
     try {
       const { data } = await customAxios.post(useroutes.startScanSession, {
@@ -111,14 +120,27 @@ export default function PickslipsScreen() {
 
       const { status, session_id, message } = data;
       const success = isAPISuccess(status);
-      toastify(success ? "success" : "warning", message, 1500);
+      toastify(success ? "success" : "warning", message);
 
       if (!success) return;
+
+      console.log("received session_id", session_id);
 
       sessionStorage.setItem("scan_session_id", String(session_id));
       handleViewItems(pickslip);
     } catch (error) {
       console.error("Error in startScanSession", error);
+      apiErrorPrompter(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleDownloadReport(pickslip: Pickslip) {
+    try {
+      await GetFileForDownload(pickslip, setLoading);
+    } catch (error) {
+      console.error("Error in downloadFile for user", error);
     }
   }
 
@@ -135,12 +157,14 @@ export default function PickslipsScreen() {
       </UserAuthHeader>
 
       {/* body */}
-      <div className="flex flex-col px-4 py-5 gap-5 mt-[6.5vh]">
+      <div
+        className={`flex flex-col px-4 py-5 gap-5 ${smallHeight() ? "mt-[10vh]" : "mt-[6.5vh]"}`}
+      >
         {validData ? (
           <>
             {/* top buttons */}
             <div className="flex justify-between">
-              <div className="flex h-[3.5vh] gap-4 items-center">
+              <div className="flex h-[3.5vh] gap-[2.2vw] items-center">
                 <button className={dynamicClass(sortKey)} onClick={handleSort}>
                   <span>Sort</span>
                   <TbArrowsSort />
@@ -152,7 +176,7 @@ export default function PickslipsScreen() {
                   className={dynamicClass(statusFilter === "created")}
                   onClick={() => setStatusFilter("created")}
                 >
-                  <FaRegClock />
+                  {/* <FaRegClock /> */}
                   <span>Pending</span>
                 </button>
 
@@ -160,8 +184,16 @@ export default function PickslipsScreen() {
                   className={dynamicClass(statusFilter === "completed")}
                   onClick={() => setStatusFilter("completed")}
                 >
-                  <FaRegCircleCheck />
+                  {/* <FaRegCircleCheck /> */}
                   <span>Completed</span>
+                </button>
+
+                <button
+                  className={dynamicClass(statusFilter === "submitted")}
+                  onClick={() => setStatusFilter("submitted")}
+                >
+                  {/* <FaRegCircleCheck /> */}
+                  <span>Submitted</span>
                 </button>
               </div>
 
@@ -177,9 +209,11 @@ export default function PickslipsScreen() {
                 <div
                   className={`h-[1vh] w-full 
                 ${
-                  data.status === "completed"
-                    ? "bg-[linear-gradient(90deg,rgba(248,209,168,1)_10%,rgba(255,169,94,1))]"
-                    : "bg-[linear-gradient(90deg,rgba(202,213,226,1)_10%,rgba(144,161,185,1))]"
+                  data.status === "submitted"
+                    ? "bg-[linear-gradient(90deg,rgb(249,248,246,1)_10%,rgb(251,243,209,1))]"
+                    : data.status === "completed"
+                      ? "bg-[linear-gradient(90deg,rgba(248,209,168,1)_10%,rgba(255,169,94,1))]"
+                      : "bg-[linear-gradient(90deg,rgba(202,213,226,1)_10%,rgba(144,161,185,1))]"
                 } 
                   rounded-3xl`}
                 />
@@ -200,7 +234,7 @@ export default function PickslipsScreen() {
                         <textarea
                           disabled
                           className="text-[0.85rem] w-[27vw] field-sizing-content"
-                          value={data.oa_no}
+                          value={data.oa_no || ""}
                         />
                       </div>
                     </div>
@@ -210,13 +244,13 @@ export default function PickslipsScreen() {
                       <span className="text-[rgba(98,116,142,1)]">
                         Scanned items
                       </span>
-                      <span className="tracking-wide">{`${data.scanned_items?.length || 0}/${data.items?.length}`}</span>
+                      <span className="tracking-wide">{`${getScannedItems(data.items).length}/${data.items?.length}`}</span>
                     </div>
                   </div>
 
                   {data.status === "created" && (
                     <button
-                      className="mobile-btn-main py-2.5! font-medium! text-[0.85rem]!"
+                      className="animated2 mobile-btn-main py-2.5! font-medium! text-[0.85rem]!"
                       onClick={() => postStartScan(data)}
                     >
                       Start Scanning
@@ -224,15 +258,27 @@ export default function PickslipsScreen() {
                   )}
 
                   {data.status === "completed" && (
+                    <button
+                      className="animated2 mobile-btn-main py-2.5! font-medium! text-[0.85rem]!"
+                      onClick={() => handleViewItems(data)}
+                    >
+                      View Items
+                    </button>
+                  )}
+
+                  {data.status === "submitted" && (
                     <div className="flex w-full justify-between gap-[4vw]">
                       <button
-                        className="mobile-btn-main py-2.5! font-medium! text-[0.85rem]!"
+                        className="animated2 mobile-btn-main py-2.5! font-medium! text-[0.85rem]!"
                         onClick={() => handleViewItems(data)}
                       >
                         View Items
                       </button>
 
-                      <button className="mobile-btn-main py-2.5! font-medium! text-[0.85rem]! text-[rgba(64,108,175,1)]! border border-[rgba(64,108,175,1)] bg-transparent! w-full rounded-xl">
+                      <button
+                        className="animated2 mobile-btn-main py-2.5! font-medium! text-[0.85rem]! text-[rgba(64,108,175,1)]! border border-[rgba(64,108,175,1)] bg-transparent! w-full rounded-xl"
+                        onClick={() => handleDownloadReport(data)}
+                      >
                         Download
                       </button>
                     </div>

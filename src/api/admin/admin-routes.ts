@@ -1,7 +1,8 @@
 export const adminroutes = {
-  getUsersList: "/api/users/get-user-list", //get
+  getUsersList: "/api/users/get-user-list", //tested
+  userLogs: "/api/users/", //tested
 
-  createUser: "/api/users/create", //post
-  updateUser: "/api/users/update-user", //put
-  deleteUser: "/api/users/delete_user", //delete
+  createUser: "/api/users/create-user", //tested
+  updateUser: "/api/users/update-user", //tested
+  deleteUser: "/api/users/delete_user", //tested
 };

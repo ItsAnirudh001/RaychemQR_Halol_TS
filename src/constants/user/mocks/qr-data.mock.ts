@@ -10,7 +10,7 @@ export const qrDataSample = [
       bottom: 509,
       left: 270,
     },
-    rawValue: "RAYCHEM RPG L225000884  17.115 Kg.  167012293  AAA2729029  J7",
+    rawValue: "RAYCHEM RPG L225000884  17.115 Kg.  167012293  AAA2729029  J7",  
     format: "aztec",
     cornerPoints: [
       {
