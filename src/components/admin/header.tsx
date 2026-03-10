@@ -3,11 +3,11 @@
 import { Logout } from "@/api/common-utils";
 import useAutoCall from "@/hooks/useAutoCall";
 import useAppStore from "@/store/app-store";
-import { getStoredUser } from "@/utils/helpers";
+import { getStoredUser } from "@/utils/session-utils";
 import { Menu, MenuItem } from "@mui/material";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PiUserCircleFill } from "react-icons/pi";
 import { RiLogoutCircleLine } from "react-icons/ri";
 

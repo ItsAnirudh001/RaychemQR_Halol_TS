@@ -30,6 +30,7 @@ export interface ScannedItem {
 
 export interface Pickslip {
   pickslip_id: number;
+  po_no: string;
   oa_no: string;
   scanned: number;
   total: number;

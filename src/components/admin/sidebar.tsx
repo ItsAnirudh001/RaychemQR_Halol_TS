@@ -12,7 +12,6 @@ export default function AdminSidebar() {
   const path = usePathname();
 
   if (path.includes("login") || path.startsWith("/user")) return <></>;
-  //   const { sidebarOpen, setSidebarOpen } = useAppStore();
 
   // console.log("name", path);
 

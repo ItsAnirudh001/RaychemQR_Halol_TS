@@ -14,7 +14,7 @@ import { pickslipItemsTableHeaders } from "@/constants/admin/table-headers";
 import { useEffect, useState } from "react";
 import useAppStore from "@/store/app-store";
 import { GetPickslipItems } from "@/api/common-utils";
-import { getStoredPickslip } from "@/utils/helpers";
+import { getStoredPickslip } from "@/utils/session-utils";
 
 export default function PickslipItemsTable() {
   const { setLoading } = useAppStore();

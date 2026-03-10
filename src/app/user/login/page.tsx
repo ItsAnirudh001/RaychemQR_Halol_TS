@@ -3,16 +3,16 @@
 import { Login } from "@/api/common-utils";
 import MuiInput from "@/components/material-ui/input";
 import useAppStore from "@/store/app-store";
-import { LoginForm } from "@/types/login-form";
+import { LoginForm } from "@/types/login-types";
 import { MuiInputChangeEvent } from "@/types/mui-types";
-import { toastify } from "@/utils/toast";
+import { validatedInput } from "@/utils/helpers";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function LoginPage() {
   const { push } = useRouter();
-  const { setUser, setLoading } = useAppStore();
+  const { setLoading } = useAppStore();
 
   const [form, setForm] = useState<LoginForm>({
     username: "",
@@ -35,7 +35,9 @@ export default function LoginPage() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    await Login(setLoading, form, setUser, () => {
+    if (!validatedInput(form.password, "password")) return;
+
+    await Login(setLoading, form, () => {
       push("/user/pickslips");
     });
   }

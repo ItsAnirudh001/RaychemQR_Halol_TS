@@ -1,6 +1,6 @@
 import { customAxios } from "@/utils/axios";
 import { commonmodroutes, commonroutes } from "./common-routes";
-import { LoginForm } from "@/types/login-form";
+import { LoginForm } from "@/types/login-types";
 import qs from "qs";
 import { NavigateOptions } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { toastify } from "@/utils/toast";
@@ -34,7 +34,6 @@ export function apiErrorPrompter(error: unknown | Error) {
 export async function Login(
   setLoading: (value: boolean) => void,
   reqBody: LoginForm,
-  setUser: (data: UserObject) => void,
   callback: () => void,
 ) {
   setLoading(true);
@@ -66,8 +65,6 @@ export async function Login(
       app_token,
       refresh_token,
     };
-
-    setUser(userObject);
 
     sessionStorage.setItem("user", JSON.stringify(userObject));
 

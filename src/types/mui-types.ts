@@ -1,29 +1,10 @@
 import { SelectChangeEvent } from "@mui/material";
 import React from "react";
 
-export type SelectEvent =
-  | React.ChangeEvent<
-      Omit<HTMLInputElement, "value"> & {
-        value: string;
-      }
-    >
-  | (Event & {
-      target: {
-        value: string;
-        name: string;
-      };
-    })
-  | React.ChangeEvent<
-      Omit<HTMLInputElement, "value"> & {
-        value: number;
-      }
-    >
-  | (Event & {
-      target: {
-        value: number;
-        name: string;
-      };
-    });
+export type SelectEvent = (
+  event: SelectChangeEvent<string | number>,
+  child: React.ReactNode,
+) => void;
 
 export interface SelectItem {
   label: string | number;
@@ -34,7 +15,7 @@ export interface SelectProps {
   label: string;
   value: string | number;
   items: SelectItem[];
-  handleChange: (e: SelectChangeEvent) => void;
+  handleChange: SelectEvent;
   className?: string;
 }
 

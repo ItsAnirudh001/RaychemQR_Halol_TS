@@ -4,7 +4,7 @@ import { toastData } from "../constants/toast-data";
 import { ToastType } from "@/types/toast-types";
 
 export function toastify(type: ToastType, message: string, duration?: boolean) {
-  const { background, color, Icon } =
+  const { background, color } =
     toastData.find((data) => data.type === type) || {};
 
   // console.log("back",background);

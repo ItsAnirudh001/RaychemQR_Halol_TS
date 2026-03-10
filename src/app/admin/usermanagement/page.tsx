@@ -3,15 +3,17 @@
 import { adminroutes } from "@/api/admin/admin-routes";
 import AddEditUserModal from "@/components/admin/modals/addedit-user-modal";
 import UsersTable from "@/components/admin/tables/users-table";
-import { UserTableItem, userTableObject } from "@/types/table-types";
+import { UserTableItem } from "@/types/table-types";
 import { customAxios } from "@/utils/axios";
 import { useEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import useAppStore from "@/store/app-store";
 import { toastify } from "@/utils/toast";
-import { MuiInputChangeEvent, SelectEvent } from "@/types/mui-types";
+import { MuiInputChangeEvent } from "@/types/mui-types";
 import { apiErrorPrompter } from "@/api/common-utils";
-import { isAPISuccess } from "@/utils/helpers";
+import { isAPISuccess, validatedInput } from "@/utils/helpers";
+import { SelectChangeEvent } from "@mui/material";
+import { userTableObject } from "@/constants/admin/admin-constants";
 
 export default function UserManagementPage() {
   const { setLoading } = useAppStore();
@@ -21,8 +23,11 @@ export default function UserManagementPage() {
     useState<UserTableItem>(userTableObject);
   const [usersData, setUsersData] = useState<UserTableItem[]>([]);
 
-  function updateUser(key: string, e: MuiInputChangeEvent | SelectEvent) {
-    const { value } = e.target;
+  function updateUser(
+    key: string,
+    e: MuiInputChangeEvent | SelectChangeEvent<string | number>,
+  ) {
+    const value = "target" in e ? e.target.value : "";
 
     setSelectedUser((prev) => {
       const object = {
@@ -47,8 +52,12 @@ export default function UserManagementPage() {
     }
   }
 
+  const isEdit = Boolean(selectedUser.user_id);
+
   async function postUserSubmit() {
     setLoading(true);
+
+    if (!isEdit && !validatedInput(selectedUser.password, "password")) return;
 
     try {
       const { data } = isEdit
@@ -93,8 +102,6 @@ export default function UserManagementPage() {
   function hideModal() {
     setUserModal(false);
   }
-
-  const isEdit = Boolean(selectedUser.user_id);
 
   const modalProps = {
     title: isEdit ? "Edit User" : "Add User",

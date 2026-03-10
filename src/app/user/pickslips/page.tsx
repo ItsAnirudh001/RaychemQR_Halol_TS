@@ -5,7 +5,6 @@ import { FaCube, FaRegClock } from "react-icons/fa";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import { TbArrowsSort } from "react-icons/tb";
 import React, { useEffect, useState } from "react";
-import { TbReload } from "react-icons/tb";
 import { pickslipsDataMock } from "@/constants/user/mocks/picklips-mock";
 import { useRouter } from "next/navigation";
 import { Pickslip } from "@/types/pickslip-type";

@@ -17,15 +17,15 @@ export const regexMod = {
   password: [
     {
       name: "uppercase letters",
-      validation: /^[A-Z]+$/,
+      validation: /[A-Z]/,
     },
     {
       name: "lowercase letters",
-      validation: /^[a-z]+$/,
+      validation: /[a-z]/,
     },
     {
       name: "numbers",
-      validation: /^[0-9]+$/,
+      validation: /[0-9]/,
     },
     {
       name: "special characters",

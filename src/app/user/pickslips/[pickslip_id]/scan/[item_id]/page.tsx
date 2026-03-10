@@ -4,9 +4,10 @@ import { useroutes } from "@/api/user/user-routes";
 import UserAuthHeader from "@/components/user/authd-header";
 import QRScanner from "@/components/user/qr-scanner";
 import useAppStore from "@/store/app-store";
-import { PickslipItem, ScannedItem } from "@/types/pickslip-type";
+import { ScannedItem } from "@/types/pickslip-type";
 import { customAxios } from "@/utils/axios";
-import { getStoredScanSessionID, isAPISuccess } from "@/utils/helpers";
+import { isAPISuccess } from "@/utils/helpers";
+import { getStoredScanItem, getStoredScanSessionID } from "@/utils/session-utils";
 import { toastify } from "@/utils/toast";
 import { IDetectedBarcode } from "@yudiel/react-qr-scanner";
 import { useRouter } from "next/navigation";
@@ -15,10 +16,10 @@ export default function ItemScanPage() {
   const { back } = useRouter();
   const { setLoading } = useAppStore();
 
-  const item = typeof sessionStorage !== "undefined" ? JSON.parse(sessionStorage.getItem("scan_item")!) : {};
-
   async function postScanItem(scannedItem: ScannedItem) {
     setLoading(true);
+
+    const item = getStoredScanItem();
 
     const { item_id } = item;
     const { serial_no, batch_no, box_type, pcn } = scannedItem;
@@ -65,15 +66,18 @@ export default function ItemScanPage() {
     toastify("success", "QR Scan successful");
 
     const scanned =
+      // "RAYCHEM RPG L125079858 TO L125079860 16.865 Kg. 16725009896 AAA2429093 EK-16"
       // "RAYCHEM RPG L225000884  17.115 Kg.  167012293  AAA2729029  J7"
       detectedCodes[0].rawValue.split(" ").filter(Boolean);
 
+    const multiLot = scanned[3] === "TO";
+
     const scannedItem: ScannedItem = {
-      pcn: scanned[6],
-      lot_no: scanned[2],
-      serial_no: scanned[5],
-      box_type: scanned[7],
-      weight: scanned[4],
+      pcn: multiLot ? scanned[8] : scanned[6],
+      lot_no: multiLot ? scanned[7] : scanned[5],
+      serial_no: multiLot ? scanned[4] : scanned[2],
+      box_type: multiLot ? scanned[9] : scanned[7],
+      weight: multiLot ? scanned[5] : scanned[3],
     };
 
     await postScanItem(scannedItem);

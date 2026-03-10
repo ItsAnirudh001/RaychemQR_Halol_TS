@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { FormControl, TextField, IconButton } from "@mui/material";
 import { VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material";
 import { fieldProps } from "@/constants/material-ui/input-field";
 import { MuiInputChangeEvent, MuiInputProps } from "@/types/mui-types";
 import { useKeyboardScroll } from "@/hooks/user/useKeyboardScroll";
-import { regexObject } from "@/constants/regex";
-import { toastify } from "@/utils/toast";
+import { regexObject } from "@/constants/regex-data";
 
 export default function MuiInput(props: MuiInputProps) {
   const {
@@ -57,7 +56,7 @@ export default function MuiInput(props: MuiInputProps) {
 
     if (typeof type !== "string") return;
 
-    const validator = regexObject[type];
+    const validator = regexObject[type as keyof typeof regexObject];
 
     if (!validator) return;
 
