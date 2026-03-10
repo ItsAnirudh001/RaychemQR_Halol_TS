@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { toastify } from "./toast";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { PickslipItem } from "@/types/pickslip-type";
-import { regexMod } from "@/constants/regex";
+import { regexMod } from "@/constants/regex-data";
 
 export function handleInputScroll() {
   const active = document.activeElement as HTMLElement | null;
@@ -12,27 +12,6 @@ export function handleInputScroll() {
     behavior: "smooth",
     block: "nearest",
   });
-}
-
-export function getStoredUser() {
-  if (typeof sessionStorage === "undefined") return;
-
-  const user = JSON.parse(sessionStorage.getItem("user")!);
-  return user || {};
-}
-
-export function getStoredScanSessionID() {
-  if (typeof sessionStorage === "undefined") return;
-
-  const session_id = Number(sessionStorage.getItem("scan_session_id"));
-  return session_id;
-}
-
-export function getStoredPickslip() {
-  if (typeof sessionStorage === "undefined") return;
-
-  const pickslip = JSON.parse(sessionStorage.getItem("pickslip")!);
-  return pickslip;
 }
 
 export function handleFileDownload(file: File, filename: string) {
@@ -115,21 +94,21 @@ export function smallHeight() {
   return height <= 850;
 }
 
-export function validateInputNeeds(value: string, type: string) {
-  const validations = regexMod[type];
+export function validatedInput(value: string, type: string) {
+  const validations = regexMod[type as keyof typeof regexMod];
 
-  if (!validations) return true;
+  if (!Array.isArray(validations)) return true;
 
   const mismatches = [];
 
-  for (const valid in validations) {
+  for (const valid of validations) {
     const { name, validation } = valid;
-    if (validation.test(value)) mismatches.push(name);
+    if (!validation.test(value)) mismatches.push(name);
   }
 
   if (mismatches.length < 1) return true;
 
-  toastify("warning", `${type} must include ${mismatches.join(" ,")}`);
+  toastify("warning", `${type} must include ${mismatches.join(", ")}`);
 
   return false;
 }

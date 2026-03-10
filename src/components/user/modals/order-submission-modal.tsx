@@ -4,9 +4,8 @@ import { GetFileForDownload } from "@/api/common-utils";
 import AppModal from "@/components/material-ui/modal";
 import useAppStore from "@/store/app-store";
 import { PickslipItem } from "@/types/pickslip-type";
-import { getStoredPickslip } from "@/utils/helpers";
+import { getStoredPickslip } from "@/utils/session-utils";
 import { useRouter } from "next/navigation";
-import React from "react";
 import { FaCube } from "react-icons/fa";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
@@ -91,7 +90,9 @@ export default function OrderSubmissionModal(props: {
               <span className="text-[1.75vh]">Validated</span>
 
               <span className="text-[rgba(0,122,85,1)] text-[2vh] font-medium">
-                {Math.round(scannedItems?.length / pickslipItems?.length) * 100}
+                {Math.round(
+                  (scannedItems?.length ?? 0) / (pickslipItems?.length ?? 0),
+                ) * 100}
                 %
               </span>
             </div>

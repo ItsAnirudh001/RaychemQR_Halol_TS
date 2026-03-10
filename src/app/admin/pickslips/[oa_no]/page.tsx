@@ -3,7 +3,7 @@
 import { GetFileForDownload } from "@/api/common-utils";
 import PickslipItemsTable from "@/components/admin/tables/pickslip-items-table";
 import useAppStore from "@/store/app-store";
-import { getStoredPickslip } from "@/utils/helpers";
+import { getStoredPickslip } from "@/utils/session-utils";
 import { useRouter } from "next/navigation";
 import { FiDownload } from "react-icons/fi";
 import { IoChevronBackCircle } from "react-icons/io5";

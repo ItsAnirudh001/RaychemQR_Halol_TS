@@ -7,7 +7,8 @@ import useAppStore from "@/store/app-store";
 import { MuiInputChangeEvent } from "@/types/mui-types";
 import { ResetForm } from "@/types/user/user-types";
 import { customAxios } from "@/utils/axios";
-import { getStoredUser, isAPISuccess } from "@/utils/helpers";
+import { isAPISuccess, validatedInput } from "@/utils/helpers";
+import { getStoredUser } from "@/utils/session-utils";
 import { toastify } from "@/utils/toast";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -33,6 +34,12 @@ export default function PasswordResetPage() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    if (
+      !validatedInput(form.new_password, "password") ||
+      !validatedInput(form.confirm_password, "password")
+    )
+      return;
 
     const reset_token = sessionStorage.getItem("reset_token");
     const user = getStoredUser();

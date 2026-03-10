@@ -3,25 +3,23 @@
 import React, { useEffect } from "react";
 import AdminHeader from "./header";
 import AdminSidebar from "./sidebar";
-import { checkToken, getStoredUser } from "@/utils/helpers";
+import { checkToken } from "@/utils/helpers";
 import { Logout } from "@/api/common-utils";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import useAppStore from "@/store/app-store";
-import NotFound from "@/app/not-found";
+import { getStoredUser, userExists } from "@/utils/session-utils";
+import { preauthAdminPaths } from "@/utils/admin/admin-utils";
+import UnAuth from "../unauth";
 
 export default function AdminLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const path = usePathname();
   const { push } = useRouter();
   const { setLoading } = useAppStore();
 
-  // useEffect(() => {
-  //   if (path.startsWith("/user")) window.resizeTo(480, 800);
-  //   else window.resizeTo(1500, 600);
-  // }, [path]);
-
   useEffect(() => {
-    let interval = null;
+    let interval: NodeJS.Timeout | null = null;
 
     interval = setInterval(async () => {
       const user = getStoredUser();
@@ -29,10 +27,14 @@ export default function AdminLayout({
       if (!tokenExpired) return;
 
       await Logout(setLoading, push).then(() => {
-        clearInterval(interval);
+        if (interval) clearInterval(interval);
       });
     });
   }, []);
+
+  if(path.startsWith("/user")) return <></>;
+
+  if (!userExists() && ! preauthAdminPaths.includes(path)) return <UnAuth no_margin />;
 
   return (
     <div className="hidden lg:flex lg:flex-col w-screen overflow-x-hidden">

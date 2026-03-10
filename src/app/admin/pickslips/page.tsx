@@ -7,7 +7,7 @@ import { Pickslip } from "@/types/pickslip-type";
 import { useEffect, useState } from "react";
 
 export default function PickslipsPage() {
-  const {setLoading } = useAppStore();
+  const { setLoading } = useAppStore();
   const [pickslips, setPickslips] = useState<Pickslip[]>();
 
   async function fetchPickslips() {
@@ -18,7 +18,7 @@ export default function PickslipsPage() {
     } catch (error) {
       console.error("Error fetching pickslips", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 

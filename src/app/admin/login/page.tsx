@@ -6,13 +6,14 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import { LoginForm } from "@/types/login-form";
+import { LoginForm } from "@/types/login-types";
 import { Login } from "@/api/common-utils";
 import useAppStore from "@/store/app-store";
+import { validatedInput } from "@/utils/helpers";
 
 export default function LoginPage() {
   const { push } = useRouter();
-  const { setUser, setLoading } = useAppStore();
+  const { setLoading } = useAppStore();
 
   const [form, setForm] = useState<LoginForm>({
     username: "",
@@ -30,14 +31,16 @@ export default function LoginPage() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    await Login(setLoading, form, setUser, () => {
+
+    if (!validatedInput(form.password, "password")) return;
+
+    await Login(setLoading, form, () => {
       push("/admin/usermanagement");
     });
   }
 
   return (
     <div className="flex w-screen h-screen mt-[-10vh] overflow-hidden">
-
       <div className="flex w-full items-center justify-center">
         {/* Login Box */}
         <div className="shadowed flex flex-col bg-white w-[70%] rounded-2xl py-[3vh] px-[2.25vw] gap-[5vh]">
@@ -61,7 +64,7 @@ export default function LoginPage() {
                 label="Password"
                 type="password"
                 placeholder="Enter Password"
-                required={true}             
+                required={true}
                 min={8}
                 onChange={(e: MuiInputChangeEvent) => updateForm("password", e)}
               />

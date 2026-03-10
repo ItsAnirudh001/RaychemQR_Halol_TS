@@ -10,7 +10,6 @@ import { customAxios } from "@/utils/axios";
 import { isAPISuccess } from "@/utils/helpers";
 import { toastify } from "@/utils/toast";
 import { useRouter } from "next/navigation";
-
 import React, { useState } from "react";
 
 export default function EmailVerifyPage() {

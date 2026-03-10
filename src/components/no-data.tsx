@@ -7,14 +7,12 @@ import useAppStore from "@/store/app-store";
 export default function NoData() {
   const { loading } = useAppStore();
 
+  if (loading) return <></>;
+
   return (
-    <>
-      {!loading && (
-        <div className="flex flex-col items-center justify-center">
-          <LottieView animation={noDataAnimation} />
-          <h1 className="text-[1.5rem] font-bold">No Data Available</h1>
-        </div>
-      )}
-    </>
+    <div className="flex flex-col items-center justify-center">
+      <LottieView animation={noDataAnimation} />
+      <h1 className="text-[1.5rem] font-bold">No Data Available</h1>
+    </div>
   );
 }

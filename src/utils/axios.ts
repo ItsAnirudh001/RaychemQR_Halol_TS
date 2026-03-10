@@ -1,9 +1,9 @@
 import axios from "axios";
-import { getStoredUser } from "./helpers";
+import { getStoredUser } from "./session-utils";
 
 const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 
-console.log("Base", baseURL);
+// console.log("Base", baseURL);
 
 export const customAxios = axios.create({
   baseURL,

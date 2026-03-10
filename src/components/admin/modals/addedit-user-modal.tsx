@@ -2,8 +2,9 @@ import MuiInput from "@/components/material-ui/input";
 import AppModal from "@/components/material-ui/modal";
 import MuiSingleSelect from "@/components/material-ui/single-select";
 import { rolesData } from "@/constants/roles-data";
-import { SelectEvent, MuiInputChangeEvent } from "@/types/mui-types";
+import { MuiInputChangeEvent } from "@/types/mui-types";
 import { UserTableItem } from "@/types/table-types";
+import { SelectChangeEvent } from "@mui/material";
 import { IoMdClose } from "react-icons/io";
 
 export default function AddEditUserModal(props: {
@@ -11,7 +12,7 @@ export default function AddEditUserModal(props: {
   open: boolean;
   onClose: () => void;
   selectedUser: UserTableItem;
-  updateUser: (key: string, e: MuiInputChangeEvent | SelectEvent) => void;
+  updateUser: (key: string, e: MuiInputChangeEvent | SelectChangeEvent<string | number>) => void;
   postUserSubmit: () => Promise<void>;
 }) {
   const { title, selectedUser, updateUser, onClose, postUserSubmit } = props;

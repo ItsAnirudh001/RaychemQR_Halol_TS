@@ -19,8 +19,6 @@ import { customAxios } from "@/utils/axios";
 import { usermodroutes, useroutes } from "@/api/user/user-routes";
 import {
   dynamicClass,
-  getStoredPickslip,
-  getStoredScanSessionID,
   isAPISuccess,
   smallHeight,
 } from "@/utils/helpers";
@@ -28,6 +26,7 @@ import { toastify } from "@/utils/toast";
 import useAppStore from "@/store/app-store";
 import { apiErrorPrompter, GetPickslipItems } from "@/api/common-utils";
 import useAutoCall from "@/hooks/useAutoCall";
+import { getStoredPickslip, getStoredScanSessionID } from "@/utils/session-utils";
 
 export default function PickslipItemsScreen() {
   const { back, push } = useRouter();

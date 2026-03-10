@@ -5,7 +5,6 @@ import { PickslipItem } from "@/types/pickslip-type";
 import { customAxios } from "@/utils/axios";
 import { isAPISuccess } from "@/utils/helpers";
 import { toastify } from "@/utils/toast";
-import React from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 export default function ItemDeletionModal(props: {
