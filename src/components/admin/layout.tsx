@@ -37,7 +37,7 @@ export default function AdminLayout({
   if (!userExists() && ! preauthAdminPaths.includes(path)) return <UnAuth no_margin />;
 
   return (
-    <div className="hidden lg:flex lg:flex-col w-screen overflow-x-hidden">
+    <div className="hidden lg:flex lg:flex-col w-screen overflow-x-hidden" suppressHydrationWarning>
       <AdminHeader />
 
       <div className="flex w-full mt-[10vh]">

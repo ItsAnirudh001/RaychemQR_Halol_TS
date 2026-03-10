@@ -74,6 +74,7 @@ export default function MuiInput(props: MuiInputProps) {
   }
 
   return (
+   <div suppressHydrationWarning>
     <FormControl fullWidth>
       <TextField
         sx={input}
@@ -107,5 +108,6 @@ export default function MuiInput(props: MuiInputProps) {
         }}
       />
     </FormControl>
+    </div>
   );
 }
