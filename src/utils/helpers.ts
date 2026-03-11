@@ -1,8 +1,9 @@
 import dayjs from "dayjs";
 import { toastify } from "./toast";
 import { jwtDecode, JwtPayload } from "jwt-decode";
-import { PickslipItem } from "@/types/pickslip-type";
+import { Pickslip, PickslipItem } from "@/types/pickslip-type";
 import { regexMod } from "@/constants/regex-data";
+import { UserLogsItem, UserTableItem } from "@/types/table-types";
 
 export function handleInputScroll() {
   const active = document.activeElement as HTMLElement | null;
@@ -111,4 +112,15 @@ export function validatedInput(value: string, type: string) {
   toastify("warning", `${type} must include ${mismatches.join(", ")}`);
 
   return false;
+}
+
+export function validData(
+  data:
+    | UserTableItem[]
+    | UserLogsItem[]
+    | Pickslip[]
+    | PickslipItem[]
+    | undefined,
+) {
+  return Array.isArray(data) && data.length > 0;
 }

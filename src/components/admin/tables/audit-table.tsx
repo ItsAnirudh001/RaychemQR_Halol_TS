@@ -11,39 +11,18 @@ import {
 } from "@mui/material";
 import { tableData } from "@/constants/admin/mocks/audit-table-mock";
 import { auditTableHeaders } from "@/constants/admin/table-headers";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { UserLogsItem } from "@/types/table-types";
-import { customAxios } from "@/utils/axios";
-import { adminroutes } from "@/api/admin/admin-routes";
-import { isAPISuccess } from "@/utils/helpers";
+import MuiPagination from "@/components/material-ui/pagination";
+import { rowsPerPage } from "@/constants/admin/paginate-data";
 import dayjs from "dayjs";
-import useAppStore from "@/store/app-store";
 
-export default function AuditTable() {
-  const [userLogs, setUserLogs] = useState<UserLogsItem[]>();
-  const { setLoading } = useAppStore();
+export default function AuditTable(props: { userLogs: UserLogsItem[] | undefined }) {
+  const { userLogs } = props;
+  const [page, setPage] = useState(0);
 
-  async function fetchUserLogs() {
-    setLoading(true);
-
-    try {
-      const { data } = await customAxios.get(adminroutes.userLogs);
-
-      const success = isAPISuccess(data.status);
-
-      if (!success) return;
-
-      setUserLogs(data?.data);
-    } catch (error) {
-      console.error("Error in userLogs", error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    fetchUserLogs();
-  }, []);
+  const topRowIndex = page * rowsPerPage;
+  const nthRowIndex = page * rowsPerPage + rowsPerPage;
 
   return (
     <TableContainer component={Paper} className="table-container">
@@ -63,7 +42,7 @@ export default function AuditTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {userLogs?.map((data, i) => (
+          {userLogs?.slice(topRowIndex, nthRowIndex)?.map((data, i) => (
             <TableRow className="table-row-data" key={i + 1}>
               <TableCell className="tablecell">{data.slno}</TableCell>
 
@@ -86,6 +65,16 @@ export default function AuditTable() {
           ))}
         </TableBody>
       </Table>
+
+      {userLogs && (
+        <MuiPagination
+          data={userLogs}
+          page={page}
+          setPage={setPage}
+          top={topRowIndex}
+          bottom={nthRowIndex}
+        />
+      )}
     </TableContainer>
   );
 }

@@ -1,5 +1,5 @@
 import { SelectChangeEvent } from "@mui/material";
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
 export type SelectEvent = (
   event: SelectChangeEvent<string | number>,
@@ -41,4 +41,12 @@ export interface MuiInputProps {
 export interface SelectItemType {
   label: string;
   value: string;
+}
+
+export interface PaginationProps {
+  data: object[];
+  page: number;
+  setPage: Dispatch<SetStateAction<number>>;
+  top: number;
+  bottom: number;
 }

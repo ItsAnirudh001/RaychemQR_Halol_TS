@@ -11,35 +11,18 @@ import {
 } from "@mui/material";
 import { PickslipItem } from "@/types/pickslip-type";
 import { pickslipItemsTableHeaders } from "@/constants/admin/table-headers";
-import { useEffect, useState } from "react";
-import useAppStore from "@/store/app-store";
-import { GetPickslipItems } from "@/api/common-utils";
-import { getStoredPickslip } from "@/utils/session-utils";
+import { useState } from "react";
+import MuiPagination from "@/components/material-ui/pagination";
+import { rowsPerPage } from "@/constants/admin/paginate-data";
 
-export default function PickslipItemsTable() {
-  const { setLoading } = useAppStore();
+export default function PickslipItemsTable(props: {
+  pickslipItems: PickslipItem[] | undefined;
+}) {
+  const { pickslipItems } = props;
+  const [page, setPage] = useState(0);
 
-  const pickslip = getStoredPickslip();
-
-  const [pickslipItems, setPickslipItems] = useState<PickslipItem[]>();
-
-  async function fetchPickslipItems() {
-    setLoading(true);
-    const { pickslip_id } = pickslip;
-
-    try {
-      const items = await GetPickslipItems(pickslip_id, setLoading);
-      setPickslipItems(items);
-    } catch (error) {
-      console.error("Error in fetchPickslipItems", error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    fetchPickslipItems();
-  }, []);
+  const topRowIndex = page * rowsPerPage;
+  const nthRowIndex = page * rowsPerPage + rowsPerPage;
 
   return (
     <TableContainer component={Paper} className="table-container">
@@ -59,23 +42,37 @@ export default function PickslipItemsTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {pickslipItems?.map((data: PickslipItem) => (
-            <TableRow className="table-row-data" key={data.item_id}>
-              <TableCell className="tablecell">{data.item_name}</TableCell>
+          {pickslipItems
+            ?.slice(topRowIndex, nthRowIndex)
+            ?.map((data: PickslipItem) => (
+              <TableRow className="table-row-data" key={data.item_id}>
+                <TableCell className="tablecell">{data.item_name}</TableCell>
 
-              <TableCell className="tablecell">{data.item_code}</TableCell>
+                <TableCell className="tablecell">{data.item_code}</TableCell>
 
-              <TableCell className="tablecell">{data.requested_qty}</TableCell>
+                <TableCell className="tablecell">
+                  {data.requested_qty}
+                </TableCell>
 
-              <TableCell className="tablecell">{data.serial_no}</TableCell>
+                <TableCell className="tablecell">{data.serial_no}</TableCell>
 
-              <TableCell className="tablecell">{data.net_weight}</TableCell>
+                <TableCell className="tablecell">{data.net_weight}</TableCell>
 
-              <TableCell className="tablecell">{data.gross_weight}</TableCell>
-            </TableRow>
-          ))}
+                <TableCell className="tablecell">{data.gross_weight}</TableCell>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
+
+      {pickslipItems && (
+        <MuiPagination
+          data={pickslipItems}
+          page={page}
+          setPage={setPage}
+          top={topRowIndex}
+          bottom={nthRowIndex}
+        />
+      )}
     </TableContainer>
   );
 }

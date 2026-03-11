@@ -17,7 +17,7 @@ export default function MobileLayout({
     return <UnAuth no_margin />;
 
   return (
-    <div className="lg:hidden" suppressHydrationWarning>
+    <div className="lg:hidden" suppressHydrationWarning={true}>
       <div className="lg:hidden flex flex-col w-screen overflow-x-hidden">
         {children}
       </div>

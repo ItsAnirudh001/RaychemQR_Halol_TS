@@ -1,3 +1,5 @@
+"use client";
+
 import MuiInput from "@/components/material-ui/input";
 import AppModal from "@/components/material-ui/modal";
 import MuiSingleSelect from "@/components/material-ui/single-select";

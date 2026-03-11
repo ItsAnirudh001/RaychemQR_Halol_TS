@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Paper,
   Table,
@@ -12,6 +14,9 @@ import { Pickslip } from "@/types/pickslip-type";
 import { useRouter } from "next/navigation";
 import useAppStore from "@/store/app-store";
 import { pickslipTableHeaders } from "@/constants/admin/table-headers";
+import MuiPagination from "@/components/material-ui/pagination";
+import { rowsPerPage } from "@/constants/admin/paginate-data";
+import { useState } from "react";
 
 export default function PickslipTable(props: {
   pickslips: Pickslip[] | undefined;
@@ -19,6 +24,10 @@ export default function PickslipTable(props: {
   const { pickslips } = props;
   const { push } = useRouter();
   const { setLoading } = useAppStore();
+  const [page, setPage] = useState(0);
+
+  const topRowIndex = page * rowsPerPage;
+  const nthRowIndex = page * rowsPerPage + rowsPerPage;
 
   function handleOrderClick(data: Pickslip) {
     sessionStorage.setItem("pickslip", JSON.stringify(data));
@@ -50,7 +59,7 @@ export default function PickslipTable(props: {
           </TableRow>
         </TableHead>
         <TableBody>
-          {pickslips?.map((data, i) => (
+          {pickslips?.slice(topRowIndex, nthRowIndex)?.map((data, i) => (
             <TableRow
               className="table-row-data"
               key={i + 1}
@@ -81,6 +90,16 @@ export default function PickslipTable(props: {
           ))}
         </TableBody>
       </Table>
+
+      {pickslips && (
+        <MuiPagination
+          data={pickslips}
+          page={page}
+          setPage={setPage}
+          top={topRowIndex}
+          bottom={nthRowIndex}
+        />
+      )}
     </TableContainer>
   );
 }

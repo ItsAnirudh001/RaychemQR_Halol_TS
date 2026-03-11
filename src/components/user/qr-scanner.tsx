@@ -1,3 +1,5 @@
+"use client";
+
 import { QRScannerProps } from "@/types/scanner-types";
 import { Scanner } from "@yudiel/react-qr-scanner";
 

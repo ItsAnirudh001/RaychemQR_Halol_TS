@@ -1,3 +1,5 @@
+"use client";
+
 import { handleInputScroll } from "@/utils/helpers";
 import { useEffect } from "react";
 import { isMobile } from "react-device-detect";

@@ -5,23 +5,28 @@ import AddEditUserModal from "@/components/admin/modals/addedit-user-modal";
 import UsersTable from "@/components/admin/tables/users-table";
 import { UserTableItem } from "@/types/table-types";
 import { customAxios } from "@/utils/axios";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import useAppStore from "@/store/app-store";
 import { toastify } from "@/utils/toast";
 import { MuiInputChangeEvent } from "@/types/mui-types";
 import { apiErrorPrompter } from "@/api/common-utils";
-import { isAPISuccess, validatedInput } from "@/utils/helpers";
+import { isAPISuccess, validatedInput, validData } from "@/utils/helpers";
 import { SelectChangeEvent } from "@mui/material";
 import { userTableObject } from "@/constants/admin/admin-constants";
+import NoData from "@/components/no-data";
 
 export default function UserManagementPage() {
-  const { setLoading } = useAppStore();
+  const { loading, setLoading } = useAppStore();
 
   const [userModal, setUserModal] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] =
     useState<UserTableItem>(userTableObject);
   const [usersData, setUsersData] = useState<UserTableItem[]>([]);
+
+  useLayoutEffect(() => {
+    setLoading(true);
+  }, []);
 
   function updateUser(
     key: string,
@@ -114,6 +119,8 @@ export default function UserManagementPage() {
 
   const tableProps = { usersData, handleRefresh, selectedUser, showModal };
 
+  if (loading) return <></>;
+
   return (
     <div className="page gap-[3vh]">
       <button
@@ -124,7 +131,7 @@ export default function UserManagementPage() {
         <span>Add Users</span>
       </button>
 
-      <UsersTable {...tableProps} />
+      {validData(usersData) ? <UsersTable {...tableProps} /> : <NoData />}
 
       <AddEditUserModal {...modalProps} />
     </div>

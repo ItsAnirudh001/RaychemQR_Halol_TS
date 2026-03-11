@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Paper,
   Table,
@@ -13,6 +15,9 @@ import { adminroutes } from "@/api/admin/admin-routes";
 import { toastify } from "@/utils/toast";
 import useAppStore from "@/store/app-store";
 import { userTableHeaders } from "@/constants/admin/table-headers";
+import MuiPagination from "@/components/material-ui/pagination";
+import { useState } from "react";
+import { rowsPerPage } from "@/constants/admin/paginate-data";
 
 export default function UsersTable(props: {
   usersData: UserTableItem[];
@@ -21,12 +26,16 @@ export default function UsersTable(props: {
 }) {
   const { setLoading } = useAppStore();
   const { usersData, showModal } = props;
+  const [page, setPage] = useState(0);
 
-  async function postDeleteUser(data:UserTableItem) {
+  const topRowIndex = page * rowsPerPage;
+  const nthRowIndex = page * rowsPerPage + rowsPerPage;
+
+  async function postDeleteUser(data: UserTableItem) {
     setLoading(true);
     const { user_id } = data;
 
-    console.log("user_id",data);
+    console.log("user_id", data);
 
     try {
       const { data, status } = await customAxios.delete(
@@ -35,7 +44,7 @@ export default function UsersTable(props: {
 
       const success = status == 200;
 
-      if(!success) return;
+      if (!success) return;
       toastify("success", data?.message);
     } catch (error) {
       console.error("Error in deleteUser", error);
@@ -62,7 +71,7 @@ export default function UsersTable(props: {
           </TableRow>
         </TableHead>
         <TableBody>
-          {usersData?.map((data, i) => (
+          {usersData?.slice(topRowIndex, nthRowIndex)?.map((data, i) => (
             <TableRow className="table-row-data" key={i + 1}>
               <TableCell className="tablecell">{data.user_id}</TableCell>
 
@@ -104,6 +113,14 @@ export default function UsersTable(props: {
           ))}
         </TableBody>
       </Table>
+
+      <MuiPagination
+        data={usersData}
+        page={page}
+        setPage={setPage}
+        top={topRowIndex}
+        bottom={nthRowIndex}
+      />
     </TableContainer>
   );
 }
