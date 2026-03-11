@@ -32,12 +32,16 @@ export default function AdminLayout({
     });
   }, []);
 
-  if(path.startsWith("/user")) return <></>;
+  if (path.startsWith("/user")) return <></>;
 
-  if (!userExists() && ! preauthAdminPaths.includes(path)) return <UnAuth no_margin />;
+  if (!userExists() && !preauthAdminPaths.includes(path))
+    return <UnAuth no_margin />;
 
   return (
-    <div className="hidden lg:flex lg:flex-col w-screen overflow-x-hidden" suppressHydrationWarning>
+    <div
+      className="hidden lg:flex lg:flex-col w-screen overflow-x-hidden"
+      suppressHydrationWarning={true}
+    >
       <AdminHeader />
 
       <div className="flex w-full mt-[10vh]">

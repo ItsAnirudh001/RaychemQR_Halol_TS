@@ -1,3 +1,5 @@
+"use client";
+
 export default function UnAuth(props: { no_margin?: boolean }) {
   const { no_margin } = props;
 

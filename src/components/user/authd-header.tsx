@@ -10,14 +10,16 @@ import { useRouter } from "next/navigation";
 import { Logout } from "@/api/common-utils";
 import useAppStore from "@/store/app-store";
 import useAutoCall from "@/hooks/useAutoCall";
+import { IoRefreshCircleSharp } from "react-icons/io5";
 
 export default function UserAuthHeader({
   children,
   setSearchVal,
+  handleRefresh,
 }: {
   children?: React.ReactNode;
-  searchable?: boolean;
   setSearchVal?: React.Dispatch<React.SetStateAction<string>>;
+  handleRefresh?: () => Promise<void>;
 }) {
   const { push } = useRouter();
   const { setLoading } = useAppStore();
@@ -53,7 +55,13 @@ export default function UserAuthHeader({
     >
       <div className="flex gap-2 items-center">{children}</div>
 
-      <div className="flex gap-3 items-center">
+      <div className="flex gap-[1.5vw] items-center">
+        {Boolean(handleRefresh) && (
+          <button className="animated2" onClick={handleRefresh}>
+            <IoRefreshCircleSharp className="text-blue-800 text-[2.2rem]" />
+          </button>
+        )}
+
         {Boolean(setSearchVal) && (
           <div className="flex bg-[rgba(237,243,247,1)] rounded-3xl p-2 placeholder:text-gray-600 gap-2 items-center border border-gray-300 text-[0.75rem]!">
             <FaSearch />
@@ -97,7 +105,10 @@ export default function UserAuthHeader({
             <MdLock className="text-[1.25rem]" />
             Change Password
           </MenuItem>
-          <MenuItem className="animated2 mui-menuitem-mobile" onClick={postLogout}>
+          <MenuItem
+            className="animated2 mui-menuitem-mobile"
+            onClick={postLogout}
+          >
             <RiLogoutCircleLine className="text-[1.1rem]" />
             Logout
           </MenuItem>

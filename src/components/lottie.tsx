@@ -8,6 +8,6 @@ export default function LottieView(props: { animation: object }) {
   const { animation } = props;
 
   return (
-    <Lottie animationData={animation} autoplay loop className="w-[80%] h-full self-center" />
+    <Lottie animationData={animation} autoplay loop className="w-[80%] lg:w-[40%] h-full self-center" />
   );
 }

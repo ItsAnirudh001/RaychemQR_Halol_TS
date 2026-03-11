@@ -7,7 +7,10 @@ import useAppStore from "@/store/app-store";
 import { ScannedItem } from "@/types/pickslip-type";
 import { customAxios } from "@/utils/axios";
 import { isAPISuccess } from "@/utils/helpers";
-import { getStoredScanItem, getStoredScanSessionID } from "@/utils/session-utils";
+import {
+  getStoredScanItem,
+  getStoredScanSessionID,
+} from "@/utils/session-utils";
 import { toastify } from "@/utils/toast";
 import { IDetectedBarcode } from "@yudiel/react-qr-scanner";
 import { useRouter } from "next/navigation";
@@ -75,7 +78,7 @@ export default function ItemScanPage() {
     const scannedItem: ScannedItem = {
       pcn: multiLot ? scanned[8] : scanned[6],
       lot_no: multiLot ? scanned[7] : scanned[5],
-      serial_no: multiLot ? scanned[4] : scanned[2],
+      serial_no: multiLot ? scanned[2] + scanned[3] + scanned[4] : scanned[2],
       box_type: multiLot ? scanned[9] : scanned[7],
       weight: multiLot ? scanned[5] : scanned[3],
     };

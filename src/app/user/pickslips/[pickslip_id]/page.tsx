@@ -4,7 +4,7 @@ import UserAuthHeader from "@/components/user/authd-header";
 import { FaCube, FaRegClock } from "react-icons/fa";
 import { FaRegCircleCheck, FaHashtag } from "react-icons/fa6";
 import { TbArrowsSort } from "react-icons/tb";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { TbReload } from "react-icons/tb";
 import { IoChevronBackCircle } from "react-icons/io5";
 import { useRouter } from "next/navigation";
@@ -17,32 +17,20 @@ import { PickslipItem } from "@/types/pickslip-type";
 import NoData from "@/components/no-data";
 import { customAxios } from "@/utils/axios";
 import { usermodroutes, useroutes } from "@/api/user/user-routes";
-import {
-  dynamicClass,
-  isAPISuccess,
-  smallHeight,
-} from "@/utils/helpers";
+import { dynamicClass, isAPISuccess, smallHeight } from "@/utils/helpers";
 import { toastify } from "@/utils/toast";
 import useAppStore from "@/store/app-store";
 import { apiErrorPrompter, GetPickslipItems } from "@/api/common-utils";
 import useAutoCall from "@/hooks/useAutoCall";
-import { getStoredPickslip, getStoredScanSessionID } from "@/utils/session-utils";
+import {
+  getStoredPickslip,
+  getStoredScanSessionID,
+} from "@/utils/session-utils";
 
 export default function PickslipItemsScreen() {
   const { back, push } = useRouter();
   const { setLoading } = useAppStore();
   const pickslip = getStoredPickslip();
-
-  // console.log("pickslip", pickslip);
-
-  const created = pickslip?.status === "created";
-  const submitted = pickslip?.status === "submitted";
-
-  const { oa_no, pickslip_id } = pickslip;
-
-  // const mockItems = pickslipsDataMock.find(
-  //   (data) => data.pickslip_id == Number(pickslip_id),
-  // );
 
   const [sortKey, setSortKey] = useState<string>("");
   const [pickslipItems, setPickslipItems] = useState<PickslipItem[]>();
@@ -53,6 +41,15 @@ export default function PickslipItemsScreen() {
   const [viewDashboard, setViewDashboard] = useState<boolean>(false);
 
   const [selectedItem, setSelectedItem] = useState<PickslipItem>();
+
+  useLayoutEffect(() => {
+    setLoading(true);
+  }, []);
+
+  const created = pickslip?.status === "created";
+  const submitted = pickslip?.status === "submitted";
+
+  const { oa_no, pickslip_id } = pickslip;
 
   const scannedItems = pickslipItems?.filter(
     (item: PickslipItem) => item.is_scanned == true,
@@ -122,8 +119,6 @@ export default function PickslipItemsScreen() {
 
     return searched;
   }
-
-  const headerProps = { setSearchVal, searchable: true };
 
   const iconClass = "text-blue-600";
 
@@ -205,12 +200,15 @@ export default function PickslipItemsScreen() {
   }
 
   async function postAbortSession() {
+    const session_id = getStoredScanSessionID();
+    if (!session_id) return;
+
     if (!created) return directToPickslips();
 
     setLoading(true);
     try {
       const { data } = await customAxios.post(useroutes.abortScanSession, {
-        session_id: getStoredScanSessionID(),
+        session_id,
       });
 
       const { status, message } = data;
@@ -262,6 +260,15 @@ export default function PickslipItemsScreen() {
       setLoading(false);
     }
   }
+
+  async function handleRefresh() {
+    setSortKey("");
+    setSearchVal("");
+    setStatusFilter("");
+    await fetchPickslipItems();
+  }
+
+  const headerProps = { setSearchVal, handleRefresh };
 
   const deleteModalProps = {
     viewDelete,

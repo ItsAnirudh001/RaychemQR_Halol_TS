@@ -4,7 +4,7 @@ import UserAuthHeader from "@/components/user/authd-header";
 import { FaCube, FaRegClock } from "react-icons/fa";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import { TbArrowsSort } from "react-icons/tb";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { pickslipsDataMock } from "@/constants/user/mocks/picklips-mock";
 import { useRouter } from "next/navigation";
 import { Pickslip } from "@/types/pickslip-type";
@@ -34,6 +34,10 @@ export default function PickslipsScreen() {
   const [statusFilter, setStatusFilter] = useState<string>("");
 
   const [searchVal, setSearchVal] = useState<string>("");
+
+  useLayoutEffect(() => {
+    setLoading(true);
+  }, []);
 
   const validData = Array.isArray(pickslips) && pickslips.length > 1;
 
@@ -73,13 +77,9 @@ export default function PickslipsScreen() {
     return statusFilter ? filteredData : data;
   }
 
-  function handleReset() {
-    window.location.reload();
-  }
-
   function handleSort() {
     setSortKey((prev) => {
-      return prev === "desc" ? "asc" : "desc";
+      return prev === "asc" ? "desc" : "asc";
     });
   }
 
@@ -143,7 +143,14 @@ export default function PickslipsScreen() {
     }
   }
 
-  const headerProps = { setSearchVal, searchable: true };
+  async function handleRefresh() {
+    setSortKey("");
+    setSearchVal("");
+    setStatusFilter("");
+    await fetchPickslips();
+  }
+
+  const headerProps = { setSearchVal, handleRefresh };
 
   return (
     <>

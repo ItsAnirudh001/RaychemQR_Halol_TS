@@ -1,3 +1,5 @@
+"use client";
+
 import { AppState, AppStore } from "@/types/store-types";
 import { create } from "zustand";
 

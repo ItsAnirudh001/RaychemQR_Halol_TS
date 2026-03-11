@@ -1,3 +1,5 @@
+"use client";
+
 import { usermodroutes } from "@/api/user/user-routes";
 import AppModal from "@/components/material-ui/modal";
 import useAppStore from "@/store/app-store";

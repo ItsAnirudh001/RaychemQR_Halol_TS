@@ -39,9 +39,12 @@ export default function AdminHeader() {
 
   if (path.includes("login") || path.startsWith("/user")) return <></>;
 
+  const user = getStoredUser();
+
   return (
     <div className="fixed top-0 left-0 w-full z-50 flex flex-row py-4 px-8 items-center gap-4 bg-header-bg h-[10vh] justify-between">
       <Image
+        suppressHydrationWarning={true}
         src="/org_logo.png"
         alt="Org logo"
         width={140}
@@ -51,8 +54,8 @@ export default function AdminHeader() {
 
       <div className="flex gap-[0.85vw]">
         <div className="flex flex-col text-end text-[0.8rem]">
-          <span className="font-bold">{getStoredUser()?.full_name}</span>
-          <span className="font-medium">{getStoredUser()?.username}</span>
+          <span className="font-bold">{user?.full_name}</span>
+          <span className="font-medium">{user?.username}</span>
         </div>
 
         <button onClick={showMenu} className="animated">

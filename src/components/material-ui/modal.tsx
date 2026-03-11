@@ -1,3 +1,5 @@
+"use client";
+
 import { JSXElementConstructor, ReactElement } from "react";
 import { Modal } from "@mui/material";
 

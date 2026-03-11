@@ -1,3 +1,5 @@
+"use client";
+
 import { SelectProps } from "@/types/mui-types";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { FaChevronDown } from "react-icons/fa";

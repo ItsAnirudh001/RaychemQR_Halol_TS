@@ -1,12 +1,18 @@
-"use client"
+"use client";
 
-import { useEffect } from 'react'
+import { useEffect } from "react";
 
-export default function useAutoCall(callback:() => Promise<void>) {
+export default function useUnload(callback: () => Promise<void>) {
+  function handleBeforeUnload(e: BeforeUnloadEvent) {
+    e.preventDefault();
+  }
+
   useEffect(() => {
-    window.addEventListener("beforeunload", callback);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("unload", callback);
     return () => {
-      window.removeEventListener("beforeunload", callback);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("unload", callback);
     };
   }, []);
-}
+};

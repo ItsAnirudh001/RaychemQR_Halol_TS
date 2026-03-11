@@ -63,9 +63,8 @@ export default function MuiInput(props: MuiInputProps) {
     if (onChange && (validator.test(value) || !value)) onChange(e);
   }
 
-  function handleInputBlur(
-    // e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>
-  ) {
+  function handleInputBlur() {
+  // e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>
     // const { value } = e.target;
     setFocused(false);
 
@@ -74,7 +73,6 @@ export default function MuiInput(props: MuiInputProps) {
   }
 
   return (
-   <div suppressHydrationWarning>
     <FormControl fullWidth>
       <TextField
         sx={input}
@@ -108,6 +106,5 @@ export default function MuiInput(props: MuiInputProps) {
         }}
       />
     </FormControl>
-    </div>
   );
 }
