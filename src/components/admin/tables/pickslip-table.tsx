@@ -12,37 +12,31 @@ import {
 import dayjs from "dayjs";
 import { Pickslip } from "@/types/pickslip-type";
 import { useRouter } from "next/navigation";
-import useAppStore from "@/store/app-store";
 import { pickslipTableHeaders } from "@/constants/admin/table-headers";
 import MuiPagination from "@/components/material-ui/pagination";
 import { rowsPerPage } from "@/constants/admin/paginate-data";
 import { useState } from "react";
+import { tableIndices } from "@/utils/helpers";
 
 export default function PickslipTable(props: {
   pickslips: Pickslip[] | undefined;
 }) {
   const { pickslips } = props;
   const { push } = useRouter();
-  const { setLoading } = useAppStore();
+
   const [page, setPage] = useState(0);
 
-  const topRowIndex = page * rowsPerPage;
-  const nthRowIndex = page * rowsPerPage + rowsPerPage;
+  const { topRowIndex, nthRowIndex } = tableIndices(page, rowsPerPage);
 
   function handleOrderClick(data: Pickslip) {
-    sessionStorage.setItem("pickslip", JSON.stringify(data));
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      push(`/admin/pickslips/${data.oa_no}`);
-    }, 400);
+    new Promise((resolve) => {
+      sessionStorage.setItem("pickslip", JSON.stringify(data));
+      resolve(() => {});
+    }).then(() => push(`/admin/pickslips/${data.oa_no}`));
   }
 
   return (
-    <TableContainer
-      component={Paper}
-      className="table-container"
-    >
+    <TableContainer component={Paper} className="table-container">
       <Table className="w-full bg-transparent! p-2!">
         <TableHead>
           <TableRow className="bg-white border-b! border-gray-800!">
@@ -60,10 +54,7 @@ export default function PickslipTable(props: {
         </TableHead>
         <TableBody>
           {pickslips?.slice(topRowIndex, nthRowIndex)?.map((data, i) => (
-            <TableRow
-              className="table-row-data"
-              key={i + 1}
-            >
+            <TableRow className="table-row-data" key={i + 1}>
               <TableCell
                 className="tablecell text-[rgba(1,127,245,1)]! font-medium! underline! cursor-pointer! animated"
                 onClick={() => handleOrderClick(data)}
@@ -96,8 +87,6 @@ export default function PickslipTable(props: {
           data={pickslips}
           page={page}
           setPage={setPage}
-          top={topRowIndex}
-          bottom={nthRowIndex}
         />
       )}
     </TableContainer>

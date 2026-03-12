@@ -14,6 +14,7 @@ import { pickslipItemsTableHeaders } from "@/constants/admin/table-headers";
 import { useState } from "react";
 import MuiPagination from "@/components/material-ui/pagination";
 import { rowsPerPage } from "@/constants/admin/paginate-data";
+import { tableIndices } from "@/utils/helpers";
 
 export default function PickslipItemsTable(props: {
   pickslipItems: PickslipItem[] | undefined;
@@ -21,8 +22,7 @@ export default function PickslipItemsTable(props: {
   const { pickslipItems } = props;
   const [page, setPage] = useState(0);
 
-  const topRowIndex = page * rowsPerPage;
-  const nthRowIndex = page * rowsPerPage + rowsPerPage;
+  const { topRowIndex, nthRowIndex } = tableIndices(page, rowsPerPage);
 
   return (
     <TableContainer component={Paper} className="table-container">
@@ -54,7 +54,11 @@ export default function PickslipItemsTable(props: {
                   {data.requested_qty}
                 </TableCell>
 
-                <TableCell className="tablecell">{data.serial_no}</TableCell>
+                <TableCell className="tablecell">
+                  {Array.isArray(data.serial_no)
+                    ? data.serial_no.join(", ")
+                    : ""}
+                </TableCell>
 
                 <TableCell className="tablecell">{data.net_weight}</TableCell>
 
@@ -65,13 +69,7 @@ export default function PickslipItemsTable(props: {
       </Table>
 
       {pickslipItems && (
-        <MuiPagination
-          data={pickslipItems}
-          page={page}
-          setPage={setPage}
-          top={topRowIndex}
-          bottom={nthRowIndex}
-        />
+        <MuiPagination data={pickslipItems} page={page} setPage={setPage} />
       )}
     </TableContainer>
   );

@@ -58,7 +58,7 @@ export default function UserAuthHeader({
       <div className="flex gap-[1.5vw] items-center">
         {Boolean(handleRefresh) && (
           <button className="animated2" onClick={handleRefresh}>
-            <IoRefreshCircleSharp className="text-blue-800 text-[2.2rem]" />
+            <IoRefreshCircleSharp className="text-primary-heading text-[2.2rem]" />
           </button>
         )}
 
@@ -75,10 +75,7 @@ export default function UserAuthHeader({
         )}
 
         <button className="animated2" onClick={showMenu}>
-          <PiUserCircleFill
-            color="rgba(108, 107, 110, 1)"
-            className="text-[2.4rem]"
-          />
+          <PiUserCircleFill color="rgb(9, 99, 126)" className="text-[2.4rem]" />
         </button>
 
         <Menu

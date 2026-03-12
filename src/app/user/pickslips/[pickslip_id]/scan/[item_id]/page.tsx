@@ -24,8 +24,14 @@ export default function ItemScanPage() {
 
     const item = getStoredScanItem();
 
-    const { item_id } = item;
+    const { item_id, requested_qty } = item;
     const { serial_no, batch_no, box_type, pcn } = scannedItem;
+
+    if (serial_no.length !== requested_qty)
+      return toastify(
+        "warning",
+        "Scanned quantity not matching Requested quantity",
+      );
 
     try {
       const { data } = await customAxios.post(useroutes.scanItem, {
@@ -65,20 +71,34 @@ export default function ItemScanPage() {
   async function handleQRScan(
     detectedCodes: IDetectedBarcode[],
   ): Promise<void> {
-    console.log("QR Scan Result", detectedCodes);
-    toastify("success", "QR Scan successful");
+    const value = detectedCodes[0].rawValue;
+
+    console.log("QR Scan Result", value);
+    toastify("success", `QR Scan successful for "${value}"`);
 
     const scanned =
       // "RAYCHEM RPG L125079858 TO L125079860 16.865 Kg. 16725009896 AAA2429093 EK-16"
       // "RAYCHEM RPG L225000884  17.115 Kg.  167012293  AAA2729029  J7"
-      detectedCodes[0].rawValue.split(" ").filter(Boolean);
+      value.split(" ").filter(Boolean);
 
     const multiLot = scanned[3] === "TO";
+
+    const serials: string[] = [];
+
+    if (multiLot) {
+      let first = Number(scanned[2]?.replace("L", ""));
+      const last = Number(scanned[4]?.replace("L", ""));
+
+      while (first <= last) {
+        serials.push("L" + first);
+        first += 1;
+      }
+    } else serials.push(scanned[2]);
 
     const scannedItem: ScannedItem = {
       pcn: multiLot ? scanned[8] : scanned[6],
       lot_no: multiLot ? scanned[7] : scanned[5],
-      serial_no: multiLot ? scanned[2] + scanned[3] + scanned[4] : scanned[2],
+      serial_no: serials,
       box_type: multiLot ? scanned[9] : scanned[7],
       weight: multiLot ? scanned[5] : scanned[3],
     };

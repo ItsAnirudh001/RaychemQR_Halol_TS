@@ -1,6 +1,7 @@
 "use client";
 
 import { adminroutes } from "@/api/admin/admin-routes";
+import AdminPageHead from "@/components/admin/page-head";
 import AuditTable from "@/components/admin/tables/audit-table";
 import NoData from "@/components/no-data";
 import useAppStore from "@/store/app-store";
@@ -41,11 +42,13 @@ export default function AuditPage() {
 
   const tableProps = { userLogs };
 
+  const headProps = { title: "Audit Logs", handleRefresh : fetchUserLogs };
+
   if (loading) return <></>;
 
   return (
-    <div className="page gap-6">
-      <h1 className="font-semibold">Audit Logs</h1>
+    <div className="page gap-[3vh]">
+      <AdminPageHead {...headProps} />
 
       {validData(userLogs) ? <AuditTable {...tableProps} /> : <NoData />}
     </div>

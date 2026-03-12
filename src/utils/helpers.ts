@@ -5,6 +5,15 @@ import { Pickslip, PickslipItem } from "@/types/pickslip-type";
 import { regexMod } from "@/constants/regex-data";
 import { UserLogsItem, UserTableItem } from "@/types/table-types";
 
+export function tableIndices(page: number, rowsPerPage: number) {
+  const indices = {
+    topRowIndex: page * rowsPerPage,
+    nthRowIndex: page * rowsPerPage + rowsPerPage,
+  };
+
+  return indices;
+}
+
 export function handleInputScroll() {
   const active = document.activeElement as HTMLElement | null;
   if (!active) return;

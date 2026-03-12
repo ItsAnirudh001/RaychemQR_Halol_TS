@@ -16,13 +16,15 @@ import { UserLogsItem } from "@/types/table-types";
 import MuiPagination from "@/components/material-ui/pagination";
 import { rowsPerPage } from "@/constants/admin/paginate-data";
 import dayjs from "dayjs";
+import { tableIndices } from "@/utils/helpers";
 
-export default function AuditTable(props: { userLogs: UserLogsItem[] | undefined }) {
+export default function AuditTable(props: {
+  userLogs: UserLogsItem[] | undefined;
+}) {
   const { userLogs } = props;
   const [page, setPage] = useState(0);
 
-  const topRowIndex = page * rowsPerPage;
-  const nthRowIndex = page * rowsPerPage + rowsPerPage;
+  const { topRowIndex, nthRowIndex } = tableIndices(page, rowsPerPage);
 
   return (
     <TableContainer component={Paper} className="table-container">
@@ -55,11 +57,11 @@ export default function AuditTable(props: { userLogs: UserLogsItem[] | undefined
               </TableCell>
 
               <TableCell className="tablecell text-center!">
-                {Number(data.login_success)}
+                {data.login_flag}
               </TableCell>
 
               <TableCell className="tablecell text-center!">
-                {data.login_flag}
+                {Number(data.login_success)}
               </TableCell>
             </TableRow>
           ))}
@@ -67,13 +69,7 @@ export default function AuditTable(props: { userLogs: UserLogsItem[] | undefined
       </Table>
 
       {userLogs && (
-        <MuiPagination
-          data={userLogs}
-          page={page}
-          setPage={setPage}
-          top={topRowIndex}
-          bottom={nthRowIndex}
-        />
+        <MuiPagination data={userLogs} page={page} setPage={setPage} />
       )}
     </TableContainer>
   );

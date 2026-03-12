@@ -104,7 +104,7 @@ body {
 }
 
 .user-table-btn {
-  @apply border-[1.5px] py-[0.85vh]! rounded-md cursor-pointer w-full font-semibold text-[0.80rem]!;
+  @apply flex py-2.75 rounded-3xl cursor-pointer w-full font-semibold text-[1rem] text-white items-center justify-center;
 }
 
 .mobile-btn-main {

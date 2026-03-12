@@ -47,6 +47,4 @@ export interface PaginationProps {
   data: object[];
   page: number;
   setPage: Dispatch<SetStateAction<number>>;
-  top: number;
-  bottom: number;
 }

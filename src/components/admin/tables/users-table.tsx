@@ -18,6 +18,10 @@ import { userTableHeaders } from "@/constants/admin/table-headers";
 import MuiPagination from "@/components/material-ui/pagination";
 import { useState } from "react";
 import { rowsPerPage } from "@/constants/admin/paginate-data";
+import MuiTooltip from "@/components/material-ui/tooltip";
+import { FaUserEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
+import { tableIndices } from "@/utils/helpers";
 
 export default function UsersTable(props: {
   usersData: UserTableItem[];
@@ -28,14 +32,13 @@ export default function UsersTable(props: {
   const { usersData, showModal } = props;
   const [page, setPage] = useState(0);
 
-  const topRowIndex = page * rowsPerPage;
-  const nthRowIndex = page * rowsPerPage + rowsPerPage;
+  const { topRowIndex, nthRowIndex } = tableIndices(page, rowsPerPage);
 
   async function postDeleteUser(data: UserTableItem) {
     setLoading(true);
     const { user_id } = data;
 
-    console.log("user_id", data);
+    // console.log("user_id", data);
 
     try {
       const { data, status } = await customAxios.delete(
@@ -94,19 +97,24 @@ export default function UsersTable(props: {
               </TableCell>
 
               <TableCell className="tablecell">
-                <div className="flex flex-1 w-full justify-evenly cursor-pointer gap-[1.1vw]">
-                  <button
-                    className="user-table-btn animated hover-shadow border-primary-heading text-primary-heading"
-                    onClick={() => showModal(data)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="user-table-btn animated hover-shadow border-red-600 text-red-600"
-                    onClick={() => postDeleteUser(data)}
-                  >
-                    Delete
-                  </button>
+                <div className="flex flex-1 w-full justify-evenly cursor-pointer gap-[0.75vw] px-3">
+                  <MuiTooltip title="Edit User">
+                    <button
+                      className="user-table-btn animated hover-shadow bg-indigo-800"
+                      onClick={() => showModal(data)}
+                    >
+                      <FaUserEdit />
+                    </button>
+                  </MuiTooltip>
+
+                  <MuiTooltip title="Delete User">
+                    <button
+                      className="user-table-btn animated hover-shadow bg-red-600"
+                      onClick={() => postDeleteUser(data)}
+                    >
+                      <MdDelete />
+                    </button>
+                  </MuiTooltip>
                 </div>
               </TableCell>
             </TableRow>
@@ -114,13 +122,7 @@ export default function UsersTable(props: {
         </TableBody>
       </Table>
 
-      <MuiPagination
-        data={usersData}
-        page={page}
-        setPage={setPage}
-        top={topRowIndex}
-        bottom={nthRowIndex}
-      />
+      <MuiPagination data={usersData} page={page} setPage={setPage} />
     </TableContainer>
   );
 }

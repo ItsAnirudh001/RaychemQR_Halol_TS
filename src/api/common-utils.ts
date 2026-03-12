@@ -74,10 +74,10 @@ export async function Login(
 
     if (!success) return;
 
-    localStorage.setItem(
-      "login",
-      `Login at ${dayjs().format("DD-MM-YYYY hh:mm:ss")}`,
-    );
+    // localStorage.setItem(
+    //   "login",
+    //   `Login at ${dayjs().format("DD-MM-YYYY hh:mm:ss")}`,
+    // );
 
     callback();
   } catch (error) {

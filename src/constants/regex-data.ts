@@ -10,7 +10,7 @@ export const regexObject = {
   username: /^[a-zA-Z0-9\s]+$/,
   email: /^[a-zA-Z0-9@.\s]+$/,
   password: /^.*$/,
-  mobile_no: /^[0-9+-]+$/,
+  mobile_no: /^[+0-9]+$/,
 };
 
 export const regexMod = {

@@ -44,7 +44,7 @@ export default function AdminLayout({
     >
       <AdminHeader />
 
-      <div className="flex w-full mt-[10vh]">
+      <div className="flex w-full mt-[8.5vh]">
         <AdminSidebar />
 
         <div className="w-[85vw]">{children}</div>

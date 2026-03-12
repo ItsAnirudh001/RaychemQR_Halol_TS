@@ -42,7 +42,7 @@ export default function AdminHeader() {
   const user = getStoredUser();
 
   return (
-    <div className="fixed top-0 left-0 w-full z-50 flex flex-row py-4 px-8 items-center gap-4 bg-header-bg h-[10vh] justify-between">
+    <div className="fixed top-0 left-0 w-full z-50 flex flex-row py-4 px-7 items-center gap-4 bg-header-bg h-[10vh] justify-between">
       <Image
         suppressHydrationWarning={true}
         src="/org_logo.png"
@@ -60,7 +60,7 @@ export default function AdminHeader() {
 
         <button onClick={showMenu} className="animated">
           <PiUserCircleFill
-            color="rgba(108, 107, 110, 1)"
+            color="rgb(9, 99, 126)"
             className="text-[2.4rem]"
           />
         </button>

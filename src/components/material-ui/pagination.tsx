@@ -2,10 +2,10 @@
 
 import { rowsPerPage } from "@/constants/admin/paginate-data";
 import { PaginationProps } from "@/types/mui-types";
-import { Box, TablePagination, Typography } from "@mui/material";
+import { Box, TablePagination } from "@mui/material";
 
 export default function MuiPagination(props: PaginationProps) {
-  const { data, page, setPage, top, bottom } = props;
+  const { data, page, setPage } = props;
 
   const rowCount = data?.length;
 
@@ -14,14 +14,6 @@ export default function MuiPagination(props: PaginationProps) {
     newPage: number,
   ) {
     setPage(newPage);
-  }
-
-  function displayLabel() {
-    return (
-      <Typography component="span" className="text-[0.92rem]! font-medium!">{`${top + 1}–${
-        bottom
-      } of ${rowCount}`}</Typography>
-    );
   }
 
   if (data.length <= rowsPerPage) return <></>;
@@ -39,11 +31,15 @@ export default function MuiPagination(props: PaginationProps) {
             opacity: 0.25,
           },
         }}
+        slotProps={{
+          displayedRows:{
+            className:"font-medium! text-[0.92rem]!"
+          }
+        }}
         count={rowCount}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[]}
         labelRowsPerPage=""
-        labelDisplayedRows={displayLabel}
         page={page}
         onPageChange={handleChangePage}
       />
