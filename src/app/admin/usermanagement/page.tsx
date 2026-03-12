@@ -15,6 +15,7 @@ import { isAPISuccess, validatedInput, validData } from "@/utils/helpers";
 import { SelectChangeEvent } from "@mui/material";
 import { userTableObject } from "@/constants/admin/admin-constants";
 import NoData from "@/components/no-data";
+import AdminPageHead from "@/components/admin/page-head";
 
 export default function UserManagementPage() {
   const { loading, setLoading } = useAppStore();
@@ -62,7 +63,7 @@ export default function UserManagementPage() {
   async function postUserSubmit() {
     setLoading(true);
 
-    if (!isEdit && !validatedInput(selectedUser.password, "password")) return;
+    if (!validatedInput(selectedUser.password, "password")) return;
 
     try {
       const { data } = isEdit
@@ -91,9 +92,14 @@ export default function UserManagementPage() {
     fetchUsers();
   }, []);
 
+  function hideModal() {
+    setUserModal(false);
+  }
+
   async function handleRefresh() {
-    await fetchUsers();
+    hideModal();
     setSelectedUser(userTableObject);
+    await fetchUsers();
   }
 
   function showModal(data?: UserTableItem) {
@@ -102,10 +108,6 @@ export default function UserManagementPage() {
     console.log("object", object);
     setSelectedUser(object);
     setUserModal(true);
-  }
-
-  function hideModal() {
-    setUserModal(false);
   }
 
   const modalProps = {
@@ -119,16 +121,20 @@ export default function UserManagementPage() {
 
   const tableProps = { usersData, handleRefresh, selectedUser, showModal };
 
+  const headProps = { title: "User Management", handleRefresh };
+
   if (loading) return <></>;
 
   return (
     <div className="page gap-[3vh]">
+      <AdminPageHead {...headProps} />
+
       <button
         className="hover-shadow flex py-[1vh] px-[1.5vw] bg-primary-heading rounded-xl self-end text-white font-semibold items-center gap-[1vw] cursor-pointer"
         onClick={() => showModal()}
       >
         <IoMdAdd className="text-[1.25rem]" />
-        <span>Add Users</span>
+        <span>Add User</span>
       </button>
 
       {validData(usersData) ? <UsersTable {...tableProps} /> : <NoData />}

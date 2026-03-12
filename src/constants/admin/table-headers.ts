@@ -7,11 +7,11 @@ export const userTableHeaders: TableHeaderItem[] = [
   },
   {
     name: "Name",
-    width: "15%",
+    width: "20%",
   },
   {
     name: "Email ID",
-    width: "20%",
+    width: "22.5%",
   },
   {
     name: "Phone Number",
@@ -29,7 +29,7 @@ export const userTableHeaders: TableHeaderItem[] = [
   },
   {
     name: "Actions",
-    width: "20%",
+    width: "12.25%",
     align: "center",
   },
 ];
@@ -102,15 +102,14 @@ export const auditTableHeaders: TableHeaderItem[] = [
     name: "Login Time",
     width: "15%",
   },
-    {
-    name: "Success",
-    width: "10%",
-    align: "center",
-  },
   {
     name: "Status",
     width: "10%",
     align: "center",
   },
+  {
+    name: "Success",
+    width: "10%",
+    align: "center",
+  },
 ];
-

@@ -1,6 +1,6 @@
 {
-  "name": "halolts",
-  "version": "0.1.0",
+  "name": "raychem_halol",
+  "version": "2.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",

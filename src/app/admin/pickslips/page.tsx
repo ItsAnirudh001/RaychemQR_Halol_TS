@@ -1,6 +1,7 @@
 "use client";
 
 import { GetAllPickslips } from "@/api/common-utils";
+import AdminPageHead from "@/components/admin/page-head";
 import PickslipTable from "@/components/admin/tables/pickslip-table";
 import NoData from "@/components/no-data";
 import useAppStore from "@/store/app-store";
@@ -36,11 +37,16 @@ export default function PickslipsPage() {
 
   const tableProps = { pickslips };
 
+  const headProps = {
+    title: "Pickslip details",
+    handleRefresh: fetchPickslips,
+  };
+
   if (loading) return <></>;
 
   return (
     <div className="page gap-6">
-      <h1 className="font-semibold">Pickslip details</h1>
+      <AdminPageHead {...headProps} />
 
       {validData(pickslips) ? <PickslipTable {...tableProps} /> : <NoData />}
     </div>

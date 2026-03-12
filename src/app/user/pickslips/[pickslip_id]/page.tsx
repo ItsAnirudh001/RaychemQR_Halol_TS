@@ -112,7 +112,9 @@ export default function PickslipItemsScreen() {
         searchParam(d.item_code).includes(searchParam(searchVal)) ||
         searchParam(d.material_description).includes(searchParam(searchVal)) ||
         searchParam(d.item_name).includes(searchParam(searchVal)) ||
-        searchParam(d.serial_no).includes(searchParam(searchVal)) ||
+        d.serial_no
+          ?.map((slno: string) => searchParam(slno))
+          .includes(searchParam(searchVal)) ||
         searchParam(d.batch_no).includes(searchParam(searchVal)) ||
         searchParam(d.box_type).includes(searchParam(searchVal)),
     );
@@ -417,7 +419,9 @@ export default function PickslipItemsScreen() {
                     )}
                     {infoCard(
                       "Serial Number",
-                      data.serial_no,
+                      Array.isArray(data.serial_no)
+                        ? data.serial_no.join(", ")
+                        : "",
                       <FaHashtag className={iconClass} />,
                     )}
                   </div>
@@ -435,7 +439,7 @@ export default function PickslipItemsScreen() {
                     )}
                     {infoCard(
                       "Box Type",
-                      data.box_type,
+                      data.box_type || "",
                       <FaHashtag className={iconClass} />,
                     )}
                   </div>

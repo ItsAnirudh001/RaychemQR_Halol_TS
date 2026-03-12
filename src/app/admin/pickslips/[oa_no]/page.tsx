@@ -1,6 +1,7 @@
 "use client";
 
 import { GetFileForDownload, GetPickslipItems } from "@/api/common-utils";
+import AdminPageHead from "@/components/admin/page-head";
 import PickslipItemsTable from "@/components/admin/tables/pickslip-items-table";
 import NoData from "@/components/no-data";
 import useAppStore from "@/store/app-store";
@@ -47,10 +48,10 @@ export default function PickslipItemsPage() {
   const pickslip = usePickslip();
 
   function directToPickslips() {
-    back();
-    setTimeout(() => {
-      sessionStorage.removeItem("pickslip");
-    }, 1000);
+    new Promise((resolve) => {
+      back();
+      resolve(() => {});
+    }).then(() => sessionStorage.removeItem("pickslip"));
   }
 
   async function handleDownloadReport() {
@@ -63,18 +64,23 @@ export default function PickslipItemsPage() {
 
   const tableProps = { pickslipItems };
 
+  const headProps = {
+    title: `${pickslip?.oa_no} - Items`,
+    handleRefresh: fetchPickslipItems,
+  };
+
   if (loading) return <></>;
 
   return (
     <div className="page gap-[3vh]">
       <div className="flex items-center gap-[0.5vw]">
         <button
-          className="animated text-3xl cursor-pointer"
+          className="animated text-[2.2rem] cursor-pointer text-gray-600"
           onClick={directToPickslips}
         >
           <IoChevronBackCircle />
         </button>
-        <h1 className="font-semibold">{`${pickslip?.oa_no} - Items`}</h1>
+        <AdminPageHead {...headProps} />
       </div>
       {pickslip?.status === "submitted" && (
         <button

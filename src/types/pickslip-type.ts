@@ -7,7 +7,7 @@ export interface PickslipItem {
   material_description: string;
   requested_qty: number;
   lot_no: string | null;
-  serial_no: string | null;
+  serial_no: string[] | null;
   box_type: string | null;
   weight: string;
   packing_details: string | null;
@@ -23,7 +23,7 @@ export interface ScannedItem {
   item_name?: string;
   batch_no?: string | null;
   lot_no: string | null;
-  serial_no: string;
+  serial_no: string[];
   box_type: string;
   weight: string;
 }

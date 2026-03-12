@@ -19,8 +19,6 @@ export default function AddEditUserModal(props: {
 }) {
   const { title, selectedUser, updateUser, onClose, postUserSubmit } = props;
 
-  const isNew = title === "Add User";
-
   const inputProps = {
     background: "rgba(241, 242, 244, 1)",
     noBorder: true,
@@ -98,7 +96,6 @@ export default function AddEditUserModal(props: {
             </div>
 
             <div className="flex gap-[1.4vw]">
-              {isNew && (
                 <MuiInput
                   value={selectedUser.password}
                   label="Password"
@@ -110,7 +107,6 @@ export default function AddEditUserModal(props: {
                   }
                   {...inputProps}
                 />
-              )}
 
               <MuiSingleSelect
                 label="Select Role"
