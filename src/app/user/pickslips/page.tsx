@@ -39,8 +39,6 @@ export default function PickslipsScreen() {
     setLoading(true);
   }, []);
 
-  const validData = Array.isArray(pickslips) && pickslips.length > 1;
-
   async function fetchPickslips() {
     setLoading(true);
     try {
@@ -150,6 +148,9 @@ export default function PickslipsScreen() {
     await fetchPickslips();
   }
 
+  const finalData = searchedData()
+  const validData = Array.isArray(finalData) && finalData.length > 0;
+
   const headerProps = { setSearchVal, handleRefresh };
 
   return (
@@ -207,7 +208,7 @@ export default function PickslipsScreen() {
             </div>
 
             {/* order cards */}
-            {searchedData()?.map((data) => (
+            {finalData?.map((data) => (
               <div
                 key={data.oa_no}
                 className="flex flex-col bg-white w-full rounded-3xl border-2 border-gray-200 overflow-hidden shadowed"

@@ -17,6 +17,7 @@ export interface SelectProps {
   items: SelectItem[];
   handleChange: SelectEvent;
   className?: string;
+  disabled?:boolean
 }
 
 export type MuiInputChangeEvent = React.ChangeEvent<
@@ -36,6 +37,7 @@ export interface MuiInputProps {
   radius?: number;
   min?: number;
   max?: number;
+  disabled?:boolean
 }
 
 export interface SelectItemType {

@@ -32,6 +32,7 @@ export function apiErrorPrompter(error: unknown | Error) {
 }
 
 export async function Login(
+  access_mode: string,
   setLoading: (value: boolean) => void,
   reqBody: LoginForm,
   callback: () => void,
@@ -69,10 +70,14 @@ export async function Login(
     sessionStorage.setItem("user", JSON.stringify(userObject));
 
     const success = isAPISuccess(status);
+    const authorized = role === access_mode;
 
     toastify(success ? "success" : "warning", message);
 
     if (!success) return;
+
+    if (!authorized)
+      return toastify("warning", `Access Unauthorized for ${role}`);
 
     // localStorage.setItem(
     //   "login",

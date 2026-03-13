@@ -7,12 +7,17 @@ import NoData from "@/components/no-data";
 import useAppStore from "@/store/app-store";
 import { UserLogsItem } from "@/types/table-types";
 import { customAxios } from "@/utils/axios";
-import { isAPISuccess, validData } from "@/utils/helpers";
+import {
+  isAPISuccess,
+  searchParam,
+  timestamp,
+} from "@/utils/helpers";
 import { useEffect, useLayoutEffect, useState } from "react";
 
 export default function AuditPage() {
   const { loading, setLoading } = useAppStore();
   const [userLogs, setUserLogs] = useState<UserLogsItem[]>();
+  const [searchVal, setSearchVal] = useState<string>("");
 
   useLayoutEffect(() => {
     setLoading(true);
@@ -40,9 +45,31 @@ export default function AuditPage() {
     fetchUserLogs();
   }, []);
 
-  const tableProps = { userLogs };
+  function searchedData() {
+    const data = userLogs;
 
-  const headProps = { title: "Audit Logs", handleRefresh : fetchUserLogs };
+    if (!searchVal) return data;
+
+    const searched = data?.filter(
+      (d) =>
+        searchParam(d.user_id).includes(searchParam(searchVal)) ||
+        searchParam(d.username).includes(searchParam(searchVal)) ||
+        timestamp(searchParam(d.login_time)).includes(searchParam(searchVal)),
+    );
+
+    return searched;
+  }
+
+  const finalData = searchedData();
+  const validData = Array.isArray(finalData) && finalData.length > 0;
+
+  const tableProps = { userLogs: finalData };
+
+  const headProps = {
+    title: "Audit Logs",
+    handleRefresh: fetchUserLogs,
+    setSearchVal,
+  };
 
   if (loading) return <></>;
 
@@ -50,7 +77,7 @@ export default function AuditPage() {
     <div className="page gap-[3vh]">
       <AdminPageHead {...headProps} />
 
-      {validData(userLogs) ? <AuditTable {...tableProps} /> : <NoData />}
+      {validData ? <AuditTable {...tableProps} /> : <NoData />}
     </div>
   );
 }

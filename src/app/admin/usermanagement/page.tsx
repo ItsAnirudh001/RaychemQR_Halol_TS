@@ -1,7 +1,7 @@
 "use client";
 
 import { adminroutes } from "@/api/admin/admin-routes";
-import AddEditUserModal from "@/components/admin/modals/addedit-user-modal";
+import AddEditUserModal from "@/components/admin/modals/add-edit-delete-modal";
 import UsersTable from "@/components/admin/tables/users-table";
 import { UserTableItem } from "@/types/table-types";
 import { customAxios } from "@/utils/axios";
@@ -11,7 +11,12 @@ import useAppStore from "@/store/app-store";
 import { toastify } from "@/utils/toast";
 import { MuiInputChangeEvent } from "@/types/mui-types";
 import { apiErrorPrompter } from "@/api/common-utils";
-import { isAPISuccess, validatedInput, validData } from "@/utils/helpers";
+import {
+  isAPISuccess,
+  searchParam,
+  validatedInput,
+  validData,
+} from "@/utils/helpers";
 import { SelectChangeEvent } from "@mui/material";
 import { userTableObject } from "@/constants/admin/admin-constants";
 import NoData from "@/components/no-data";
@@ -21,9 +26,11 @@ export default function UserManagementPage() {
   const { loading, setLoading } = useAppStore();
 
   const [userModal, setUserModal] = useState<boolean>(false);
+  const [mode, setMode] = useState<string>("");
   const [selectedUser, setSelectedUser] =
     useState<UserTableItem>(userTableObject);
   const [usersData, setUsersData] = useState<UserTableItem[]>([]);
+  const [searchVal, setSearchVal] = useState<string>("");
 
   useLayoutEffect(() => {
     setLoading(true);
@@ -94,6 +101,7 @@ export default function UserManagementPage() {
 
   function hideModal() {
     setUserModal(false);
+    setMode("");
   }
 
   async function handleRefresh() {
@@ -102,26 +110,52 @@ export default function UserManagementPage() {
     await fetchUsers();
   }
 
-  function showModal(data?: UserTableItem) {
+  function showModal(params: { data?: UserTableItem; newMode: string }) {
+    const { data, newMode } = params;
     // console.log("modal data", data);
     const object = data || userTableObject;
     console.log("object", object);
     setSelectedUser(object);
+    setMode(newMode);
     setUserModal(true);
   }
 
+  function searchedData() {
+    const data = usersData;
+
+    if (!searchVal) return data;
+
+    const searched = data?.filter(
+      (d) =>
+        searchParam(d.email_id).includes(searchParam(searchVal)) ||
+        searchParam(d.full_name).includes(searchParam(searchVal)) ||
+        searchParam(d.phone_number).includes(searchParam(searchVal)),
+    );
+
+    return searched;
+  }
+
+  const finalData = searchedData();
+  const validData = Array.isArray(finalData) && finalData.length > 0;
+
   const modalProps = {
-    title: isEdit ? "Edit User" : "Add User",
     open: userModal,
     onClose: hideModal,
     selectedUser,
     updateUser,
     postUserSubmit,
+    mode,
+    handleRefresh,
   };
 
-  const tableProps = { usersData, handleRefresh, selectedUser, showModal };
+  const tableProps = {
+    usersData: searchedData(),
+    handleRefresh,
+    selectedUser,
+    showModal,
+  };
 
-  const headProps = { title: "User Management", handleRefresh };
+  const headProps = { title: "User Management", handleRefresh, setSearchVal };
 
   if (loading) return <></>;
 
@@ -131,13 +165,13 @@ export default function UserManagementPage() {
 
       <button
         className="hover-shadow flex py-[1vh] px-[1.5vw] bg-primary-heading rounded-xl self-end text-white font-semibold items-center gap-[1vw] cursor-pointer"
-        onClick={() => showModal()}
+        onClick={() => showModal({ newMode: "Add User" })}
       >
         <IoMdAdd className="text-[1.25rem]" />
         <span>Add User</span>
       </button>
 
-      {validData(usersData) ? <UsersTable {...tableProps} /> : <NoData />}
+      {validData ? <UsersTable {...tableProps} /> : <NoData />}
 
       <AddEditUserModal {...modalProps} />
     </div>

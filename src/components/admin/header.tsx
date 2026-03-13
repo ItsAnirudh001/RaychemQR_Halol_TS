@@ -42,12 +42,12 @@ export default function AdminHeader() {
   const user = getStoredUser();
 
   return (
-    <div className="fixed top-0 left-0 w-full z-50 flex flex-row py-4 px-7 items-center gap-4 bg-header-bg h-[10vh] justify-between">
+    <div className="fixed top-0 left-0 w-full z-50 flex flex-row py-4 px-4 items-center gap-4 bg-header-bg h-[10vh] justify-between">
       <Image
         suppressHydrationWarning={true}
-        src="/org_logo.png"
+        src="/ray-logo.png"
         alt="Org logo"
-        width={140}
+        width={200}
         height={0}
         priority
       />

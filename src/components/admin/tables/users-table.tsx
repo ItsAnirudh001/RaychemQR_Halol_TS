@@ -9,11 +9,7 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { UserTableItem } from "@/types/table-types";
-import { customAxios } from "@/utils/axios";
-import { adminroutes } from "@/api/admin/admin-routes";
-import { toastify } from "@/utils/toast";
-import useAppStore from "@/store/app-store";
+import { UserTableItem } from "@/types/table-types"; 
 import { userTableHeaders } from "@/constants/admin/table-headers";
 import MuiPagination from "@/components/material-ui/pagination";
 import { useState } from "react";
@@ -26,35 +22,15 @@ import { tableIndices } from "@/utils/helpers";
 export default function UsersTable(props: {
   usersData: UserTableItem[];
   selectedUser: UserTableItem;
-  showModal: (data?: UserTableItem | undefined) => void;
+  showModal: (params: {
+    data?: UserTableItem | undefined;
+    newMode: string;
+  }) => void;
 }) {
-  const { setLoading } = useAppStore();
   const { usersData, showModal } = props;
   const [page, setPage] = useState(0);
 
   const { topRowIndex, nthRowIndex } = tableIndices(page, rowsPerPage);
-
-  async function postDeleteUser(data: UserTableItem) {
-    setLoading(true);
-    const { user_id } = data;
-
-    // console.log("user_id", data);
-
-    try {
-      const { data, status } = await customAxios.delete(
-        adminroutes.deleteUser + "/" + user_id,
-      );
-
-      const success = status == 200;
-
-      if (!success) return;
-      toastify("success", data?.message);
-    } catch (error) {
-      console.error("Error in deleteUser", error);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   return (
     <TableContainer component={Paper} className="table-container">
@@ -101,16 +77,17 @@ export default function UsersTable(props: {
                   <MuiTooltip title="Edit User">
                     <button
                       className="user-table-btn animated hover-shadow bg-indigo-800"
-                      onClick={() => showModal(data)}
+                      onClick={() => showModal({ data, newMode: "Edit User" })}
                     >
                       <FaUserEdit />
                     </button>
                   </MuiTooltip>
 
-                  <MuiTooltip title="Delete User">
+                  <MuiTooltip title={data.is_active ? "Delete User" : "User Already Deleted"} disabled={!data.is_active}>
                     <button
-                      className="user-table-btn animated hover-shadow bg-red-600"
-                      onClick={() => postDeleteUser(data)}
+                      className={`user-table-btn bg-red-600 ${data.is_active ? "animated hover-shadow" : "opacity-60 cursor-not-allowed!"}`}
+                      onClick={() => showModal({ data, newMode: "Delete User" })}
+                      disabled={!data.is_active}
                     >
                       <MdDelete />
                     </button>

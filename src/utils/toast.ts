@@ -9,6 +9,8 @@ export function toastify(type: ToastType, message: string, duration?: boolean) {
 
   // console.log("back",background);
 
+  const modDuration = 10000;
+
   if (color)
     document.documentElement.style.setProperty("--toast-progress", color);
 
@@ -17,7 +19,7 @@ export function toastify(type: ToastType, message: string, duration?: boolean) {
     className: `toast-${type} flex text-base! m-6! rounded-xl! w-[80vw]! md:w-[30vw]!`,
     type,
     transition: Bounce,
-    autoClose: duration ? false : 2200,
+    autoClose: duration ? false : modDuration,
     closeOnClick: duration,
     hideProgressBar: false,
     draggable: true,

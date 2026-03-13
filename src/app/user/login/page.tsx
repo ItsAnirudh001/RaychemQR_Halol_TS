@@ -37,7 +37,7 @@ export default function LoginPage() {
 
     if (!validatedInput(form.password, "password")) return;
 
-    await Login(setLoading, form, () => {
+    await Login("user", setLoading, form, () => {
       push("/user/pickslips");
     });
   }

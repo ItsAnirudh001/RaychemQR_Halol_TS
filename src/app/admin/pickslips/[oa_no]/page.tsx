@@ -6,7 +6,7 @@ import PickslipItemsTable from "@/components/admin/tables/pickslip-items-table";
 import NoData from "@/components/no-data";
 import useAppStore from "@/store/app-store";
 import { PickslipItem } from "@/types/pickslip-type";
-import { validData } from "@/utils/helpers";
+import { searchParam } from "@/utils/helpers";
 import { getStoredPickslip } from "@/utils/session-utils";
 import { useRouter } from "next/navigation";
 import { useEffect, useLayoutEffect, useState } from "react";
@@ -16,6 +16,7 @@ import { IoChevronBackCircle } from "react-icons/io5";
 export default function PickslipItemsPage() {
   const { back } = useRouter();
   const { loading, setLoading } = useAppStore();
+  const [searchVal, setSearchVal] = useState<string>("");
 
   const [pickslipItems, setPickslipItems] = useState<PickslipItem[]>();
 
@@ -62,11 +63,30 @@ export default function PickslipItemsPage() {
     }
   }
 
-  const tableProps = { pickslipItems };
+  function searchedData() {
+    const data = pickslipItems;
+
+    if (!searchVal) return data;
+
+    const searched = data?.filter(
+      (d) =>
+        searchParam(d.material_description).includes(searchParam(searchVal)) ||
+        searchParam(d.item_code).includes(searchParam(searchVal)) ||
+        searchParam(d.serial_no).includes(searchParam(searchVal)),
+    );
+
+    return searched;
+  }
+
+  const finalData = searchedData();
+  const validData = Array.isArray(finalData) && finalData.length > 0;
+
+  const tableProps = { pickslipItems: searchedData() };
 
   const headProps = {
     title: `${pickslip?.oa_no} - Items`,
     handleRefresh: fetchPickslipItems,
+    setSearchVal,
   };
 
   if (loading) return <></>;
@@ -92,11 +112,7 @@ export default function PickslipItemsPage() {
         </button>
       )}
 
-      {validData(pickslipItems) ? (
-        <PickslipItemsTable {...tableProps} />
-      ) : (
-        <NoData />
-      )}
+      {validData ? <PickslipItemsTable {...tableProps} /> : <NoData />}
     </div>
   );
 }

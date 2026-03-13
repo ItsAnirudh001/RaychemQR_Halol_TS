@@ -1,32 +1,79 @@
 "use client";
 
+import { adminroutes } from "@/api/admin/admin-routes";
 import MuiInput from "@/components/material-ui/input";
 import AppModal from "@/components/material-ui/modal";
 import MuiSingleSelect from "@/components/material-ui/single-select";
 import { rolesData } from "@/constants/roles-data";
+import useAppStore from "@/store/app-store";
 import { MuiInputChangeEvent } from "@/types/mui-types";
 import { UserTableItem } from "@/types/table-types";
+import { customAxios } from "@/utils/axios";
+import { toastify } from "@/utils/toast";
 import { SelectChangeEvent } from "@mui/material";
 import { IoMdClose } from "react-icons/io";
 
 export default function AddEditUserModal(props: {
-  title: string;
   open: boolean;
   onClose: () => void;
   selectedUser: UserTableItem;
-  updateUser: (key: string, e: MuiInputChangeEvent | SelectChangeEvent<string | number>) => void;
+  updateUser: (
+    key: string,
+    e: MuiInputChangeEvent | SelectChangeEvent<string | number>,
+  ) => void;
   postUserSubmit: () => Promise<void>;
+  mode: string;
+  handleRefresh: () => Promise<void>;
 }) {
-  const { title, selectedUser, updateUser, onClose, postUserSubmit } = props;
+  const {
+    selectedUser,
+    updateUser,
+    onClose,
+    postUserSubmit,
+    mode,
+    handleRefresh,
+  } = props;
+
+  const isDelete = mode === "Delete User";
+
+  const { setLoading } = useAppStore();
 
   const inputProps = {
     background: "rgba(241, 242, 244, 1)",
     noBorder: true,
     required: true,
     radius: 12,
+    disabled: isDelete,
   };
 
+  async function postDeleteUser(data: UserTableItem) {
+    setLoading(true);
+    const { user_id } = data;
+
+    // console.log("user_id", data);
+
+    try {
+      const { data, status } = await customAxios.delete(
+        adminroutes.deleteUser + "/" + user_id,
+      );
+
+      const success = status == 200;
+
+      toastify(success ? "success" : "warning", data?.message);
+
+      if (!success) return;
+
+      await handleRefresh();
+    } catch (error) {
+      console.error("Error in deleteUser", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
+    if (isDelete) return await postDeleteUser(selectedUser);
+
     e.preventDefault();
     await postUserSubmit();
   }
@@ -37,7 +84,7 @@ export default function AddEditUserModal(props: {
         {/* header */}
         <div className="flex w-full pb-[1.25vh] items-center justify-between border-b-2 border-[rgba(173,180,185,1)]">
           <h1 className="font-medium text-[rgba(65,68,70,1)] text-[1.25rem]">
-            {title}
+            {mode}
           </h1>
 
           <button
@@ -96,6 +143,7 @@ export default function AddEditUserModal(props: {
             </div>
 
             <div className="flex gap-[1.4vw]">
+              {!isDelete && (
                 <MuiInput
                   value={selectedUser.password}
                   label="Password"
@@ -107,11 +155,13 @@ export default function AddEditUserModal(props: {
                   }
                   {...inputProps}
                 />
+              )}
 
               <MuiSingleSelect
                 label="Select Role"
                 value={selectedUser.role}
                 items={rolesData}
+                disabled={isDelete}
                 handleChange={(e) => updateUser("role", e)}
                 className="bg-[rgba(241,242,244,1)]! text-[0.85rem]! rounded-2xl!"
               />
@@ -129,7 +179,7 @@ export default function AddEditUserModal(props: {
 
             <button
               type="submit"
-              className="animated hover-shadow mobile-btn-main py-[1.25vh]! px-[2.75vw]! font-medium! w-fit! bg-[rgba(59,130,246,1)]!"
+              className={`animated hover-shadow mobile-btn-main py-[1.25vh]! px-[2.75vw]! font-medium! w-fit! ${isDelete ? "bg-red-800!" : "bg-[rgba(59,130,246,1)]!"}`}
             >
               Submit
             </button>
