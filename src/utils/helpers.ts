@@ -74,11 +74,12 @@ export function checkToken(token: string) {
     // console.log("exp", exp);
     // console.log("current",currentTime)
 
-    if (tokenExpired)
-      localStorage.setItem(
-        "logout",
-        `Logout at ${dayjs().format("DD-MM-YYYY hh:mm:ss")}`,
-      );
+    // if (tokenExpired)
+    //   localStorage.setItem(
+    //     "logout",
+    //     `Logout at ${dayjs().format("DD-MM-YYYY hh:mm:ss")}`,
+    //   );
+
     return tokenExpired;
   } catch (error) {
     console.error("Error decoding token:", error);
@@ -132,4 +133,12 @@ export function validData(
     | undefined,
 ) {
   return Array.isArray(data) && data.length > 0;
+}
+
+export function searchParam(value: string | number | null) {
+  return String(value).toLowerCase();
+}
+
+export function timestamp(date: string) {
+  return dayjs(date).format("DD-MM-YYYY hh:mm:ss");
 }

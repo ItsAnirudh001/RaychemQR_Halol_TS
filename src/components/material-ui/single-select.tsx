@@ -5,14 +5,21 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { FaChevronDown } from "react-icons/fa";
 
 export default function MuiSingleSelect(props: SelectProps) {
-  const { label, value, items, handleChange, className } = props;
+  const { label, value, items, handleChange, className, disabled } = props;
 
   return (
     <FormControl fullWidth>
-      {label && <InputLabel id={label} className="text-sm! font-medium!">{label}</InputLabel>}
+      <InputLabel
+        id={label}
+        className={`text-sm! font-medium! ${disabled ? "opacity-60" : ""}`}
+      >
+        {label}
+      </InputLabel>
+
       <Select
         id={label}
         labelId={label}
+        disabled={disabled}
         value={value}
         label={label}
         onChange={handleChange}

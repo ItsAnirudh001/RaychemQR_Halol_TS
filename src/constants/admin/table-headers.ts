@@ -60,28 +60,28 @@ export const pickslipTableHeaders: TableHeaderItem[] = [
 
 export const pickslipItemsTableHeaders: TableHeaderItem[] = [
   {
-    name: "Item Name",
-    width: "20%",
+    name: "Material",
+    width: "30%",
   },
   {
     name: "Item Code",
-    width: "20%",
+    width: "12.5%",
   },
   {
     name: "Req Quantity",
-    width: "15%",
+    width: "12.5%",
   },
   {
     name: "Serial Number",
-    width: "15%",
+    width: "12.5%",
   },
   {
     name: "Net Weight",
-    width: "15%",
+    width: "10%",
   },
   {
     name: "Gross Weight",
-    width: "15%",
+    width: "10%",
   },
 ];
 

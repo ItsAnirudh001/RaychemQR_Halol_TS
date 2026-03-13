@@ -22,6 +22,7 @@ export default function MuiInput(props: MuiInputProps) {
     radius,
     max,
     min,
+    disabled
   } = props;
 
   useKeyboardScroll();
@@ -89,12 +90,14 @@ export default function MuiInput(props: MuiInputProps) {
         onChange={handleInput}
         required={required}
         fullWidth
+        disabled={disabled}
         color={focused ? "primary" : "warning"}
         type={type === "password" ? (visiblity ? "text" : "password") : type}
         slotProps={{
           htmlInput: {
             maxLength: max,
             minLength: min,
+            readOnly:disabled
           },
           input: {
             ...inputProps,

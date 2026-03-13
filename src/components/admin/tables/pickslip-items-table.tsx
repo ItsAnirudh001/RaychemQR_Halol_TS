@@ -46,7 +46,7 @@ export default function PickslipItemsTable(props: {
             ?.slice(topRowIndex, nthRowIndex)
             ?.map((data: PickslipItem) => (
               <TableRow className="table-row-data" key={data.item_id}>
-                <TableCell className="tablecell">{data.item_name}</TableCell>
+                <TableCell className="tablecell">{data.material_description}</TableCell>
 
                 <TableCell className="tablecell">{data.item_code}</TableCell>
 
@@ -55,9 +55,7 @@ export default function PickslipItemsTable(props: {
                 </TableCell>
 
                 <TableCell className="tablecell">
-                  {Array.isArray(data.serial_no)
-                    ? data.serial_no.join(", ")
-                    : ""}
+                  {data.serial_no}
                 </TableCell>
 
                 <TableCell className="tablecell">{data.net_weight}</TableCell>

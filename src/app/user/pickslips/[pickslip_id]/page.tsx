@@ -17,7 +17,12 @@ import { PickslipItem } from "@/types/pickslip-type";
 import NoData from "@/components/no-data";
 import { customAxios } from "@/utils/axios";
 import { usermodroutes, useroutes } from "@/api/user/user-routes";
-import { dynamicClass, isAPISuccess, smallHeight } from "@/utils/helpers";
+import {
+  dynamicClass,
+  isAPISuccess,
+  searchParam,
+  smallHeight,
+} from "@/utils/helpers";
 import { toastify } from "@/utils/toast";
 import useAppStore from "@/store/app-store";
 import { apiErrorPrompter, GetPickslipItems } from "@/api/common-utils";
@@ -98,10 +103,6 @@ export default function PickslipItemsScreen() {
     });
   }
 
-  function searchParam(value: string | null) {
-    return String(value).toLowerCase().trim();
-  }
-
   function searchedData() {
     const data = filteredData();
 
@@ -112,9 +113,7 @@ export default function PickslipItemsScreen() {
         searchParam(d.item_code).includes(searchParam(searchVal)) ||
         searchParam(d.material_description).includes(searchParam(searchVal)) ||
         searchParam(d.item_name).includes(searchParam(searchVal)) ||
-        d.serial_no
-          ?.map((slno: string) => searchParam(slno))
-          .includes(searchParam(searchVal)) ||
+        searchParam(d.serial_no).includes(searchParam(searchVal)) ||
         searchParam(d.batch_no).includes(searchParam(searchVal)) ||
         searchParam(d.box_type).includes(searchParam(searchVal)),
     );
@@ -203,7 +202,7 @@ export default function PickslipItemsScreen() {
 
   async function postAbortSession() {
     const session_id = getStoredScanSessionID();
-    if (!session_id) return;
+    if (created && !session_id) return;
 
     if (!created) return directToPickslips();
 
@@ -287,7 +286,8 @@ export default function PickslipItemsScreen() {
     postAbortSession,
   };
 
-  const validData = Array.isArray(pickslipItems) && pickslipItems?.length > 0;
+  const finalData = searchedData();
+  const validData = Array.isArray(finalData) && finalData.length > 0;
   const allScanned = scannedItems?.length == pickslipItems?.length;
 
   // console.log("items", pickslipItems);
@@ -356,7 +356,7 @@ export default function PickslipItemsScreen() {
             </div>
 
             {/* order cards */}
-            {searchedData()?.map((data, index) => (
+            {finalData?.map((data, index) => (
               <div
                 className={`flex flex-col bg-white w-full rounded-3xl border-2 overflow-hidden ${data.status === "pending" ? "border-gray-200" : "border-green-600"}`}
                 key={data.item_id}
@@ -383,7 +383,7 @@ export default function PickslipItemsScreen() {
                         <textarea
                           disabled
                           className="text-[3.25vw] w-[50vw] field-sizing-content max-h-fit"
-                          value={data.item_name || ""}
+                          value={data.material_description || ""}
                         />
                       </div>
                     </div>
@@ -419,9 +419,7 @@ export default function PickslipItemsScreen() {
                     )}
                     {infoCard(
                       "Serial Number",
-                      Array.isArray(data.serial_no)
-                        ? data.serial_no.join(", ")
-                        : "",
+                      data.serial_no || "",
                       <FaHashtag className={iconClass} />,
                     )}
                   </div>

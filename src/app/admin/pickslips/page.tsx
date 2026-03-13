@@ -6,12 +6,13 @@ import PickslipTable from "@/components/admin/tables/pickslip-table";
 import NoData from "@/components/no-data";
 import useAppStore from "@/store/app-store";
 import { Pickslip } from "@/types/pickslip-type";
-import { validData } from "@/utils/helpers";
+import { searchParam, timestamp } from "@/utils/helpers";
 import { useEffect, useLayoutEffect, useState } from "react";
 
 export default function PickslipsPage() {
   const { loading, setLoading } = useAppStore();
   const [pickslips, setPickslips] = useState<Pickslip[]>();
+  const [searchVal, setSearchVal] = useState<string>("");
 
   useLayoutEffect(() => {
     setLoading(true);
@@ -33,13 +34,33 @@ export default function PickslipsPage() {
     fetchPickslips();
   }, []);
 
+  function searchedData() {
+    const data = pickslips;
+
+    if (!searchVal) return data;
+
+    const searched = data?.filter(
+      (d) =>
+        searchParam(d.oa_no).includes(searchParam(searchVal)) ||
+        searchParam(d.po_no).includes(searchParam(searchVal)) ||
+        searchParam(timestamp(d.created_at)).includes(searchParam(searchVal)) ||
+        searchParam(d.status).includes(searchParam(searchVal)),
+    );
+
+    return searched;
+  }
+
   // console.log("Pickslips",pickslips);
 
-  const tableProps = { pickslips };
+  const finalData = searchedData();
+  const validData = Array.isArray(finalData) && finalData.length > 0;
+
+  const tableProps = { pickslips: searchedData() };
 
   const headProps = {
     title: "Pickslip details",
     handleRefresh: fetchPickslips,
+    setSearchVal,
   };
 
   if (loading) return <></>;
@@ -48,7 +69,7 @@ export default function PickslipsPage() {
     <div className="page gap-6">
       <AdminPageHead {...headProps} />
 
-      {validData(pickslips) ? <PickslipTable {...tableProps} /> : <NoData />}
+      {validData ? <PickslipTable {...tableProps} /> : <NoData />}
     </div>
   );
 }

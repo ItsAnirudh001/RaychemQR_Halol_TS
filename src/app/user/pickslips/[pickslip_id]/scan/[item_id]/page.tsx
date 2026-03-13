@@ -19,7 +19,7 @@ export default function ItemScanPage() {
   const { back } = useRouter();
   const { setLoading } = useAppStore();
 
-  async function postScanItem(scannedItem: ScannedItem) {
+  async function postScanItem(scannedItem: ScannedItem, scanned_qty: number) {
     setLoading(true);
 
     const item = getStoredScanItem();
@@ -27,7 +27,7 @@ export default function ItemScanPage() {
     const { item_id, requested_qty } = item;
     const { serial_no, batch_no, box_type, pcn } = scannedItem;
 
-    if (serial_no.length !== requested_qty)
+    if (scanned_qty !== requested_qty)
       return toastify(
         "warning",
         "Scanned quantity not matching Requested quantity",
@@ -97,13 +97,13 @@ export default function ItemScanPage() {
 
     const scannedItem: ScannedItem = {
       pcn: multiLot ? scanned[8] : scanned[6],
-      lot_no: multiLot ? scanned[7] : scanned[5],
-      serial_no: serials,
+      batch_no: multiLot ? scanned[7] : scanned[5],
+      serial_no: multiLot ? scanned[2] + scanned[3] + scanned[4] : scanned[2],
       box_type: multiLot ? scanned[9] : scanned[7],
       weight: multiLot ? scanned[5] : scanned[3],
     };
 
-    await postScanItem(scannedItem);
+    await postScanItem(scannedItem, serials.length);
   }
 
   return (

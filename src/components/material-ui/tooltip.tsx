@@ -6,12 +6,17 @@ import React, { ReactElement } from "react";
 export default function MuiTooltip({
   title,
   children,
+  // disabled,
 }: {
   title: string;
   children: ReactElement;
+  disabled?: boolean;
 }) {
   return (
     <Tooltip
+      // disableFocusListener={disabled}
+      // disableTouchListener={disabled}
+      // disableHoverListener={disabled}
       title={title}
       slotProps={{
         tooltip: {
