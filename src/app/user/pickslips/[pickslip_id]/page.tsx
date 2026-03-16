@@ -16,7 +16,7 @@ import OrderSubmissionModal from "@/components/user/modals/order-submission-moda
 import { PickslipItem } from "@/types/pickslip-type";
 import NoData from "@/components/no-data";
 import { customAxios } from "@/utils/axios";
-import { usermodroutes, useroutes } from "@/api/user/user-routes";
+import { usermodroutes } from "@/api/user/user-routes";
 import {
   dynamicClass,
   isAPISuccess,
@@ -26,7 +26,6 @@ import {
 import { toastify } from "@/utils/toast";
 import useAppStore from "@/store/app-store";
 import { AbortScanSession, apiErrorPrompter, GetPickslipItems } from "@/api/common-utils";
-import useAutoCall from "@/hooks/useAutoCall";
 import {
   getStoredPickslip,
   getStoredScanSessionID,
@@ -203,7 +202,7 @@ export default function PickslipItemsScreen() {
   async function postAbortSession() {
     const session_id = getStoredScanSessionID();
 
-    if (created && session_id) return;
+    if (!session_id) return;
 
     if (!created) return directToPickslips();
 
@@ -222,8 +221,6 @@ export default function PickslipItemsScreen() {
       setLoading(false);
     }
   }
-
-  useAutoCall(postAbortSession);
 
   async function postSubmitPickslip() {
     setLoading(true);

@@ -81,10 +81,7 @@ export async function Login(
 
     if (!success) return;
 
-    localStorage.setItem(
-      "login",
-      `Login at ${timestamp()}`,
-    );
+    localStorage.setItem("login", `Login at ${timestamp()}`);
 
     callback();
   } catch (error) {
@@ -152,10 +149,13 @@ export async function GetPickslipItems(
   }
 }
 
-export async function AbortScanSession(setLoading: (value: boolean) => void) {
+export async function AbortScanSession(setLoading?: (value: boolean) => void) {
   const session_id = getStoredScanSessionID();
 
-  setLoading(true);
+  // if(!session_id) return;
+
+  if (setLoading) setLoading(true);
+
   try {
     const { data } = await customAxios.post(useroutes.abortScanSession, {
       session_id,
@@ -166,7 +166,7 @@ export async function AbortScanSession(setLoading: (value: boolean) => void) {
     console.error("Error in /abortScanSession", error);
     apiErrorPrompter(error);
   } finally {
-    setLoading(false);
+    if (setLoading) setLoading(false);
   }
 }
 

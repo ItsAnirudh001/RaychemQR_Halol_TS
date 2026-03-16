@@ -2,7 +2,9 @@
 
 import { useEffect } from "react";
 
-export default function useUnload(callback: () => Promise<void>) {
+export default function useAutoCall(
+  callback: () => Promise<void>,
+) {
   function handleBeforeUnload(e: BeforeUnloadEvent) {
     e.preventDefault();
   }
@@ -15,4 +17,4 @@ export default function useUnload(callback: () => Promise<void>) {
       window.removeEventListener("unload", callback);
     };
   }, []);
-};
+}

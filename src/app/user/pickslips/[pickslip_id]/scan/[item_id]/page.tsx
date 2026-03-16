@@ -8,7 +8,6 @@ import { ScannedItem } from "@/types/pickslip-type";
 import { customAxios } from "@/utils/axios";
 import { isAPISuccess } from "@/utils/helpers";
 import {
-  getStoredPickslip,
   getStoredScanItem,
   getStoredScanSessionID,
 } from "@/utils/session-utils";
