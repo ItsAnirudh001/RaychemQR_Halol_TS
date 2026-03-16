@@ -16,7 +16,7 @@ import { pickslipTableHeaders } from "@/constants/admin/table-headers";
 import MuiPagination from "@/components/material-ui/pagination";
 import { rowsPerPage } from "@/constants/admin/paginate-data";
 import { useState } from "react";
-import { tableIndices } from "@/utils/helpers";
+import { tableIndices, timestamp } from "@/utils/helpers";
 
 export default function PickslipTable(props: {
   pickslips: Pickslip[] | undefined;
@@ -67,7 +67,7 @@ export default function PickslipTable(props: {
               <TableCell className="tablecell">{data.items?.length}</TableCell>
 
               <TableCell className="tablecell">
-                {dayjs(data.created_at).format("DD-MM-YYYY hh:mm:ss")}
+                {timestamp(data.created_at)}
               </TableCell>
 
               <TableCell className="tablecell flex! justify-center!">

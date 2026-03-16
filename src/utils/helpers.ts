@@ -64,21 +64,21 @@ export function checkToken(token: string) {
   try {
     const decodedToken: JwtPayload = jwtDecode(token);
 
-    const { exp } = decodedToken;
-    if (!exp) return;
+    console.log("decodedToken",decodedToken);
 
-    const currentTime = Date.now() / 1000;
+    const { exp,iat } = decodedToken;
+    if (!exp || !iat) return;
 
-    const tokenExpired = exp < currentTime;
+    const tokenExpired = exp < iat;
 
     // console.log("exp", exp);
     // console.log("current",currentTime)
 
-    // if (tokenExpired)
-    //   localStorage.setItem(
-    //     "logout",
-    //     `Logout at ${dayjs().format("DD-MM-YYYY hh:mm:ss")}`,
-    //   );
+    if (tokenExpired)
+      localStorage.setItem(
+        "logout",
+        `Logout at ${timestamp()}`,
+      );
 
     return tokenExpired;
   } catch (error) {
@@ -139,6 +139,6 @@ export function searchParam(value: string | number | null) {
   return String(value).toLowerCase();
 }
 
-export function timestamp(date: string) {
-  return dayjs(date).format("DD-MM-YYYY hh:mm:ss");
+export function timestamp(date?: string | null) {
+  return date ? dayjs(date || "").format("DD-MM-YYYY hh:mm:ss") : "";
 }

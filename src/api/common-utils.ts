@@ -5,9 +5,11 @@ import qs from "qs";
 import { NavigateOptions } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { toastify } from "@/utils/toast";
 import { UserObject } from "@/types/store-types";
-import { handleFileDownload, isAPISuccess } from "@/utils/helpers";
+import { handleFileDownload, isAPISuccess, timestamp } from "@/utils/helpers";
 import dayjs from "dayjs";
 import { Pickslip } from "@/types/pickslip-type";
+import { getStoredScanSessionID } from "@/utils/session-utils";
+import { useroutes } from "./user/user-routes";
 
 export function apiErrorPrompter(error: unknown | Error) {
   const detail = error?.response?.data?.detail;
@@ -70,19 +72,19 @@ export async function Login(
     sessionStorage.setItem("user", JSON.stringify(userObject));
 
     const success = isAPISuccess(status);
-    const authorized = role === access_mode;
+    const authorized = role && role === access_mode;
+
+    if (!authorized)
+      return toastify("warning", `Access Unauthorized for ${role}`);
 
     toastify(success ? "success" : "warning", message);
 
     if (!success) return;
 
-    if (!authorized)
-      return toastify("warning", `Access Unauthorized for ${role}`);
-
-    // localStorage.setItem(
-    //   "login",
-    //   `Login at ${dayjs().format("DD-MM-YYYY hh:mm:ss")}`,
-    // );
+    localStorage.setItem(
+      "login",
+      `Login at ${timestamp()}`,
+    );
 
     callback();
   } catch (error) {
@@ -144,6 +146,24 @@ export async function GetPickslipItems(
     return data?.data;
   } catch (error) {
     console.error("Error in getPickslipItems", error);
+    apiErrorPrompter(error);
+  } finally {
+    setLoading(false);
+  }
+}
+
+export async function AbortScanSession(setLoading: (value: boolean) => void) {
+  const session_id = getStoredScanSessionID();
+
+  setLoading(true);
+  try {
+    const { data } = await customAxios.post(useroutes.abortScanSession, {
+      session_id,
+    });
+
+    return data;
+  } catch (error) {
+    console.error("Error in /abortScanSession", error);
     apiErrorPrompter(error);
   } finally {
     setLoading(false);

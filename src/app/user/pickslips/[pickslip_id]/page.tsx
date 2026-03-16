@@ -25,7 +25,7 @@ import {
 } from "@/utils/helpers";
 import { toastify } from "@/utils/toast";
 import useAppStore from "@/store/app-store";
-import { apiErrorPrompter, GetPickslipItems } from "@/api/common-utils";
+import { AbortScanSession, apiErrorPrompter, GetPickslipItems } from "@/api/common-utils";
 import useAutoCall from "@/hooks/useAutoCall";
 import {
   getStoredPickslip,
@@ -202,17 +202,13 @@ export default function PickslipItemsScreen() {
 
   async function postAbortSession() {
     const session_id = getStoredScanSessionID();
-    if (created && !session_id) return;
+
+    if (created && session_id) return;
 
     if (!created) return directToPickslips();
 
-    setLoading(true);
     try {
-      const { data } = await customAxios.post(useroutes.abortScanSession, {
-        session_id,
-      });
-
-      const { status, message } = data;
+      const { status, message } = await AbortScanSession(setLoading);
       const success = isAPISuccess(status);
       toastify(success ? "success" : "warning", message);
 
@@ -220,7 +216,7 @@ export default function PickslipItemsScreen() {
 
       directToPickslips();
     } catch (error) {
-      console.error("Error in abortScanSession", error);
+      console.error("Error in aborting Scan Session", error);
       apiErrorPrompter(error);
     } finally {
       setLoading(false);

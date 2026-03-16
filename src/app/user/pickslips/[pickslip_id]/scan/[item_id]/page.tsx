@@ -8,21 +8,22 @@ import { ScannedItem } from "@/types/pickslip-type";
 import { customAxios } from "@/utils/axios";
 import { isAPISuccess } from "@/utils/helpers";
 import {
+  getStoredPickslip,
   getStoredScanItem,
   getStoredScanSessionID,
 } from "@/utils/session-utils";
 import { toastify } from "@/utils/toast";
 import { IDetectedBarcode } from "@yudiel/react-qr-scanner";
 import { useRouter } from "next/navigation";
+import { IoChevronBackCircle } from "react-icons/io5";
 
 export default function ItemScanPage() {
   const { back } = useRouter();
   const { setLoading } = useAppStore();
+  const item = getStoredScanItem();
 
   async function postScanItem(scannedItem: ScannedItem, scanned_qty: number) {
     setLoading(true);
-
-    const item = getStoredScanItem();
 
     const { item_id, requested_qty } = item;
     const { serial_no, batch_no, box_type, pcn } = scannedItem;
@@ -108,7 +109,22 @@ export default function ItemScanPage() {
 
   return (
     <>
-      <UserAuthHeader />
+      <UserAuthHeader>
+        <div className="flex items-center gap-2 text-[rgba(64,108,175,1)]">
+          <button className="animated2 text-3xl" onClick={back}>
+            <IoChevronBackCircle />
+          </button>
+
+          <div className="flex flex-col font-medium">
+            <span className="text-[rgba(144,161,185,1)] text-xs">Item Code</span>
+            <textarea
+              disabled
+              className="text-[3.25vw] w-[24vw] field-sizing-content"
+              value={item?.item_code}
+            />
+          </div>
+        </div>
+      </UserAuthHeader>
 
       <div className="flex flex-col p-[2vh] gap-[2vh] h-[80vh] items-center justify-center">
         <div className="flex rounded-2xl overflow-hidden h-[35vh] max-w-[75vw]">
