@@ -16,7 +16,7 @@ import { IoMdClose } from "react-icons/io";
 export default function AddEditUserModal(props: {
   open: boolean;
   onClose: () => void;
-  selectedUser: UserTableItem;
+  selectedUser: UserTableItem | undefined;
   updateUser: (
     key: string,
     e: MuiInputChangeEvent | SelectChangeEvent<string | number>,
@@ -34,6 +34,7 @@ export default function AddEditUserModal(props: {
     handleRefresh,
   } = props;
 
+  const isCreate = mode === "Add User"
   const isDelete = mode === "Delete User";
 
   const { setLoading } = useAppStore();
@@ -72,11 +73,15 @@ export default function AddEditUserModal(props: {
   }
 
   async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
+    if(!selectedUser) return;
+    
     if (isDelete) return await postDeleteUser(selectedUser);
 
     e.preventDefault();
     await postUserSubmit();
   }
+
+  if(!selectedUser) return <></>
 
   return (
     <AppModal {...props}>
@@ -143,7 +148,7 @@ export default function AddEditUserModal(props: {
             </div>
 
             <div className="flex gap-[1.4vw]">
-              {!isDelete && (
+              {isCreate && (
                 <MuiInput
                   value={selectedUser.password}
                   label="Password"

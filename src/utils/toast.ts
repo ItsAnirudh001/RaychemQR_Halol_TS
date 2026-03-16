@@ -1,3 +1,5 @@
+"use client"
+
 // import { Close } from "@mui/icons-material";
 import { Bounce, toast } from "react-toastify";
 import { toastData } from "../constants/toast-data";
@@ -16,7 +18,7 @@ export function toastify(type: ToastType, message: string, duration?: boolean) {
 
   return toast(message, {
     position: "top-center",
-    className: `toast-${type} flex text-base! m-6! rounded-xl! w-[80vw]! md:w-[30vw]!`,
+    className: `toast-${type} flex m-2! rounded-xl! w-[69vw]! lg:w-[27vw]! text-[0.85rem]!`,
     type,
     transition: Bounce,
     autoClose: duration ? false : modDuration,

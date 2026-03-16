@@ -96,15 +96,15 @@ export const auditTableHeaders: TableHeaderItem[] = [
   },
   {
     name: "Username",
-    width: "17.5%",
-  },
-  {
-    name: "Login Time",
     width: "15%",
   },
   {
-    name: "Status",
-    width: "10%",
+    name: "Login Time",
+    width: "12.5%",
+  },
+  {
+    name: "Logout Time",
+    width: "12.5%",
     align: "center",
   },
   {

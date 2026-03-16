@@ -21,7 +21,7 @@ import { tableIndices } from "@/utils/helpers";
 
 export default function UsersTable(props: {
   usersData: UserTableItem[];
-  selectedUser: UserTableItem;
+  selectedUser: UserTableItem | undefined;
   showModal: (params: {
     data?: UserTableItem | undefined;
     newMode: string;

@@ -15,8 +15,7 @@ import { useState } from "react";
 import { UserLogsItem } from "@/types/table-types";
 import MuiPagination from "@/components/material-ui/pagination";
 import { rowsPerPage } from "@/constants/admin/paginate-data";
-import dayjs from "dayjs";
-import { tableIndices } from "@/utils/helpers";
+import { tableIndices, timestamp } from "@/utils/helpers";
 
 export default function AuditTable(props: {
   userLogs: UserLogsItem[] | undefined;
@@ -53,11 +52,11 @@ export default function AuditTable(props: {
               <TableCell className="tablecell">{data.username}</TableCell>
 
               <TableCell className="tablecell">
-                {dayjs(data.login_time).format("DD-MM-YYYY hh:mm:ss")}
+                {timestamp(data.login_time)}
               </TableCell>
 
               <TableCell className="tablecell text-center!">
-                {data.login_flag}
+                {timestamp(data.logout_time)}
               </TableCell>
 
               <TableCell className="tablecell text-center!">

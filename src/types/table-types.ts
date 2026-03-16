@@ -12,7 +12,7 @@ export interface UserTableItem {
   phone_number: string | number;
   role: string;
   is_active: boolean;
-  password:string
+  password: string;
 }
 
 export interface AuditTableItem {
@@ -39,4 +39,5 @@ export interface UserLogsItem {
   login_flag: string;
   login_success: boolean;
   login_time: string;
+  logout_time: string | null;
 }

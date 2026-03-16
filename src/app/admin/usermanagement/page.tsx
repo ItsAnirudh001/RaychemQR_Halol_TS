@@ -11,24 +11,21 @@ import useAppStore from "@/store/app-store";
 import { toastify } from "@/utils/toast";
 import { MuiInputChangeEvent } from "@/types/mui-types";
 import { apiErrorPrompter } from "@/api/common-utils";
-import {
-  isAPISuccess,
-  searchParam,
-  validatedInput,
-  validData,
-} from "@/utils/helpers";
+import { isAPISuccess, searchParam, validatedInput } from "@/utils/helpers";
 import { SelectChangeEvent } from "@mui/material";
 import { userTableObject } from "@/constants/admin/admin-constants";
 import NoData from "@/components/no-data";
 import AdminPageHead from "@/components/admin/page-head";
+import { getStoredUser } from "@/utils/session-utils";
 
 export default function UserManagementPage() {
   const { loading, setLoading } = useAppStore();
 
   const [userModal, setUserModal] = useState<boolean>(false);
   const [mode, setMode] = useState<string>("");
-  const [selectedUser, setSelectedUser] =
-    useState<UserTableItem>(userTableObject);
+  const [selectedUser, setSelectedUser] = useState<UserTableItem | undefined>(
+    userTableObject,
+  );
   const [usersData, setUsersData] = useState<UserTableItem[]>([]);
   const [searchVal, setSearchVal] = useState<string>("");
 
@@ -43,6 +40,8 @@ export default function UserManagementPage() {
     const value = "target" in e ? e.target.value : "";
 
     setSelectedUser((prev) => {
+      if (!prev) return undefined;
+
       const object = {
         ...prev,
         [key]: value,
@@ -65,12 +64,12 @@ export default function UserManagementPage() {
     }
   }
 
-  const isEdit = Boolean(selectedUser.user_id);
+  const isEdit = Boolean(selectedUser?.user_id);
 
   async function postUserSubmit() {
-    setLoading(true);
+    if (!validatedInput(selectedUser?.password || "", "password")) return;
 
-    if (!validatedInput(selectedUser.password, "password")) return;
+    setLoading(true);
 
     try {
       const { data } = isEdit
@@ -101,6 +100,7 @@ export default function UserManagementPage() {
 
   function hideModal() {
     setUserModal(false);
+    setSelectedUser(undefined);
     setMode("");
   }
 
@@ -112,7 +112,11 @@ export default function UserManagementPage() {
 
   function showModal(params: { data?: UserTableItem; newMode: string }) {
     const { data, newMode } = params;
-    // console.log("modal data", data);
+    const user = getStoredUser();
+
+    if (newMode === "Delete User" && data?.user_id == user.user_id)
+      return toastify("error", "Cannot delete self account");
+
     const object = data || userTableObject;
     console.log("object", object);
     setSelectedUser(object);
