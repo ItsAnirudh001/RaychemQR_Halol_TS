@@ -72,16 +72,16 @@ export async function Login(
     sessionStorage.setItem("user", JSON.stringify(userObject));
 
     const success = isAPISuccess(status);
-    const authorized = role && role === access_mode;
+    const authorized = role === access_mode;
 
-    if (!authorized)
+    if (role && !authorized)
       return toastify("warning", `Access Unauthorized for ${role}`);
 
     toastify(success ? "success" : "warning", message);
 
     if (!success) return;
 
-    localStorage.setItem("login", `Login at ${timestamp()}`);
+    // localStorage.setItem("login", `Login at ${timestamp()}`);
 
     callback();
   } catch (error) {

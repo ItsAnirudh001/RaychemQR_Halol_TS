@@ -64,27 +64,33 @@ export function checkToken(token: string) {
   try {
     const decodedToken: JwtPayload = jwtDecode(token);
 
-    console.log("decodedToken",decodedToken);
+    console.log("decodedToken", decodedToken);
 
-    const { exp,iat } = decodedToken;
-    if (!exp || !iat) return;
+    const { exp } = decodedToken;
+    if (!exp) return;
 
-    const tokenExpired = exp < iat;
+    const currentTime = Date.now() / 1000;
+
+    const tokenExpired = exp < currentTime;
 
     // console.log("exp", exp);
     // console.log("current",currentTime)
 
     if (tokenExpired)
-      localStorage.setItem(
-        "logout",
-        `Logout at ${timestamp()}`,
-      );
+      localStorage.setItem("logout", `Logout at ${timestamp()}`);
 
     return tokenExpired;
   } catch (error) {
     console.error("Error decoding token:", error);
     return null;
   }
+}
+
+export function getTokenExpiryTime(token: string) {
+  const decoded: JwtPayload = jwtDecode(token);
+  const { exp } = decoded;
+
+  return exp ? exp - Date.now() / 1000 : 0;
 }
 
 export function getScannedItems(pickslipItems: PickslipItem[]) {
@@ -140,5 +146,8 @@ export function searchParam(value: string | number | null) {
 }
 
 export function timestamp(date?: string | null) {
-  return date ? dayjs(date || "").format("DD-MM-YYYY hh:mm:ss") : "";
+  const format = "DD-MM-YYYY hh:mm:ss";
+  if (!date) return dayjs().format(format);
+
+  return dayjs(date).format(format);
 }

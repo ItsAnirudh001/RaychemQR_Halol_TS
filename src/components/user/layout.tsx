@@ -13,11 +13,11 @@ export default function MobileLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const path = usePathname();
 
-  async function autoLogout() {
+  async function autoAbortScanSession() {
     await AbortScanSession();
   }
 
-  useAutoCall(autoLogout);
+  useAutoCall(autoAbortScanSession);
 
   if (path.startsWith("/admin")) return <></>;
 

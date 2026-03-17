@@ -176,7 +176,7 @@ export default function AddEditUserModal(props: {
           <div className="flex items-center justify-end gap-[1.25vw]">
             <button
               type="button"
-              className="animated hover-shadow mobile-btn-main py-[1.25vh]! px-[2vw]! font-medium! text-[rgba(65,68,70,1)]! border border-[rgba(152,146,146,1)] bg-transparent! rounded-xl w-fit!"
+              className="animated hover-shadow mobile-btn-main py-[1.25vh]! px-[2vw]! font-medium! text-[rgba(65,68,70,1)]! border border-[rgba(152,146,146,1)] bg-transparent! rounded-xl w-fit! text-[0.92rem]!"
               onClick={onClose}
             >
               Cancel
@@ -184,9 +184,9 @@ export default function AddEditUserModal(props: {
 
             <button
               type="submit"
-              className={`animated hover-shadow mobile-btn-main py-[1.25vh]! px-[2.75vw]! font-medium! w-fit! ${isDelete ? "bg-red-800!" : "bg-[rgba(59,130,246,1)]!"}`}
+              className={`animated hover-shadow mobile-btn-main py-[1.25vh]! px-[2.75vw]! font-medium! w-fit! text-[0.92rem]! ${isDelete ? "bg-red-600!" : "bg-[rgba(59,130,246,1)]!"}`}
             >
-              Submit
+              {isDelete ? "Confirm" : "Submit"}
             </button>
           </div>
         </form>
