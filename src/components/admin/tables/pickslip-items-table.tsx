@@ -58,9 +58,7 @@ export default function PickslipItemsTable(props: {
                   {data.serial_no}
                 </TableCell>
 
-                <TableCell className="tablecell">{data.net_weight}</TableCell>
-
-                <TableCell className="tablecell">{data.gross_weight}</TableCell>
+              <TableCell className="tablecell text-center!">{data.weight}</TableCell>
               </TableRow>
             ))}
         </TableBody>

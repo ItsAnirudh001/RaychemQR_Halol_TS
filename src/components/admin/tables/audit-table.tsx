@@ -55,12 +55,12 @@ export default function AuditTable(props: {
                 {timestamp(data.login_time)}
               </TableCell>
 
-              <TableCell className="tablecell text-center!">
+              <TableCell className="tablecell">
                 {timestamp(data.logout_time)}
               </TableCell>
 
-              <TableCell className="tablecell text-center!">
-                {Number(data.login_success)}
+              <TableCell className="tablecell">
+                {data.login_flag}
               </TableCell>
             </TableRow>
           ))}

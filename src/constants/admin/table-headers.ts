@@ -73,15 +73,11 @@ export const pickslipItemsTableHeaders: TableHeaderItem[] = [
   },
   {
     name: "Serial Number",
-    width: "12.5%",
+    width: "15%",
   },
   {
-    name: "Net Weight",
-    width: "10%",
-  },
-  {
-    name: "Gross Weight",
-    width: "10%",
+    name: "Weight",
+    width: "8%",
   },
 ];
 
@@ -92,24 +88,22 @@ export const auditTableHeaders: TableHeaderItem[] = [
   },
   {
     name: "User ID",
-    width: "12.5%",
+    width: "10%",
   },
   {
     name: "Username",
-    width: "15%",
+    width: "17.5%",
   },
   {
     name: "Login Time",
-    width: "12.5%",
+    width: "15%",
   },
   {
     name: "Logout Time",
-    width: "12.5%",
-    align: "center",
+    width: "15%",
   },
   {
-    name: "Success",
+    name: "Status",
     width: "10%",
-    align: "center",
   },
 ];

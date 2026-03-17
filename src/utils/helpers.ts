@@ -77,7 +77,7 @@ export function checkToken(token: string) {
     // console.log("current",currentTime)
 
     if (tokenExpired)
-      localStorage.setItem("logout", `Logout at ${timestamp()}`);
+      localStorage.setItem("logout", `Logout at ${dayjs().format("DD-MM-YYYY hh:mm:ss")}`);
 
     return tokenExpired;
   } catch (error) {
@@ -147,7 +147,6 @@ export function searchParam(value: string | number | null) {
 
 export function timestamp(date?: string | null) {
   const format = "DD-MM-YYYY hh:mm:ss";
-  if (!date) return dayjs().format(format);
 
-  return dayjs(date).format(format);
+  return date ? dayjs(date).format(format) : "";
 }

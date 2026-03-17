@@ -54,7 +54,7 @@ export default function AuditPage() {
       (d) =>
         searchParam(d.user_id).includes(searchParam(searchVal)) ||
         searchParam(d.username).includes(searchParam(searchVal)) ||
-        timestamp(searchParam(d.login_time)).includes(searchParam(searchVal)),
+        timestamp(searchParam(d.login_time))?.includes(searchParam(searchVal)),
     );
 
     return searched;

@@ -43,7 +43,7 @@ export default function PickslipsPage() {
       (d) =>
         searchParam(d.oa_no).includes(searchParam(searchVal)) ||
         searchParam(d.po_no).includes(searchParam(searchVal)) ||
-        searchParam(timestamp(d.created_at)).includes(searchParam(searchVal)) ||
+        timestamp(searchParam(d.created_at))?.includes(searchParam(searchVal)) ||
         searchParam(d.status).includes(searchParam(searchVal)),
     );
 

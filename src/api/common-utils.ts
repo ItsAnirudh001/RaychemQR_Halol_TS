@@ -4,8 +4,7 @@ import { LoginForm } from "@/types/login-types";
 import qs from "qs";
 import { NavigateOptions } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { toastify } from "@/utils/toast";
-import { UserObject } from "@/types/store-types";
-import { handleFileDownload, isAPISuccess, timestamp } from "@/utils/helpers";
+import { handleFileDownload, isAPISuccess } from "@/utils/helpers";
 import dayjs from "dayjs";
 import { Pickslip } from "@/types/pickslip-type";
 import { getStoredScanSessionID } from "@/utils/session-utils";
@@ -81,7 +80,7 @@ export async function Login(
 
     if (!success) return;
 
-    // localStorage.setItem("login", `Login at ${timestamp()}`);
+    localStorage.setItem("login", `Login at ${dayjs().format("DD-MM-YYYY hh:mm:ss")}`);
 
     callback();
   } catch (error) {
