@@ -9,12 +9,10 @@ export interface PickslipItem {
   lot_no: string | null;
   serial_no: string | null;
   box_type: string | null;
-  weight: string;
+  weight: string | null;
   packing_details: string | null;
   no_of_boxes: number | null;
   status: string;
-  net_weight: number | null;
-  gross_weight: number | null;
   is_scanned: boolean;
 }
 
