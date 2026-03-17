@@ -67,7 +67,7 @@ export default function UserManagementPage() {
   const isEdit = Boolean(selectedUser?.user_id);
 
   async function postUserSubmit() {
-    if (!validatedInput(selectedUser?.password || "", "password")) return;
+    if (mode === "Add User" && !validatedInput(selectedUser?.password || "", "password")) return;
 
     setLoading(true);
 
