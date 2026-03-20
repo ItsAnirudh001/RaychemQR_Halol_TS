@@ -62,7 +62,7 @@ export default function ItemScanPage() {
 
       console.log("scan-item response data", data);
       const success = isAPISuccess(status);
-      toastify(success ? "success" : "warning", message + " for " + pcn);
+      toastify(success ? "success" : "warning", message + " for item code " + pcn);
 
       if (!success) return;
 
