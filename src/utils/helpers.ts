@@ -4,6 +4,7 @@ import { jwtDecode, JwtPayload } from "jwt-decode";
 import { Pickslip, PickslipItem } from "@/types/pickslip-type";
 import { regexMod } from "@/constants/regex-data";
 import { UserLogsItem, UserTableItem } from "@/types/table-types";
+import { getStoredUser } from "./session-utils";
 
 export function tableIndices(page: number, rowsPerPage: number) {
   const indices = {
@@ -55,42 +56,23 @@ export function dynamicClass(condition: boolean | string) {
     : `animated2 mobile-filter-btn text-[rgba(120,124,130,1)]`;
 }
 
-export function checkToken(token: string) {
-  if (!token) return;
-  // console.warn("No Token Detected");
+export function checkToken() {
+  const token = getStoredUser()?.access_token;
 
-  // console.log("token",token);
+  if (!token) return 0;
 
   try {
-    const decodedToken: JwtPayload = jwtDecode(token);
+    const decoded: JwtPayload = jwtDecode(token);
+    const { exp, iat } = decoded;
+    if (!exp || !iat) return 0;
 
-    console.log("decodedToken", decodedToken);
+    const tokenExpiryTime = (exp - iat) * 1000;
 
-    const { exp } = decodedToken;
-    if (!exp) return;
-
-    const currentTime = Date.now() / 1000;
-
-    const tokenExpired = exp < currentTime;
-
-    // console.log("exp", exp);
-    // console.log("current",currentTime)
-
-    if (tokenExpired)
-      localStorage.setItem("logout", `Logout at ${dayjs().format("DD-MM-YYYY hh:mm:ss")}`);
-
-    return tokenExpired;
+    return tokenExpiryTime;
   } catch (error) {
     console.error("Error decoding token:", error);
-    return null;
+    return 0;
   }
-}
-
-export function getTokenExpiryTime(token: string) {
-  const decoded: JwtPayload = jwtDecode(token);
-  const { exp } = decoded;
-
-  return exp ? exp - Date.now() / 1000 : 0;
 }
 
 export function getScannedItems(pickslipItems: PickslipItem[]) {

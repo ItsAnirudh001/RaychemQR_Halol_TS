@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isDev } from "./constants/layout-data";
 
 export function proxy(req: NextRequest) {
   const userAgent: string = req.headers.get("user-agent") || "";
@@ -10,7 +11,7 @@ export function proxy(req: NextRequest) {
 
   const { pathname }: { pathname: string } = req.nextUrl;
 
-  const invalidAccess: boolean =
+  const invalidAccess: boolean = !isDev &&
     (isMobile && pathname.startsWith("/admin")) ||
     (!isMobile && pathname.startsWith("/user"));
 

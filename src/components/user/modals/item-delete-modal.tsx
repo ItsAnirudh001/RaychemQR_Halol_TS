@@ -52,7 +52,7 @@ export default function ItemDeletionModal(props: {
         <div className="flex flex-col gap-[1.5vh]">
           <h1 className="font-medium text-[1.75vh]">{`Confirmation to delete item :`}</h1>
 
-          <span className="font-bold text-[2vh]">{item?.item_name}</span>
+          <span className="font-bold text-[2vh]">{item?.item_code}</span>
         </div>
 
         <div className="flex w-full justify-between gap-[6vw]">

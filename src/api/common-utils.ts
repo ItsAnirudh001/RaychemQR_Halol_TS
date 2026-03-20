@@ -39,7 +39,7 @@ export async function Login(
   callback: () => void,
 ) {
   setLoading(true);
-  console.log("reqBody", reqBody);
+  // console.log("reqBody", reqBody);
   try {
     const { data } = await customAxios.post(
       commonroutes.login,
@@ -80,7 +80,11 @@ export async function Login(
 
     if (!success) return;
 
-    localStorage.setItem("login", `Login at ${dayjs().format("DD-MM-YYYY hh:mm:ss")}`);
+    window.dispatchEvent(new Event("loggedin"));
+    localStorage.setItem(
+      "login",
+      `Login at ${dayjs().format("DD-MM-YYYY hh:mm:ss")}`,
+    );
 
     callback();
   } catch (error) {
@@ -98,8 +102,14 @@ export async function Logout(
   setLoading(true);
   try {
     const { data } = await customAxios.post(commonroutes.logout);
+    console.log("Logout triggered");
+    localStorage.setItem(
+      "logout",
+      `Logout at ${dayjs().format("DD-MM-YYYY hh:mm:ss")}`,
+    );
     push("/");
     toastify("success", data?.message);
+    localStorage.clear();
     sessionStorage.clear();
   } catch (error) {
     console.error("Error in logout", error);
@@ -113,7 +123,7 @@ export async function GetAllPickslips(setLoading: (value: boolean) => void) {
   setLoading(true);
   try {
     const { data } = await customAxios.get(commonroutes.getAllPickslips);
-    console.log("getAllPickslips data", data);
+    // console.log("getAllPickslips data", data);
     return data?.data;
   } catch (error) {
     console.error("Error in getAllpickslips", error);

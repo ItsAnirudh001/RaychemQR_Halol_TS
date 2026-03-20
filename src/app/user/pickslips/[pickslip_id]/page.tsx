@@ -420,12 +420,12 @@ export default function PickslipItemsScreen() {
                   <div className="flex w-full gap-[2.5vw]">
                     {infoCard(
                       "Batch No.",
-                      "NA",
+                      data.batch_no || "NA",
                       <FaHashtag className={iconClass} />,
                     )}
                     {infoCard(
                       "Weight",
-                      data.weight,
+                      data.weight || "",
                       <FaHashtag className={iconClass} />,
                     )}
                     {infoCard(

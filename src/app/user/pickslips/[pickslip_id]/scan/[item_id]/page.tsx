@@ -14,6 +14,7 @@ import {
 import { toastify } from "@/utils/toast";
 import { IDetectedBarcode } from "@yudiel/react-qr-scanner";
 import { useRouter } from "next/navigation";
+import { RefObject, useRef } from "react";
 import { IoChevronBackCircle } from "react-icons/io5";
 
 export default function ItemScanPage() {
@@ -21,11 +22,19 @@ export default function ItemScanPage() {
   const { setLoading } = useAppStore();
   const item = getStoredScanItem();
 
-  async function postScanItem(scannedItem: ScannedItem, scanned_qty: number) {
-    setLoading(true);
+  const scanSuccessRef = useRef(false);
+  const scanErrorRef = useRef(false);
 
+  const scanSuccessVal = useRef("");
+
+  async function postScanItem(scannedItem: ScannedItem, scanned_qty: number) {
     const { item_id, requested_qty } = item;
-    const { serial_no, batch_no, box_type, pcn } = scannedItem;
+    const { serial_no, batch_no, box_type, pcn, weight } = scannedItem;
+
+    console.log("scanned item", scannedItem);
+    console.log("original item", item);
+
+    console.log("scanned_qty", scanned_qty);
 
     if (scanned_qty !== requested_qty)
       return toastify(
@@ -33,78 +42,111 @@ export default function ItemScanPage() {
         "Scanned quantity not matching Requested quantity",
       );
 
+    setLoading(true);
+
+    const reqBody = {
+      session_id: getStoredScanSessionID(),
+      pick_slip_item_id: item_id,
+      item_code: pcn,
+      serial_number: serial_no,
+      batch: batch_no,
+      box_type,
+      weight,
+      notes: "OPk",
+    };
+
     try {
-      const { data } = await customAxios.post(useroutes.scanItem, {
-        session_id: getStoredScanSessionID(),
-        pick_slip_item_id: item_id,
-        item_code: pcn,
-        serial_number: serial_no,
-        batch: batch_no,
-        box_type,
-        notes: "",
-      });
+      const { data } = await customAxios.post(useroutes.scanItem, reqBody);
 
       const { status, message } = data;
+
+      console.log("scan-item response data", data);
       const success = isAPISuccess(status);
-      toastify(success ? "success" : "warning", message);
+      toastify(success ? "success" : "warning", message + " for " + pcn);
 
       if (!success) return;
 
-      sessionStorage.removeItem("reset_token");
       back();
     } catch (error) {
       console.error("Error in scanItem", error);
-      toastify("error", "Unable to scan item");
+      toastify("error", "Error in posting scanned item");
     } finally {
       setLoading(false);
     }
   }
 
-  function handleQRFail(error: unknown): void {
-    const message: string =
-      error instanceof Error ? error.message : String(error);
-
-    console.error("QR Scan Error", message);
-    toastify("error", "QR Scan Failed");
+  function resetRef(ref: RefObject<boolean>) {
+    // setTimeout(() => {
+    ref.current = false;
+    // }, 800);
   }
 
   async function handleQRScan(
     detectedCodes: IDetectedBarcode[],
   ): Promise<void> {
-    const value = detectedCodes[0].rawValue;
+    try {
+      if (scanSuccessRef.current) return;
 
-    console.log("QR Scan Result", value);
-    toastify("success", `QR Scan successful for "${value}"`);
+      const value = detectedCodes[0].rawValue;
 
-    const scanned =
-      // "RAYCHEM RPG L125079858 TO L125079860 16.865 Kg. 16725009896 AAA2429093 EK-16"
-      // "RAYCHEM RPG L225000884  17.115 Kg.  167012293  AAA2729029  J7"
-      value.split(" ").filter(Boolean);
+      // if (scanSuccessVal.current === value) return toastify("warning", "Avoid Duplicate Scanning");
 
-    const multiLot = scanned[3] === "TO";
+      console.log("QR Scan Result", value);
+      scanSuccessRef.current = true;
+      scanSuccessVal.current = value;
 
-    const serials: string[] = [];
+      // toastify("success", `QR Scan successful for "${value}"`);
 
-    if (multiLot) {
-      let first = Number(scanned[2]?.replace("L", ""));
-      const last = Number(scanned[4]?.replace("L", ""));
+      const scanned = value.split(" ").filter(Boolean);
 
-      while (first <= last) {
-        serials.push("L" + first);
-        first += 1;
-      }
-    } else serials.push(scanned[2]);
+      console.log("scanned", scanned);
 
-    const scannedItem: ScannedItem = {
-      pcn: multiLot ? scanned[8] : scanned[6],
-      batch_no: multiLot ? scanned[7] : scanned[5],
-      serial_no: multiLot ? scanned[2] + scanned[3] + scanned[4] : scanned[2],
-      box_type: multiLot ? scanned[9] : scanned[7],
-      weight: multiLot ? scanned[5] : scanned[3],
-    };
+      const multiLot = scanned[3] === "TO";
 
-    await postScanItem(scannedItem, serials.length);
+      const serials: string[] = [];
+
+      if (multiLot) {
+        let first = Number(scanned[2]?.replace("L", ""));
+        const last = Number(scanned[4]?.replace("L", ""));
+
+        while (first <= last) {
+          serials.push("L" + first);
+          first += 1;
+        }
+      } else serials.push(scanned[2]);
+
+      const scannedItem: ScannedItem = {
+        pcn: multiLot ? scanned[8] : scanned[6],
+        batch_no: multiLot ? scanned[7] : scanned[5],
+        serial_no: multiLot
+          ? `${scanned[2]} ${scanned[3]} ${scanned[4]}`
+          : scanned[2],
+        box_type: multiLot ? scanned[9] : scanned[7],
+        weight: multiLot ? scanned[5] : scanned[3],
+      };
+
+      await postScanItem(scannedItem, serials.length);
+    } finally {
+      resetRef(scanSuccessRef);
+    }
   }
+
+  function handleQRFail(error: unknown): void {
+    if (scanErrorRef.current) return;
+
+    scanErrorRef.current = true;
+    try {
+      const message: string =
+        error instanceof Error ? error.message : String(error);
+
+      console.error("QR Scan Error", message);
+      toastify("error", "QR Scan Failed");
+    } finally {
+      resetRef(scanErrorRef);
+    }
+  }
+
+  // console.log("scansuccessreff", scanSuccessRef);
 
   return (
     <>
@@ -115,7 +157,9 @@ export default function ItemScanPage() {
           </button>
 
           <div className="flex flex-col font-medium">
-            <span className="text-[rgba(144,161,185,1)] text-xs">Item Code</span>
+            <span className="text-[rgba(144,161,185,1)] text-xs">
+              Item Code
+            </span>
             <textarea
               disabled
               className="text-[3.25vw] w-[24vw] field-sizing-content"

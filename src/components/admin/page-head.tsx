@@ -7,7 +7,7 @@ import { FaSearch } from "react-icons/fa";
 
 export default function AdminPageHead(props: {
   title: string;
-  setSearchVal?: React.Dispatch<React.SetStateAction<string>>;
+  setSearchVal: React.Dispatch<React.SetStateAction<string>>;
   handleRefresh: () => Promise<void>;
 }) {
   const { title, handleRefresh, setSearchVal } = props;
@@ -17,6 +17,11 @@ export default function AdminPageHead(props: {
 
     const { value } = e.target;
     setSearchVal(value);
+  }
+
+  async function handleRefreshClick() {
+    setSearchVal("");
+    await handleRefresh();
   }
 
   return (
@@ -39,7 +44,7 @@ export default function AdminPageHead(props: {
         <MuiTooltip title="Refresh Page">
           <button
             className="animated hover-shadow rounded-3xl text-[3rem] text-[rgb(9,99,126)]"
-            onClick={handleRefresh}
+            onClick={handleRefreshClick}
           >
             <IoRefreshCircleSharp />
           </button>

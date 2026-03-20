@@ -6,3 +6,5 @@ export const fontSans = Poppins({
   variable: "--font-sans",
   subsets: ["latin"],
 });
+
+export const isDev = process.env.NEXT_PUBLIC_ENV === "Local";

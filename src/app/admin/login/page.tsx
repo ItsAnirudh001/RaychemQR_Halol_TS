@@ -34,9 +34,7 @@ export default function LoginPage() {
 
     if (!validatedInput(form.password, "password")) return;
 
-    await Login("admin",setLoading, form, () => {
-      push("/admin/usermanagement");
-    });
+    await Login("admin", setLoading, form, () => push("/admin/usermanagement"));
   }
 
   return (

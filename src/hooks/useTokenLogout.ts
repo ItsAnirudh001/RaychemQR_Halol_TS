@@ -2,8 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getTokenExpiryTime } from "@/utils/helpers";
-import { getStoredUser } from "@/utils/session-utils";
+import { checkToken } from "@/utils/helpers";
 import useAppStore from "@/store/app-store";
 import { Logout } from "@/api/common-utils";
 
@@ -11,20 +10,23 @@ export default function useTokenLogout() {
   const { push } = useRouter();
   const { setLoading } = useAppStore();
 
+  async function handleLogout() {
+    await Logout(setLoading, push)
+  }
+
   async function tokenLogout() {
-    await Logout(setLoading, push);
+    const remainingTime = checkToken();
+
+    console.log("nwo", remainingTime);
+
+    setTimeout(() => {
+     handleLogout()
+    }, remainingTime);
   }
 
   useEffect(() => {
-    const token = getStoredUser()?.access_token;
-    if (!token) return;
+    window.addEventListener("loggedin", tokenLogout);
 
-    const remainingTime = getTokenExpiryTime(token);
-
-    const timer = setTimeout(async () => {
-      await tokenLogout();
-    }, remainingTime * 1000);
-
-    return () => clearTimeout(timer);
+    return () => window.removeEventListener("loggedin", tokenLogout);
   }, []);
 }
