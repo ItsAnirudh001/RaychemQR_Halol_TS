@@ -1,15 +1,31 @@
 "use client";
 
 import { QRScannerProps } from "@/types/scanner-types";
-import { Scanner } from "@yudiel/react-qr-scanner";
+import { IDetectedBarcode, Scanner } from "@yudiel/react-qr-scanner";
+import { useState } from "react";
 
 export default function QRScanner({ onScan, onError, sound }: QRScannerProps) {
+  const [scannerKey, setScannerKey] = useState<number>(0);
+
+  function updateScanner() {
+    setTimeout(() => {
+      setScannerKey((prev) => prev + 1);
+    }, 2000);
+  }
+
   return (
     <Scanner
-      onScan={onScan}
-      onError={onError}
+      onScan={(detectedCodes: IDetectedBarcode[]) => {
+        onScan(detectedCodes);
+        updateScanner();
+      }}
+      onError={(error: unknown) => {
+        onError(error);
+        updateScanner();
+      }}
+      key={scannerKey}
       sound={sound}
-      scanDelay={1000}
+      scanDelay={6000}
       constraints={{
         facingMode: "environment",
       }}
@@ -20,18 +36,18 @@ export default function QRScanner({ onScan, onError, sound }: QRScannerProps) {
             const { boundingBox, cornerPoints } = qrCode;
 
             // bounding box
-            ctx.strokeStyle = "blue";
+            ctx.strokeStyle = "white";
             ctx.lineWidth = 4;
 
             ctx.strokeRect(
               boundingBox.x,
               boundingBox.y,
               boundingBox.width,
-              boundingBox.height
+              boundingBox.height,
             );
 
             // corner points
-            ctx.fillStyle = "blue";
+            ctx.fillStyle = "aquamarine";
             cornerPoints.forEach((point) => {
               ctx.beginPath();
               ctx.arc(point.x, point.y, 5, 0, 2 * Math.PI);

@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { userExists } from "@/utils/session-utils";
 import { preauthAdminPaths } from "@/utils/admin/admin-utils";
 import UnAuth from "../unauth";
+import { isDev } from "@/constants/layout-data";
 import useTokenLogout from "@/hooks/useTokenLogout";
 
 export default function AdminLayout({
@@ -16,6 +17,8 @@ export default function AdminLayout({
 
   useTokenLogout();
 
+  // console.log("dev mode?",isDev);
+
   if (path.startsWith("/user")) return <></>;
 
   if (!userExists() && !preauthAdminPaths.includes(path))
@@ -23,7 +26,7 @@ export default function AdminLayout({
 
   return (
     <div
-      className="hidden lg:flex lg:flex-col w-screen overflow-x-hidden"
+      className={`${isDev ? "flex flex-col" : "hidden lg:flex lg:flex-col"} w-screen overflow-x-hidden`}
       suppressHydrationWarning={true}
     >
       <AdminHeader />

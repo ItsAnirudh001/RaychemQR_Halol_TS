@@ -23,6 +23,7 @@ export default function PickslipsPage() {
     try {
       const data = await GetAllPickslips(setLoading);
       setPickslips(data);
+      console.log("api data",data);
     } catch (error) {
       console.error("Error fetching pickslips", error);
     } finally {
@@ -54,6 +55,8 @@ export default function PickslipsPage() {
 
   const finalData = searchedData();
   const validData = Array.isArray(finalData) && finalData.length > 0;
+
+  console.log("validData",validData);
 
   const tableProps = { pickslips: searchedData() };
 
