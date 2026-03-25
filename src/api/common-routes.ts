@@ -3,6 +3,7 @@ export const commonroutes = {
   // token: "/api/auth/token",
   // refreshToken: "/api/auth/refresh-token",
   logout: "/api/auth/logout", //tested
+  autoLogout: "/api/auth/logout/simple",
 
   getAllPickslips: "/pickslips/get-all-pickslips", //tested
 };

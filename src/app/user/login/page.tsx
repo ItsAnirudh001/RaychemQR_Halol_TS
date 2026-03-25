@@ -88,6 +88,7 @@ export default function LoginPage() {
           </div>
 
           <button
+            type="button"
             className="animated2 text-[0.85rem] self-end text-primary-heading font-medium"
             onClick={handleForgetClick}
           >

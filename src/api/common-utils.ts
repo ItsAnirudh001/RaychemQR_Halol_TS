@@ -7,7 +7,7 @@ import { toastify } from "@/utils/toast";
 import { handleFileDownload, isAPISuccess } from "@/utils/helpers";
 import dayjs from "dayjs";
 import { Pickslip } from "@/types/pickslip-type";
-import { getStoredScanSessionID } from "@/utils/session-utils";
+import { getStoredScanSessionID, getStoredUser } from "@/utils/session-utils";
 import { useroutes } from "./user/user-routes";
 
 export function apiErrorPrompter(error: unknown | Error) {
@@ -117,6 +117,21 @@ export async function Logout(
   } finally {
     setLoading(false);
   }
+}
+
+export function AutoLogout() {
+  const user_id = getStoredUser()?.user_id;
+
+  const req = {
+    user_id,
+  };
+
+  const url = process.env.NEXT_PUBLIC_BASE_URL + commonroutes.autoLogout;
+  const blob = new Blob([JSON.stringify(req)], {
+    type: "application/json; charset=UTF-8",
+  });
+
+  navigator.sendBeacon(url, blob);
 }
 
 export async function GetAllPickslips(setLoading: (value: boolean) => void) {

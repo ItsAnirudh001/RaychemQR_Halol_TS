@@ -1,27 +1,41 @@
 "use client";
 
-import { userExists } from "@/utils/session-utils";
+import { getStoredScanSessionID, userExists } from "@/utils/session-utils";
 import { usePathname } from "next/navigation";
 import React from "react";
 import UnAuth from "../unauth";
 import { preauthUserPaths } from "@/utils/user/user-utils";
 import useAutoCall from "@/hooks/useAutoCall";
-import { AbortScanSession } from "@/api/common-utils";
+import { useroutes } from "@/api/user/user-routes";
 
 export default function MobileLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const path = usePathname();
+  const isAdmin = path.startsWith("/admin");
 
-  async function autoAbortScanSession() {
-    await AbortScanSession();
+  function autoAbortScanSession() {
+    if (isAdmin) return;
+
+    const session_id = getStoredScanSessionID();
+
+    const req = {
+      session_id,
+    };
+
+    const url = process.env.NEXT_PUBLIC_BASE_URL + useroutes.autoScanAbort;
+    const blob = new Blob([JSON.stringify(req)], {
+      type: "application/json; charset=UTF-8",
+    });
+
+    navigator.sendBeacon(url, blob);
   }
 
   useAutoCall(autoAbortScanSession);
 
-  if (path.startsWith("/admin")) return <></>;
+  if (isAdmin) return <></>;
 
-  if (!userExists() && !preauthUserPaths.includes(path))
+  if (!userExists() && !preauthUserPaths.includes(path) && !path.includes("reset"))
     return <UnAuth no_margin />;
 
   return (

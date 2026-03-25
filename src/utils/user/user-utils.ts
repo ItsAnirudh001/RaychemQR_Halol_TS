@@ -4,6 +4,5 @@ export function invalidUserPaths(path: string) {
 
 export const preauthUserPaths: string[] = [
   "/user/emailverify",
-  "/user/reset",
   "/user/login",
 ];

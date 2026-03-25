@@ -1,22 +1,17 @@
-"use client";
-
-import { useroutes } from "@/api/user/user-routes";
-import MuiInput from "@/components/material-ui/input";
-import UserPreAuthHeader from "@/components/user/preauth-header";
-import useAppStore from "@/store/app-store";
 import { MuiInputChangeEvent } from "@/types/mui-types";
 import { ResetForm } from "@/types/user/user-types";
-import { customAxios } from "@/utils/axios";
-import { isAPISuccess, validatedInput } from "@/utils/helpers";
-import { getStoredUser } from "@/utils/session-utils";
-import { toastify } from "@/utils/toast";
+import React, { useState } from "react";
+import MuiInput from "../material-ui/input";
+import UserPreAuthHeader from "./preauth-header";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { validatedInput } from "@/utils/helpers";
+import { toastify } from "@/utils/toast";
 
-export default function PasswordResetPage() {
-  const { push } = useRouter();
-  const { setLoading } = useAppStore();
+export default function PasswordResetForm(props: {
+  title: string;
+  postSubmit: (form: ResetForm) => Promise<void>;
+}) {
+  const { title, postSubmit } = props;
 
   const [form, setForm] = useState<ResetForm>({
     new_password: "",
@@ -35,19 +30,13 @@ export default function PasswordResetPage() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (
-      !validatedInput(form.new_password, "password") ||
-      !validatedInput(form.confirm_password, "password")
-    )
-      return;
-
-    const reset_token = sessionStorage.getItem("reset_token");
-    const user = getStoredUser();
-    const { access_token } = user;
     const { new_password, confirm_password } = form;
 
-    if (!access_token && !reset_token)
-      return toastify("error", "Password Reset Unauthorized");
+    if (
+      !validatedInput(new_password, "password") ||
+      !validatedInput(confirm_password, "password")
+    )
+      return;
 
     if (new_password !== confirm_password)
       return toastify(
@@ -55,28 +44,7 @@ export default function PasswordResetPage() {
         "Confirmed Password not matching with New Password",
       );
 
-    setLoading(true);
-
-    try {
-      const { data } = await customAxios.post(useroutes.resetPassword, {
-        reset_token,
-        new_password,
-      });
-
-      const { status, message } = data;
-
-      const success = isAPISuccess(status);
-
-      if (!success) return;
-
-      toastify("success", message);
-      push("/user/login");
-      sessionStorage.removeItem("reset_token");
-    } catch (error) {
-      console.error("Error in resetPassword", error);
-    } finally {
-      setLoading(false);
-    }
+    await postSubmit(form);
   }
 
   return (
@@ -93,9 +61,7 @@ export default function PasswordResetPage() {
           />
         </div>
 
-        <h2 className="font-semibold text-[1.25rem] pt-[1.2vh]">
-          Reset Password
-        </h2>
+        <h2 className="font-semibold text-[1.25rem] pt-[1.2vh]">{title}</h2>
 
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-[3.6vh]">
