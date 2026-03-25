@@ -5,6 +5,7 @@ export const useroutes = {
   scanItem: "/api/scan-items/scan-item", //tested
   startScanSession: "/scan-sessions/start", //tested
   abortScanSession: "/scan-sessions/abort-session", //tested
+  autoScanAbort: "/scan-sessions/abort-session/simple",
 };
 
 export const usermodroutes = (data: {

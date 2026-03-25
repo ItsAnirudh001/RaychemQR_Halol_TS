@@ -17,8 +17,6 @@ export default function useTokenLogout() {
   async function tokenLogout() {
     const remainingTime = checkToken();
 
-    console.log("nwo", remainingTime);
-
     setTimeout(() => {
      handleLogout()
     }, remainingTime);

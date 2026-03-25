@@ -1,27 +1,22 @@
 "use client";
 
-import { Logout } from "@/api/common-utils";
+import { AutoLogout } from "@/api/common-utils";
 import useAutoCall from "@/hooks/useAutoCall";
-import useAppStore from "@/store/app-store";
 import { getStoredUser } from "@/utils/session-utils";
 import { Menu, MenuItem } from "@mui/material";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { PiUserCircleFill } from "react-icons/pi";
 import { RiLogoutCircleLine } from "react-icons/ri";
 
 export default function AdminHeader() {
   const path = usePathname();
-  const { push } = useRouter();
-  const { setLoading } = useAppStore();
-
-  // console.log("user", user);
 
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 
-  async function postLogout() {
-    await Logout(setLoading, push);
+  function postLogout() {
+    AutoLogout()
     setMenuAnchor(null);
   }
 

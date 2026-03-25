@@ -7,7 +7,7 @@ import { RiLogoutCircleLine } from "react-icons/ri";
 import { PiUserCircleFill } from "react-icons/pi";
 import { MdLock } from "react-icons/md";
 import { useRouter } from "next/navigation";
-import { Logout } from "@/api/common-utils";
+import { AutoLogout, Logout } from "@/api/common-utils";
 import useAppStore from "@/store/app-store";
 import useAutoCall from "@/hooks/useAutoCall";
 import { IoRefreshCircleSharp } from "react-icons/io5";
@@ -41,8 +41,8 @@ export default function UserAuthHeader({
     setSearchVal(value);
   }
 
-  async function postLogout() {
-    await Logout(setLoading, push);
+  function postLogout() {
+    AutoLogout();
     setMenuAnchor(null);
   }
 
@@ -97,7 +97,7 @@ export default function UserAuthHeader({
         >
           <MenuItem
             className="animated2 mui-menuitem-mobile"
-            onClick={() => push("/user/reset")}
+            onClick={() => push("/user/changepassword")}
           >
             <MdLock className="text-[1.25rem]" />
             Change Password

@@ -36,8 +36,7 @@ export default function EmailVerifyPage() {
 
       if (!success) return;
 
-      sessionStorage.setItem("reset_token", reset_token);
-      push("/user/reset");
+      localStorage.setItem("reset_token", reset_token);
     } catch (error) {
       console.error("Error in forgetPassword", error);
       apiErrorPrompter(error);
