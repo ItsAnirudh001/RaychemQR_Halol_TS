@@ -16,9 +16,9 @@ export default function MobileLayout({
   const isAdmin = path.startsWith("/admin");
 
   function autoAbortScanSession() {
-    if (isAdmin) return;
-
     const session_id = getStoredScanSessionID();
+
+    if (isAdmin || !session_id) return;
 
     const req = {
       session_id,
