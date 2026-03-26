@@ -9,8 +9,9 @@ import dayjs from "dayjs";
 import { Pickslip } from "@/types/pickslip-type";
 import { getStoredScanSessionID, getStoredUser } from "@/utils/session-utils";
 import { useroutes } from "./user/user-routes";
+import { ApiError } from "@/types/api-types";
 
-export function apiErrorPrompter(error: unknown | Error) {
+export function apiErrorPrompter(error: ApiError) {
   const detail = error?.response?.data?.detail;
 
   switch (true) {
