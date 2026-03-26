@@ -9,9 +9,12 @@ import dayjs from "dayjs";
 import { Pickslip } from "@/types/pickslip-type";
 import { getStoredScanSessionID, getStoredUser } from "@/utils/session-utils";
 import { useroutes } from "./user/user-routes";
+import axios from "axios";
 
-export function apiErrorPrompter(error: unknown | Error) {
-  const detail = error?.response?.data?.detail;
+export function apiErrorPrompter(error: unknown) {
+  let detail: unknown;
+
+  if (axios.isAxiosError(error)) detail = error.response?.data?.detail;
 
   switch (true) {
     case typeof detail === "string":

@@ -9,7 +9,6 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { tableData } from "@/constants/admin/mocks/audit-table-mock";
 import { auditTableHeaders } from "@/constants/admin/table-headers";
 import { useState } from "react";
 import { UserLogsItem } from "@/types/table-types";
