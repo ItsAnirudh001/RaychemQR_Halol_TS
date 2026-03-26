@@ -10,7 +10,6 @@ import { IoChevronBackCircle } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { LuQrCode } from "react-icons/lu";
-import { pickslipsDataMock } from "@/constants/user/mocks/picklips-mock";
 import ItemDeletionModal from "@/components/user/modals/item-delete-modal";
 import OrderSubmissionModal from "@/components/user/modals/order-submission-modal";
 import { PickslipItem } from "@/types/pickslip-type";
