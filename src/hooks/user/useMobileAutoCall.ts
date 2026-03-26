@@ -2,21 +2,20 @@
 
 import { useEffect } from "react";
 
-const timeout = 10 * 1000;
+const timeout = 20 * 1000;
 
 export default function useMobileAutoCall(callback: () => void) {
    function handleBeforeUnload(e: BeforeUnloadEvent) {
     e.preventDefault();
   }
 
+  useEffect(() => {
+   localStorage.setItem("lastseen", Date.now().toString());
+  }, [document.visibilityState === "hidden"])
+  
+
   function handleVisibilityChange() {
-    if (document.visibilityState === "hidden")
-      localStorage.setItem("lastseen", Date.now().toString());
-  }
-
-  function postLogout() {
     const lastSeen = Number(localStorage.getItem("lastseen"));
-
     if (!lastSeen) return;
 
     const diff = Date.now() - lastSeen;
@@ -25,9 +24,7 @@ export default function useMobileAutoCall(callback: () => void) {
   }
 
   useEffect(() => {
-    postLogout();
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
+     window.addEventListener("beforeunload", handleBeforeUnload);
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
