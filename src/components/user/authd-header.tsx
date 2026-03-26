@@ -47,8 +47,8 @@ export default function UserAuthHeader({
     setMenuAnchor(null);
   }
 
-  // useMobileAutoCall(postLogout);
-  useAutoCall(postLogout);
+  useMobileAutoCall(postLogout);
+  // useAutoCall(postLogout);
 
   return (
     <div

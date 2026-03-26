@@ -16,12 +16,12 @@ export default function MobileLayout({
   const isAdmin = path.startsWith("/admin");
 
   function autoAbortScanSession() {
-    const session_id = getStoredScanSessionID();
+    const id = getStoredScanSessionID();
+    if (!id) return;
 
-    if (isAdmin || !session_id) return;
 
     const req = {
-      session_id,
+      session_id : Number(id),
     };
 
     const url = process.env.NEXT_PUBLIC_BASE_URL + useroutes.autoScanAbort;
@@ -32,8 +32,8 @@ export default function MobileLayout({
     navigator.sendBeacon(url, blob);
   }
 
-  // useMobileAutoCall(autoAbortScanSession);
-  useAutoCall(autoAbortScanSession)
+  useMobileAutoCall(autoAbortScanSession);
+  // useAutoCall(autoAbortScanSession)
 
   if (isAdmin) return <></>;
 
