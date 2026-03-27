@@ -32,8 +32,8 @@ export default function MobileLayout({
     navigator.sendBeacon(url, blob);
   }
 
-  useMobileAutoCall(autoAbortScanSession);
-  // useAutoCall(autoAbortScanSession)
+  // useMobileAutoCall(autoAbortScanSession);
+  useAutoCall(autoAbortScanSession)
 
   if (isAdmin) return <></>;
 
