@@ -7,7 +7,6 @@ import UnAuth from "../unauth";
 import { preauthUserPaths } from "@/utils/user/user-utils";
 import { useroutes } from "@/api/user/user-routes";
 import useMobileAutoCall from "@/hooks/user/useMobileAutoCall";
-import useAutoCall from "@/hooks/useAutoCall";
 
 export default function MobileLayout({
   children,
@@ -32,8 +31,7 @@ export default function MobileLayout({
     navigator.sendBeacon(url, blob);
   }
 
-  // useMobileAutoCall(autoAbortScanSession);
-  useAutoCall(autoAbortScanSession)
+  useMobileAutoCall(autoAbortScanSession);
 
   if (isAdmin) return <></>;
 

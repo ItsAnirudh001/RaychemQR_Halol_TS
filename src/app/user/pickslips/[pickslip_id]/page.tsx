@@ -24,7 +24,11 @@ import {
 } from "@/utils/helpers";
 import { toastify } from "@/utils/toast";
 import useAppStore from "@/store/app-store";
-import { AbortScanSession, apiErrorPrompter, GetPickslipItems } from "@/api/common-utils";
+import {
+  AbortScanSession,
+  apiErrorPrompter,
+  GetPickslipItems,
+} from "@/api/common-utils";
 import {
   getStoredPickslip,
   getStoredScanSessionID,
@@ -64,7 +68,11 @@ export default function PickslipItemsScreen() {
 
     try {
       const items = await GetPickslipItems(pickslip_id, setLoading);
-      setPickslipItems(items);
+
+      if (!Array.isArray(items)) return;
+
+      const sorted_items = items?.sort((a, b) => b.item_id - a.item_id);
+      setPickslipItems(sorted_items);
     } catch (error) {
       console.error("Error in fetchPickslipItems", error);
     } finally {
@@ -97,7 +105,7 @@ export default function PickslipItemsScreen() {
 
   function handleSort() {
     setSortKey((prev) => {
-      return prev === "desc" ? "asc" : "desc";
+      return prev === "asc" ? "desc" : "asc";
     });
   }
 
@@ -201,9 +209,7 @@ export default function PickslipItemsScreen() {
   async function postAbortSession() {
     const session_id = getStoredScanSessionID();
 
-    if (!session_id) return;
-
-    if (!created) return directToPickslips();
+    if (!session_id || !created) return directToPickslips();
 
     try {
       const { status, message } = await AbortScanSession(setLoading);
@@ -306,7 +312,7 @@ export default function PickslipItemsScreen() {
 
       {/* body */}
       <div
-        className={`flex flex-col p-[2vh] gap-[2vh] ${smallHeight() ? "mt-[10vh]" : "mt-[6.5vh]"} ${allScanned ? "mb-[15.5vh]" : "mb-[2.2vh]"}`}
+        className={`flex flex-col p-[2vh] gap-[2vh] ${smallHeight() ? "mt-[12vh]" : "mt-[9vh]"} ${allScanned ? "mb-[15.5vh]" : "mb-[2.2vh]"}`}
       >
         {/* top buttons */}
         {validData ? (

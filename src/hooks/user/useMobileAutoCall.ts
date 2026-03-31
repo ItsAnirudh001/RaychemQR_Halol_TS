@@ -2,32 +2,23 @@
 
 import { useEffect } from "react";
 
-const timeout = 2 * 60 * 1000;
-
 export default function useMobileAutoCall(callback: () => void) {
   function handleBeforeUnload(e: BeforeUnloadEvent) {
     e.preventDefault();
   }
 
-  function handleVisibilityChange() {
-    if (document.visibilityState === "hidden")
-      localStorage.setItem("lastseen", Date.now().toString());
-
-    const lastSeen = localStorage.getItem("lastseen");
-    if (!lastSeen) return;
-
-    const diff = Date.now() - Number(lastSeen);
-
-    if (diff > timeout) callback();
+  function handlePageHide() {
+    callback();
+    localStorage.clear();
   }
 
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeUnload);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("pagehide", handlePageHide);
 
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pagehide", handlePageHide);
     };
-  }, [callback, timeout]);
+  }, []);
 }
