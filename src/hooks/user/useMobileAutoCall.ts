@@ -7,18 +7,20 @@ export default function useMobileAutoCall(callback: () => void) {
     e.preventDefault();
   }
 
-  function handlePageHide() {
+  function handleVisibilityChange() {
+    if(document.visibilityState !== "hidden") return;
+    
     callback();
     localStorage.clear();
   }
 
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeUnload);
-    document.addEventListener("visibilitychange", handlePageHide);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
-      document.removeEventListener("visibilitychange", handlePageHide);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 }
