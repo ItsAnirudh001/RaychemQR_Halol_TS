@@ -1,10 +1,3 @@
-export function getStoredUser() {
-  if (typeof sessionStorage === "undefined") return;
-
-  const user = JSON.parse(sessionStorage.getItem("user")!);
-  return user || {};
-}
-
 export function userExists() {
   if (typeof sessionStorage === "undefined") return;
 
@@ -12,10 +5,17 @@ export function userExists() {
   return Boolean(user?.user_id);
 }
 
+export function getStoredUser() {
+  if (typeof sessionStorage === "undefined") return;
+
+  const user = JSON.parse(sessionStorage.getItem("user")!);
+  return user;
+}
+
 export function getStoredScanSessionID() {
   if (typeof sessionStorage === "undefined") return;
 
-  const session_id = Number(sessionStorage.getItem("scan_session_id"));
+  const session_id = sessionStorage.getItem("scan_session_id");
   return session_id;
 }
 

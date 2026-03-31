@@ -1,0 +1,1 @@
+const inactiveStates = ["frozen","terminated",""]

@@ -7,10 +7,10 @@ import { RiLogoutCircleLine } from "react-icons/ri";
 import { PiUserCircleFill } from "react-icons/pi";
 import { MdLock } from "react-icons/md";
 import { useRouter } from "next/navigation";
-import { AutoLogout, Logout } from "@/api/common-utils";
+import { AutoLogout } from "@/api/common-utils";
 import useAppStore from "@/store/app-store";
-import useAutoCall from "@/hooks/useAutoCall";
 import { IoRefreshCircleSharp } from "react-icons/io5";
+import useMobileAutoCall from "@/hooks/user/useMobileAutoCall";
 
 export default function UserAuthHeader({
   children,
@@ -46,7 +46,7 @@ export default function UserAuthHeader({
     setMenuAnchor(null);
   }
 
-  useAutoCall(postLogout);
+  useMobileAutoCall(postLogout);
 
   return (
     <div

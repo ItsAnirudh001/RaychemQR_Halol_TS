@@ -125,6 +125,8 @@ export async function Logout(
 export function AutoLogout() {
   const user_id = getStoredUser()?.user_id;
 
+  if(!user_id) return;
+
   const req = {
     user_id,
   };
