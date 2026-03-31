@@ -14,11 +14,11 @@ export default function useMobileAutoCall(callback: () => void) {
 
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeUnload);
-    window.addEventListener("pagehide", handlePageHide);
+    document.addEventListener("visibilitychange", handlePageHide);
 
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
-      window.removeEventListener("pagehide", handlePageHide);
+      document.removeEventListener("visibilitychange", handlePageHide);
     };
   }, []);
 }
