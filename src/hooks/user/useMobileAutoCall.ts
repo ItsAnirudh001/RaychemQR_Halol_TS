@@ -1,24 +1,44 @@
 "use client";
 
-import { useEffect } from "react";
+import { toastify } from "@/utils/toast";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 
-export default function useMobileAutoCall(callback: () => void) {
+export default function useMobileAutoCall(
+  callback: () => void,
+  message?: string,
+) {
+  const { push } = useRouter();
+
+  const logoutRef = useRef(false);
+
   function handleBeforeUnload(e: BeforeUnloadEvent) {
     e.preventDefault();
   }
 
-  function handlePageHide() {
-    callback();
-    localStorage.clear();
+  function handleVisibilityChange() {
+    if (logoutRef.current) return;
+    logoutRef.current = true;
+
+    try {
+      callback();
+      push("/");
+      if (message) toastify("success", message);
+      localStorage.clear();
+    } catch (error) {
+      console.error("error", error);
+    } finally {
+      logoutRef.current = false;
+    }
   }
 
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeUnload);
-    window.addEventListener("pagehide", handlePageHide);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
-      window.removeEventListener("pagehide", handlePageHide);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 }

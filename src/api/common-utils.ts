@@ -125,7 +125,9 @@ export async function Logout(
 export function AutoLogout() {
   const user_id = getStoredUser()?.user_id;
 
-  if(!user_id) return;
+  console.log("Triggwered auto logout for", user_id);
+
+  if (!user_id) return;
 
   const req = {
     user_id,
@@ -136,7 +138,22 @@ export function AutoLogout() {
     type: "application/json; charset=UTF-8",
   });
 
-  navigator.sendBeacon(url, blob);
+  const success = navigator.sendBeacon(url, blob);
+
+  console.log("beacon success for ", user_id);
+
+  if (success) return;
+
+  console.log("into fetch for ", user_id);
+
+  fetch(url, {
+    method: "POST",
+    body: JSON.stringify(req),
+    headers: { "Content-Type": "application/json" },
+    keepalive: true,
+  });
+
+  console.log("fetch success for ", user_id);
 }
 
 export async function GetAllPickslips(setLoading: (value: boolean) => void) {

@@ -11,6 +11,7 @@ import { AutoLogout } from "@/api/common-utils";
 import useAppStore from "@/store/app-store";
 import { IoRefreshCircleSharp } from "react-icons/io5";
 import useMobileAutoCall from "@/hooks/user/useMobileAutoCall";
+import { toastify } from "@/utils/toast";
 
 export default function UserAuthHeader({
   children,
@@ -46,7 +47,7 @@ export default function UserAuthHeader({
     setMenuAnchor(null);
   }
 
-  useMobileAutoCall(postLogout);
+  useMobileAutoCall(postLogout, "Logout Successful");
 
   return (
     <div
