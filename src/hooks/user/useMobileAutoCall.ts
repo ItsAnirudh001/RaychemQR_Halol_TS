@@ -1,22 +1,36 @@
 "use client";
 
+import { toastify } from "@/utils/toast";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-export default function useMobileAutoCall(callback: () => void) {
+export default function useMobileAutoCall(
+  callback: () => void,
+  message?: string,
+) {
   const { push } = useRouter();
+
+  const logoutRef = useRef(false);
 
   function handleBeforeUnload(e: BeforeUnloadEvent) {
     e.preventDefault();
   }
 
   function handleVisibilityChange() {
-    setTimeout(() => {
+    if (logoutRef.current) return;
+    logoutRef.current = true;
+
+    try {
       callback();
       push("/");
+      if (message) toastify("success", message);
       localStorage.clear();
-    }, 15000);
-  };
+    } catch (error) {
+      console.error("error", error);
+    } finally {
+      logoutRef.current = false;
+    }
+  }
 
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeUnload);
