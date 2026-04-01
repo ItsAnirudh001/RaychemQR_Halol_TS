@@ -3,6 +3,7 @@
 import { AutoLogout } from "@/api/common-utils";
 import useAutoCall from "@/hooks/useAutoCall";
 import { getStoredUser } from "@/utils/session-utils";
+import { isUserPath } from "@/utils/user/user-utils";
 import { Menu, MenuItem } from "@mui/material";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -32,7 +33,7 @@ export default function AdminHeader() {
 
   // console.log("user",user);
 
-  if (path.includes("login") || path.startsWith("/user")) return <></>;
+  if (path.includes("login") || isUserPath(path)) return <></>;
 
   const user = getStoredUser();
 

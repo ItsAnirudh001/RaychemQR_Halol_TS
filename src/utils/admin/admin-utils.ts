@@ -1,6 +1,6 @@
-export function invalidAdminPaths(path: string) {
+export function isAdminPath(path: string) {
   // console.log("func path", path);
-  const invalid = path.startsWith("/user");
+  const invalid = path.startsWith("/admin");
 
   // console.log("invalid",invalid)
 

@@ -1,7 +1,8 @@
 "use client";
 
+import { isAdminPath } from "@/utils/admin/admin-utils";
 import { toastify } from "@/utils/toast";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 export default function useMobileAutoCall(
@@ -9,6 +10,7 @@ export default function useMobileAutoCall(
   message?: string,
 ) {
   const { push } = useRouter();
+  const path = usePathname()
 
   const logoutRef = useRef(false);
 
@@ -33,6 +35,8 @@ export default function useMobileAutoCall(
   }
 
   useEffect(() => {
+    if(isAdminPath(path)) return;
+
     window.addEventListener("beforeunload", handleBeforeUnload);
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
