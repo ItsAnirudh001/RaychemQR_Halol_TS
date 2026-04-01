@@ -22,10 +22,17 @@ export default function ItemScanPage() {
   const { setLoading } = useAppStore();
   const item = getStoredScanItem();
 
+  const scanPostRef = useRef(false);
   const scanSuccessRef = useRef(false);
   const scanErrorRef = useRef(false);
 
   const scanSuccessVal = useRef("");
+
+  function resetRef(ref: RefObject<boolean>) {
+    // setTimeout(() => {
+    ref.current = false;
+    // }, 800);
+  }
 
   async function postScanItem(scannedItem: ScannedItem, scanned_qty: number) {
     const { item_id, requested_qty } = item;
@@ -42,6 +49,9 @@ export default function ItemScanPage() {
         "Scanned quantity not matching Requested quantity",
       );
 
+    if (scanPostRef.current) return;
+
+    scanPostRef.current = true;
     setLoading(true);
 
     const reqBody = {
@@ -52,7 +62,7 @@ export default function ItemScanPage() {
       batch: batch_no,
       box_type,
       weight,
-      notes: "OPk",
+      notes: "",
     };
 
     try {
@@ -62,7 +72,10 @@ export default function ItemScanPage() {
 
       console.log("scan-item response data", data);
       const success = isAPISuccess(status);
-      toastify(success ? "success" : "warning", message + " for item code " + pcn);
+      toastify(
+        success ? "success" : "warning",
+        message + " for item code " + pcn,
+      );
 
       if (!success) return;
 
@@ -72,13 +85,8 @@ export default function ItemScanPage() {
       toastify("error", "Error in posting scanned item");
     } finally {
       setLoading(false);
+      resetRef(scanPostRef);
     }
-  }
-
-  function resetRef(ref: RefObject<boolean>) {
-    // setTimeout(() => {
-    ref.current = false;
-    // }, 800);
   }
 
   async function handleQRScan(
