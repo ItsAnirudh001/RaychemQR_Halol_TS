@@ -1,5 +1,5 @@
-export function invalidUserPaths(path: string) {
-  return path.startsWith("/admin");
+export function isUserPath(path: string) {
+  return path.startsWith("/user");
 }
 
 export const preauthUserPaths: string[] = [

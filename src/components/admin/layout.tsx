@@ -9,6 +9,7 @@ import { preauthAdminPaths } from "@/utils/admin/admin-utils";
 import UnAuth from "../unauth";
 import { isDev } from "@/constants/layout-data";
 import useTokenLogout from "@/hooks/useTokenLogout";
+import { isUserPath } from "@/utils/user/user-utils";
 
 export default function AdminLayout({
   children,
@@ -19,7 +20,7 @@ export default function AdminLayout({
 
   // console.log("dev mode?",isDev);
 
-  if (path.startsWith("/user")) return <></>;
+  if (isUserPath(path)) return <></>;
 
   if (!userExists() && !preauthAdminPaths.includes(path))
     return <UnAuth no_margin />;
