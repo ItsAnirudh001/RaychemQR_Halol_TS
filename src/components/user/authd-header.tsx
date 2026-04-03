@@ -45,6 +45,7 @@ export default function UserAuthHeader({
   function postLogout() {
     AutoLogout();
     setMenuAnchor(null);
+    localStorage.clear()
   }
 
   useMobileAutoCall(postLogout, "Logout Successful");

@@ -12,6 +12,7 @@ export default function useTokenLogout() {
 
   async function handleLogout() {
     await Logout(setLoading, push)
+    localStorage.clear()
   }
 
   async function tokenLogout() {

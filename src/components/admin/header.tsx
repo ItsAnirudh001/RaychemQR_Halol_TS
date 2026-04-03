@@ -19,6 +19,7 @@ export default function AdminHeader() {
   function postLogout() {
     AutoLogout()
     setMenuAnchor(null);
+    localStorage.clear()
   }
 
   useAutoCall(postLogout);
