@@ -29,12 +29,15 @@ export default function ItemScanPage() {
   const scanSuccessVal = useRef("");
 
   function resetRef(ref: RefObject<boolean>) {
-    // setTimeout(() => {
-    ref.current = false;
-    // }, 800);
+    setTimeout(() => {
+      ref.current = false;
+    }, 2000);
   }
 
   async function postScanItem(scannedItem: ScannedItem, scanned_qty: number) {
+    if (scanPostRef.current) return;
+    scanPostRef.current = true;
+
     const { item_id, requested_qty } = item;
     const { serial_no, batch_no, box_type, pcn, weight } = scannedItem;
 
@@ -49,9 +52,6 @@ export default function ItemScanPage() {
         "Scanned quantity not matching Requested quantity",
       );
 
-    if (scanPostRef.current) return;
-
-    scanPostRef.current = true;
     setLoading(true);
 
     const reqBody = {
@@ -62,8 +62,10 @@ export default function ItemScanPage() {
       batch: batch_no,
       box_type,
       weight,
-      notes: "",
+      notes: "ok",
     };
+
+    console.log("scanBody", reqBody);
 
     try {
       const { data } = await customAxios.post(useroutes.scanItem, reqBody);
