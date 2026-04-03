@@ -46,13 +46,17 @@ export default function ItemScanPage() {
 
     console.log("scanned_qty", scanned_qty);
 
-    const mismatches: string[] = [];
+    let mismatches: string[] = [];
 
     if (pcn !== item_code) mismatches.push("Item Code");
     if (scanned_qty !== requested_qty) mismatches.push("Quantity");
 
-    if (mismatches.length > 0)
-      return toastify("warning", `${mismatches.join(", ")} mismatch`);
+    if (mismatches.length > 0) {
+      toastify("warning", `${mismatches.join(", ")} mismatch`);
+      resetRef(scanPostRef);
+      mismatches = [];
+      return;
+    }
 
     setLoading(true);
 
@@ -78,7 +82,7 @@ export default function ItemScanPage() {
       const success = isAPISuccess(status);
       toastify(
         success ? "success" : "warning",
-        qtyAlert + message + " for item code " + pcn,
+        message + " for item code " + pcn,
       );
 
       if (!success) return;
@@ -90,8 +94,11 @@ export default function ItemScanPage() {
     } finally {
       setLoading(false);
       resetRef(scanPostRef);
+      mismatches = [];
     }
   }
+
+  console.log("scanPostref", scanPostRef.current);
 
   async function handleQRScan(
     detectedCodes: IDetectedBarcode[],
