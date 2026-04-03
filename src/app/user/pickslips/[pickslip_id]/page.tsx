@@ -162,7 +162,7 @@ export default function PickslipItemsScreen() {
   }
 
   function handleScanClick(data: PickslipItem) {
-    sessionStorage.setItem("scan_item", JSON.stringify(data));
+    localStorage.setItem("scan_item", JSON.stringify(data));
     push(`/user/pickslips/${pickslip_id}/scan/${data.item_id}`);
   }
 
@@ -201,8 +201,8 @@ export default function PickslipItemsScreen() {
   function directToPickslips() {
     back();
     setTimeout(() => {
-      sessionStorage.removeItem("pickslip");
-      sessionStorage.removeItem("scan_session_id");
+      localStorage.removeItem("pickslip");
+      localStorage.removeItem("scan_session_id");
     }, 1000);
   }
 

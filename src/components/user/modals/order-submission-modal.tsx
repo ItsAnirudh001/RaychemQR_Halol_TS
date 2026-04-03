@@ -31,8 +31,8 @@ export default function OrderSubmissionModal(props: {
     await postAbortSession();
     push("/user/pickslips");
     setTimeout(() => {
-      sessionStorage.removeItem("pickslip");
-      sessionStorage.removeItem("scan_session_id");
+      localStorage.removeItem("pickslip");
+      localStorage.removeItem("scan_session_id");
     }, 1000);
   }
 

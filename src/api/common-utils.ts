@@ -71,7 +71,7 @@ export async function Login(
       refresh_token,
     };
 
-    sessionStorage.setItem("user", JSON.stringify(userObject));
+    localStorage.setItem("user", JSON.stringify(userObject));
 
     const success = isAPISuccess(status);
     const authorized = role === access_mode;
@@ -112,8 +112,6 @@ export async function Logout(
     );
     push("/");
     toastify("success", data?.message);
-    localStorage.clear();
-    sessionStorage.clear();
   } catch (error) {
     console.error("Error in logout", error);
     apiErrorPrompter(error);

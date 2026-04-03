@@ -1,34 +1,34 @@
 export function userExists() {
-  if (typeof sessionStorage === "undefined") return;
+  if (typeof localStorage === "undefined") return;
 
-  const user = JSON.parse(sessionStorage.getItem("user")!);
+  const user = JSON.parse(localStorage.getItem("user")!);
   return Boolean(user?.user_id);
 }
 
 export function getStoredUser() {
-  if (typeof sessionStorage === "undefined") return;
+  if (typeof localStorage === "undefined") return;
 
-  const user = JSON.parse(sessionStorage.getItem("user")!);
+  const user = JSON.parse(localStorage.getItem("user")!);
   return user;
 }
 
 export function getStoredScanSessionID() {
-  if (typeof sessionStorage === "undefined") return;
+  if (typeof localStorage === "undefined") return;
 
-  const session_id = sessionStorage.getItem("scan_session_id");
+  const session_id = localStorage.getItem("scan_session_id");
   return session_id;
 }
 
 export function getStoredScanItem() {
-  if (typeof sessionStorage === "undefined") return;
+  if (typeof localStorage === "undefined") return;
 
-  const scan_item = JSON.parse(sessionStorage.getItem("scan_item")!);
+  const scan_item = JSON.parse(localStorage.getItem("scan_item")!);
   return scan_item;
 }
 
 export function getStoredPickslip() {
-  if (typeof sessionStorage === "undefined") return;
+  if (typeof localStorage === "undefined") return;
 
-  const pickslip = JSON.parse(sessionStorage.getItem("pickslip")!);
+  const pickslip = JSON.parse(localStorage.getItem("pickslip")!);
   return pickslip;
 }
