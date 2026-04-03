@@ -26,7 +26,6 @@ export default function useMobileAutoCall(
       callback();
       push("/");
       if (message) toastify("success", message);
-      localStorage.clear();
     } catch (error) {
       console.error("error", error);
     } finally {

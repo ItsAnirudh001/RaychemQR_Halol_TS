@@ -97,7 +97,7 @@ export default function PickslipsScreen() {
   }
 
   function handleViewItems(data: Pickslip) {
-    sessionStorage.setItem("pickslip", JSON.stringify(data));
+    localStorage.setItem("pickslip", JSON.stringify(data));
     setTimeout(() => {
       push(`/user/pickslips/${data.pickslip_id}`);
     }, 400);
@@ -122,7 +122,7 @@ export default function PickslipsScreen() {
 
       console.log("received session_id", session_id);
 
-      sessionStorage.setItem("scan_session_id", String(session_id));
+      localStorage.setItem("scan_session_id", String(session_id));
       handleViewItems(pickslip);
     } catch (error) {
       console.error("Error in startScanSession", error);

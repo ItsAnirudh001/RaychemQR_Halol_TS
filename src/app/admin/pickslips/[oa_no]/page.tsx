@@ -52,7 +52,7 @@ export default function PickslipItemsPage() {
     new Promise((resolve) => {
       back();
       resolve(() => {});
-    }).then(() => sessionStorage.removeItem("pickslip"));
+    }).then(() => localStorage.removeItem("pickslip"));
   }
 
   async function handleDownloadReport() {

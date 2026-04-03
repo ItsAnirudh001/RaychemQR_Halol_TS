@@ -30,7 +30,7 @@ export default function PickslipTable(props: {
 
   function handleOrderClick(data: Pickslip) {
     new Promise((resolve) => {
-      sessionStorage.setItem("pickslip", JSON.stringify(data));
+      localStorage.setItem("pickslip", JSON.stringify(data));
       resolve(() => {});
     }).then(() => push(`/admin/pickslips/${data.oa_no}`));
   }
