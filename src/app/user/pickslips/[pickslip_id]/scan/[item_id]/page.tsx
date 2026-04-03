@@ -38,7 +38,7 @@ export default function ItemScanPage() {
     if (scanPostRef.current) return;
     scanPostRef.current = true;
 
-    const { item_id, requested_qty } = item;
+    const { item_id, requested_qty, item_code } = item;
     const { serial_no, batch_no, box_type, pcn, weight } = scannedItem;
 
     console.log("scanned item", scannedItem);
@@ -46,11 +46,13 @@ export default function ItemScanPage() {
 
     console.log("scanned_qty", scanned_qty);
 
-    if (scanned_qty !== requested_qty)
-      return toastify(
-        "warning",
-        "Scanned quantity not matching Requested quantity",
-      );
+    const mismatches: string[] = [];
+
+    if (pcn !== item_code) mismatches.push("Item Code");
+    if (scanned_qty !== requested_qty) mismatches.push("Quantity");
+
+    if (mismatches.length > 0)
+      return toastify("warning", `${mismatches.join(", ")} mismatch`);
 
     setLoading(true);
 
@@ -76,7 +78,7 @@ export default function ItemScanPage() {
       const success = isAPISuccess(status);
       toastify(
         success ? "success" : "warning",
-        message + " for item code " + pcn,
+        qtyAlert + message + " for item code " + pcn,
       );
 
       if (!success) return;
