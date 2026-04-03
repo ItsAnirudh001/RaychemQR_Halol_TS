@@ -31,7 +31,7 @@ export default function ItemScanPage() {
   function resetRef(ref: RefObject<boolean>) {
     setTimeout(() => {
       ref.current = false;
-    }, 2000);
+    }, 3000);
   }
 
   async function postScanItem(scannedItem: ScannedItem, scanned_qty: number) {
