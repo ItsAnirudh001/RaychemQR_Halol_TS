@@ -1,10 +1,19 @@
 "use client";
 
-import { GetFileForDownload } from "@/api/common-utils";
+import {
+  AbortScanSession,
+  apiErrorPrompter,
+  GetFileForDownload,
+} from "@/api/common-utils";
 import AppModal from "@/components/material-ui/modal";
 import useAppStore from "@/store/app-store";
 import { PickslipItem } from "@/types/pickslip-type";
-import { getStoredPickslip } from "@/utils/session-utils";
+import { isAPISuccess } from "@/utils/helpers";
+import {
+  getStoredPickslip,
+  getStoredScanSessionID,
+} from "@/utils/session-utils";
+import { toastify } from "@/utils/toast";
 import { useRouter } from "next/navigation";
 import { FaCube } from "react-icons/fa";
 import { FaRegCircleCheck } from "react-icons/fa6";
@@ -15,17 +24,26 @@ export default function OrderSubmissionModal(props: {
   hideDashboard: () => void;
   scannedItems: PickslipItem[] | undefined;
   pickslipItems: PickslipItem[] | undefined;
-  postAbortSession: () => Promise<void>;
 }) {
   const { push } = useRouter();
   const { setLoading } = useAppStore();
-  const {
-    viewDashboard,
-    hideDashboard,
-    scannedItems,
-    pickslipItems,
-    postAbortSession,
-  } = props;
+  const { viewDashboard, hideDashboard, scannedItems, pickslipItems } = props;
+
+  async function postAbortSession() {
+    const session_id = getStoredScanSessionID();
+    if (!session_id) return;
+
+    try {
+      const { status, message } = await AbortScanSession(setLoading);
+      const success = isAPISuccess(status);
+      toastify(success ? "success" : "warning", message);
+    } catch (error) {
+      console.error("Error in aborting Scan Session", error);
+      apiErrorPrompter(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function handleBackToDashboard() {
     await postAbortSession();
