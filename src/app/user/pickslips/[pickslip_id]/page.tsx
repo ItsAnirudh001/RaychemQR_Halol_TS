@@ -24,11 +24,7 @@ import {
 } from "@/utils/helpers";
 import { toastify } from "@/utils/toast";
 import useAppStore from "@/store/app-store";
-import {
-  AbortScanSession,
-  apiErrorPrompter,
-  GetPickslipItems,
-} from "@/api/common-utils";
+import { apiErrorPrompter, GetPickslipItems } from "@/api/common-utils";
 import {
   getStoredPickslip,
   getStoredScanSessionID,
@@ -166,67 +162,6 @@ export default function PickslipItemsScreen() {
     push(`/user/pickslips/${pickslip_id}/scan/${data.item_id}`);
   }
 
-  // async function handleScanClick(item: PickslipItem) {
-  //   setLoading(true);
-  //   const { item_id, item_code, batch_no, box_type } = item;
-
-  //   try {
-  //     const { data } = await customAxios.post(useroutes.scanItem, {
-  //       session_id: getStoredScanSessionID(),
-  //       pick_slip_item_id: item_id,
-  //       item_code,
-  //       serial_number: "S6547562",
-  //       batch: "567870",
-  //       box_type: "J8",
-  //       notes: "",
-  //     });
-
-  //     const { status, message } = data;
-  //     const success = isAPISuccess(status);
-  //     toastify(success ? "success" : "warning", message);
-
-  //     if (!success) return;
-
-  //     await fetchPickslipItems();
-
-  //     // back();
-  //   } catch (error) {
-  //     console.error("Error in scanItem", error);
-  //     apiErrorPrompter(error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
-
-  function directToPickslips() {
-    back();
-    setTimeout(() => {
-      localStorage.removeItem("pickslip");
-      localStorage.removeItem("scan_session_id");
-    }, 1000);
-  }
-
-  async function postAbortSession() {
-    const session_id = getStoredScanSessionID();
-
-    if (!session_id || !created) return directToPickslips();
-
-    try {
-      const { status, message } = await AbortScanSession(setLoading);
-      const success = isAPISuccess(status);
-      toastify(success ? "success" : "warning", message);
-
-      if (!success) return;
-
-      directToPickslips();
-    } catch (error) {
-      console.error("Error in aborting Scan Session", error);
-      apiErrorPrompter(error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   async function postSubmitPickslip() {
     setLoading(true);
 
@@ -281,7 +216,6 @@ export default function PickslipItemsScreen() {
     hideDashboard,
     scannedItems,
     pickslipItems,
-    postAbortSession,
   };
 
   const finalData = searchedData();
@@ -295,7 +229,7 @@ export default function PickslipItemsScreen() {
       {/* header */}
       <UserAuthHeader {...headerProps}>
         <div className="flex items-center gap-2 text-[rgba(64,108,175,1)]">
-          <button className="animated2 text-3xl" onClick={postAbortSession}>
+          <button className="animated2 text-3xl" onClick={back}>
             <IoChevronBackCircle />
           </button>
 

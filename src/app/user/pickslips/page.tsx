@@ -4,11 +4,12 @@ import UserAuthHeader from "@/components/user/authd-header";
 import { FaCube, FaRegClock } from "react-icons/fa";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import { TbArrowsSort } from "react-icons/tb";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Pickslip } from "@/types/pickslip-type";
 import useAppStore from "@/store/app-store";
 import {
+  AbortScanSession,
   apiErrorPrompter,
   GetAllPickslips,
   GetFileForDownload,
@@ -23,6 +24,7 @@ import {
   smallHeight,
 } from "@/utils/helpers";
 import { toastify } from "@/utils/toast";
+import { getStoredScanSessionID } from "@/utils/session-utils";
 
 export default function PickslipsScreen() {
   const { push } = useRouter();
@@ -33,6 +35,7 @@ export default function PickslipsScreen() {
   const [statusFilter, setStatusFilter] = useState<string>("");
 
   const [searchVal, setSearchVal] = useState<string>("");
+  const abortRef = useRef<boolean>(false);
 
   useLayoutEffect(() => {
     setLoading(true);
@@ -50,8 +53,30 @@ export default function PickslipsScreen() {
     }
   }
 
+  async function postAbortSession() {
+    if(abortRef.current) return;
+    abortRef.current = true
+    
+    const session_id = getStoredScanSessionID();
+
+    if (!session_id) return;
+
+    try {
+      const { status, message } = await AbortScanSession(setLoading);
+      const success = isAPISuccess(status);
+      toastify(success ? "success" : "warning", message);
+    } catch (error) {
+      console.error("Error in aborting Scan Session", error);
+      apiErrorPrompter(error);
+    } finally {
+      setLoading(false);
+      abortRef.current = false
+    }
+  }
+
   useEffect(() => {
     fetchPickslips();
+    postAbortSession();
   }, []);
 
   function sortedData() {
@@ -147,7 +172,7 @@ export default function PickslipsScreen() {
     await fetchPickslips();
   }
 
-  const finalData = searchedData()
+  const finalData = searchedData();
   const validData = Array.isArray(finalData) && finalData.length > 0;
 
   const headerProps = { setSearchVal, handleRefresh };
