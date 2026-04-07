@@ -1,6 +1,6 @@
 "use client";
 
-import { Login } from "@/api/common-utils";
+import { Login, Logout } from "@/api/common-utils";
 import MuiInput from "@/components/material-ui/input";
 import useAppStore from "@/store/app-store";
 import { LoginForm } from "@/types/login-types";
@@ -8,11 +8,13 @@ import { MuiInputChangeEvent } from "@/types/mui-types";
 import { validatedInput } from "@/utils/helpers";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function LoginPage() {
   const { push } = useRouter();
   const { setLoading } = useAppStore();
+
+  const logoutRef = useRef<boolean>(false);
 
   const [form, setForm] = useState<LoginForm>({
     username: "",
@@ -41,6 +43,10 @@ export default function LoginPage() {
       push("/user/pickslips");
     });
   }
+
+  useEffect(() => {
+    Logout(setLoading, push, logoutRef);
+  }, []);
 
   return (
     <div className="flex flex-col gap-[3vh] p-4 overflow-y-hidden bg-white h-screen">

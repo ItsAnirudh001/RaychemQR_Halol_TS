@@ -4,10 +4,10 @@ import MuiInput from "@/components/material-ui/input";
 import { MuiInputChangeEvent } from "@/types/mui-types";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import { LoginForm } from "@/types/login-types";
-import { Login } from "@/api/common-utils";
+import { Login, Logout } from "@/api/common-utils";
 import useAppStore from "@/store/app-store";
 import { validatedInput } from "@/utils/helpers";
 
@@ -19,6 +19,8 @@ export default function LoginPage() {
     username: "",
     password: "",
   });
+
+  const logoutRef = useRef<boolean>(false);
 
   function updateForm(key: string, e: MuiInputChangeEvent) {
     setForm((prev) => {
@@ -36,6 +38,10 @@ export default function LoginPage() {
 
     await Login("admin", setLoading, form, () => push("/admin/usermanagement"));
   }
+
+  useEffect(() => {
+    Logout(setLoading, push,logoutRef);
+  }, []);
 
   return (
     <div className="flex w-screen h-screen mt-[-10vh] overflow-hidden">

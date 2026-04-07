@@ -1,6 +1,7 @@
 export const useroutes = {
   forgetPassword: "/api/reset/forgot-password", //tested
   resetPassword: "/api/reset/reset-password", //tested
+  changePassword: "/api/reset/change-password",
 
   scanItem: "/api/scan-items/scan-item", //tested
   startScanSession: "/scan-sessions/start", //tested
