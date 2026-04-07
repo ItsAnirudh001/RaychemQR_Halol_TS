@@ -1,5 +1,6 @@
 "use client";
 
+import { apiErrorPrompter } from "@/api/common-utils";
 import { useroutes } from "@/api/user/user-routes";
 import UnAuth from "@/components/unauth";
 import PasswordResetForm from "@/components/user/password-reset-form";
@@ -36,6 +37,7 @@ export default function ChangePasswordPage() {
       back();
     } catch (error) {
       console.error("Error in changePassword", error);
+      apiErrorPrompter(error);
     } finally {
       setLoading(false);
     }
