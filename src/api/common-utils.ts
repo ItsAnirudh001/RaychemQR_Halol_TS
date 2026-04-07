@@ -10,6 +10,7 @@ import { Pickslip } from "@/types/pickslip-type";
 import { getStoredScanSessionID, getStoredUser } from "@/utils/session-utils";
 import { useroutes } from "./user/user-routes";
 import axios from "axios";
+import { RefObject } from "react";
 
 export function apiErrorPrompter(error: unknown) {
   let detail: unknown;
@@ -101,7 +102,17 @@ export async function Login(
 export async function Logout(
   setLoading: (value: boolean) => void,
   push: (href: string, options?: NavigateOptions | undefined) => void,
+  logoutRef:RefObject<boolean>
 ) {
+  if(logoutRef.current) return;
+
+  logoutRef.current = true;
+  const user = getStoredUser();
+
+  if(!user) return;
+
+  console.log("Triggwered logout for", user);
+
   setLoading(true);
   try {
     const { data } = await customAxios.post(commonroutes.logout);
@@ -112,11 +123,17 @@ export async function Logout(
     );
     push("/");
     toastify("success", data?.message);
+    // setTimeout(() => {
+      localStorage.clear()
+    // }, 2000);
   } catch (error) {
     console.error("Error in logout", error);
     apiErrorPrompter(error);
   } finally {
     setLoading(false);
+    setTimeout(() => {
+       logoutRef.current = false;
+    }, 2000);
   }
 }
 

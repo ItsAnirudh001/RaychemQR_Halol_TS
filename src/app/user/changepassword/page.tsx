@@ -22,8 +22,7 @@ export default function ChangePasswordPage() {
     setLoading(true);
 
     try {
-      const { data } = await customAxios.post(useroutes.resetPassword, {
-        reset_token: "",
+      const { data } = await customAxios.post(useroutes.changePassword, {
         new_password,
       });
 
@@ -42,7 +41,7 @@ export default function ChangePasswordPage() {
     }
   }
 
-  if(!user.access_token) return <UnAuth />
+  if (!user.access_token) return <UnAuth />;
 
   return (
     <PasswordResetForm
