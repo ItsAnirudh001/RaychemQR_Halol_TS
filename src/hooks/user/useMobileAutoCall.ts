@@ -25,7 +25,6 @@ export default function useMobileAutoCall(
 
     try {
       callback();
-      push("/");
       if (message) toastify("success", message);
     } catch (error) {
       console.error("error", error);

@@ -17,21 +17,7 @@ export default function MobileLayout({
   const { push } = useRouter();
 
   function autoAbortScanSession() {
-    const id = getStoredScanSessionID();
-    if (!id) return;
-
-    const req = {
-      session_id: Number(id),
-    };
-
-    const url = process.env.NEXT_PUBLIC_BASE_URL + useroutes.autoScanAbort;
-    const blob = new Blob([JSON.stringify(req)], {
-      type: "application/json; charset=UTF-8",
-    });
-
-    navigator.sendBeacon(url, blob);
-    toastify("success", "Scan session aborted successfully");
-    push("/");
+    push("/user/pickslips")
   }
 
   useMobileAutoCall(autoAbortScanSession);
