@@ -44,8 +44,13 @@ export default function UserAuthHeader({
 
   function postLogout() {
     AutoLogout();
-    setMenuAnchor(null);
+    hideMenu();
     localStorage.clear()
+  }
+
+  function headerLogout() {
+    hideMenu();
+    push("/")
   }
 
   useMobileAutoCall(postLogout, "Logout Successful");
@@ -106,7 +111,7 @@ export default function UserAuthHeader({
           </MenuItem>
           <MenuItem
             className="animated2 mui-menuitem-mobile"
-            onClick={postLogout}
+            onClick={headerLogout}
           >
             <RiLogoutCircleLine className="text-[1.1rem]" />
             Logout
