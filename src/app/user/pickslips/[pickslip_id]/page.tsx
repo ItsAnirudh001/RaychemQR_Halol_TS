@@ -114,7 +114,6 @@ export default function PickslipItemsScreen() {
       (d) =>
         searchParam(d.item_code).includes(searchParam(searchVal)) ||
         searchParam(d.material_description).includes(searchParam(searchVal)) ||
-        searchParam(d.item_name).includes(searchParam(searchVal)) ||
         searchParam(d.serial_no).includes(searchParam(searchVal)) ||
         searchParam(d.batch_no).includes(searchParam(searchVal))
     );
