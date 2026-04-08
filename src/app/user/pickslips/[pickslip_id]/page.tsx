@@ -188,7 +188,7 @@ export default function PickslipItemsScreen() {
 
       showDashboard();
     } catch (error) {
-      console.error("Error in abortScanSession", error);
+      console.error("Error in submit scan session", error);
       apiErrorPrompter(error);
     } finally {
       setLoading(false);

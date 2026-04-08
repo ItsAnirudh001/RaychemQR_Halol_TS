@@ -55,10 +55,12 @@ export default function PickslipsScreen() {
   }
 
   async function postAbortSession() {
-    if(abortRef.current) return;
-    abortRef.current = true
-    
+    if (abortRef.current) return;
+    abortRef.current = true;
+
     const session_id = getStoredScanSessionID();
+
+    console.log("session_id", session_id);
 
     if (!session_id) return;
 
@@ -71,7 +73,7 @@ export default function PickslipsScreen() {
       apiErrorPrompter(error);
     } finally {
       setLoading(false);
-      resetRef(abortRef)
+      resetRef(abortRef);
     }
   }
 

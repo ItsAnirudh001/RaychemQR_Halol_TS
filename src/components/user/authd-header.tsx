@@ -7,11 +7,7 @@ import { RiLogoutCircleLine } from "react-icons/ri";
 import { PiUserCircleFill } from "react-icons/pi";
 import { MdLock } from "react-icons/md";
 import { useRouter } from "next/navigation";
-import { AutoLogout } from "@/api/common-utils";
-import useAppStore from "@/store/app-store";
 import { IoRefreshCircleSharp } from "react-icons/io5";
-import useMobileAutoCall from "@/hooks/user/useMobileAutoCall";
-import { toastify } from "@/utils/toast";
 
 export default function UserAuthHeader({
   children,
@@ -23,7 +19,6 @@ export default function UserAuthHeader({
   handleRefresh?: () => Promise<void>;
 }) {
   const { push } = useRouter();
-  const { setLoading } = useAppStore();
 
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 
@@ -42,18 +37,10 @@ export default function UserAuthHeader({
     setSearchVal(value);
   }
 
-  function postLogout() {
-    AutoLogout();
-    hideMenu();
-    localStorage.clear()
-  }
-
   function headerLogout() {
     hideMenu();
     push("/")
   }
-
-  // useMobileAutoCall(postLogout, "Logout Successful");
 
   return (
     <div

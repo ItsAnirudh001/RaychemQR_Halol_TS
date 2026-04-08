@@ -10,9 +10,10 @@ export function toastify(type: ToastType, message: string) {
     toastData.find((data) => data.type === type) || {};
 
   // console.log("back",background);
-  const duration: number = Number(
-    process.env.NEXT_PUBLIC_TOAST_TIMEOUT || 4000,
-  );
+  const duration = process.env.NEXT_PUBLIC_TOAST_TIMEOUT;
+  const validDuration = !Number.isNaN(Number(duration));
+
+  // console.log("validDuration", validDuration, duration);
 
   if (color)
     document.documentElement.style.setProperty("--toast-progress", color);
@@ -22,8 +23,8 @@ export function toastify(type: ToastType, message: string) {
     className: `toast-${type} flex m-2! rounded-xl! w-[69vw]! lg:w-[27vw]! text-[0.85rem]!`,
     type,
     transition: Bounce,
-    autoClose: duration ? false : duration,
-    closeOnClick: !Boolean(duration),
+    autoClose:duration ? Number(duration) : false,
+    closeOnClick: !validDuration,
     hideProgressBar: false,
     draggable: true,
     pauseOnHover: false,
