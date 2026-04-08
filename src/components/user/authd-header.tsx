@@ -106,7 +106,7 @@ export default function UserAuthHeader({
           </MenuItem>
           <MenuItem
             className="animated2 mui-menuitem-mobile"
-            onClick={postLogout}
+            onClick={() => push("/")}
           >
             <RiLogoutCircleLine className="text-[1.1rem]" />
             Logout

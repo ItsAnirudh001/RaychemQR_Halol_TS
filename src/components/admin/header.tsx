@@ -6,13 +6,14 @@ import { getStoredUser } from "@/utils/session-utils";
 import { isUserPath } from "@/utils/user/user-utils";
 import { Menu, MenuItem } from "@mui/material";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { PiUserCircleFill } from "react-icons/pi";
 import { RiLogoutCircleLine } from "react-icons/ri";
 
 export default function AdminHeader() {
   const path = usePathname();
+  const { push } = useRouter()
 
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 
@@ -80,7 +81,7 @@ export default function AdminHeader() {
           },
         }}
       >
-        <MenuItem className="animated2 mui-menuitem" onClick={postLogout}>
+        <MenuItem className="animated2 mui-menuitem" onClick={() => push("/")}>
           <RiLogoutCircleLine className="text-[1.4rem]" />
           Logout
         </MenuItem>
