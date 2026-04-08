@@ -1,17 +1,18 @@
-"use client"
+"use client";
 
 // import { Close } from "@mui/icons-material";
 import { Bounce, toast } from "react-toastify";
 import { toastData } from "../constants/toast-data";
 import { ToastType } from "@/types/toast-types";
 
-export function toastify(type: ToastType, message: string, duration?: boolean) {
+export function toastify(type: ToastType, message: string) {
   const { background, color } =
     toastData.find((data) => data.type === type) || {};
 
   // console.log("back",background);
-
-  const modDuration = 10000;
+  const duration: number = Number(
+    process.env.NEXT_PUBLIC_TOAST_TIMEOUT || 4000,
+  );
 
   if (color)
     document.documentElement.style.setProperty("--toast-progress", color);
@@ -21,8 +22,8 @@ export function toastify(type: ToastType, message: string, duration?: boolean) {
     className: `toast-${type} flex m-2! rounded-xl! w-[69vw]! lg:w-[27vw]! text-[0.85rem]!`,
     type,
     transition: Bounce,
-    autoClose: duration ? false : modDuration,
-    closeOnClick: duration,
+    autoClose: duration ? false : duration,
+    closeOnClick: !Boolean(duration),
     hideProgressBar: false,
     draggable: true,
     pauseOnHover: false,
