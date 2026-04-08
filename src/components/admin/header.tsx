@@ -33,6 +33,11 @@ export default function AdminHeader() {
     setMenuAnchor(null);
   }
 
+  function headerLogout() {
+    hideMenu();
+    push("/")
+  }
+
   // console.log("user",user);
 
   if (path.includes("login") || isUserPath(path)) return <></>;
@@ -81,7 +86,7 @@ export default function AdminHeader() {
           },
         }}
       >
-        <MenuItem className="animated2 mui-menuitem" onClick={() => push("/")}>
+        <MenuItem className="animated2 mui-menuitem" onClick={headerLogout}>
           <RiLogoutCircleLine className="text-[1.4rem]" />
           Logout
         </MenuItem>
