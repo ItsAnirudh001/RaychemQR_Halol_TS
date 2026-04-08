@@ -21,6 +21,7 @@ import {
   dynamicClass,
   getScannedItems,
   isAPISuccess,
+  resetRef,
   smallHeight,
 } from "@/utils/helpers";
 import { toastify } from "@/utils/toast";
@@ -70,7 +71,7 @@ export default function PickslipsScreen() {
       apiErrorPrompter(error);
     } finally {
       setLoading(false);
-      abortRef.current = false
+      resetRef(abortRef)
     }
   }
 

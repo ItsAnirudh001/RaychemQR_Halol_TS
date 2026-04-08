@@ -1,32 +1,24 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { checkToken } from "@/utils/helpers";
-import useAppStore from "@/store/app-store";
-import { Logout } from "@/api/common-utils";
 
 export default function useTokenLogout() {
   const { push } = useRouter();
-  const { setLoading } = useAppStore();
-  const logoutRef = useRef<boolean>(false)
-
-  async function handleLogout() {
-    await Logout(setLoading, push, logoutRef)
-    localStorage.clear()
-  }
 
   async function tokenLogout() {
     const remainingTime = checkToken();
+    // const remainingTime = 10 * 60 * 1000;
 
     setTimeout(() => {
-     handleLogout()
+     push("/")
     }, remainingTime);
   }
 
   useEffect(() => {
-    window.addEventListener("loggedin", tokenLogout);
+    window.addEventListener("login", tokenLogout);
 
-    return () => window.removeEventListener("loggedin", tokenLogout);
+    return () => window.removeEventListener("login", tokenLogout);
   }, []);
 }

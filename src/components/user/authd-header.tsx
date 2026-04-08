@@ -53,7 +53,7 @@ export default function UserAuthHeader({
     push("/")
   }
 
-  useMobileAutoCall(postLogout, "Logout Successful");
+  // useMobileAutoCall(postLogout, "Logout Successful");
 
   return (
     <div

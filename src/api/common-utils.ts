@@ -4,7 +4,7 @@ import { LoginForm } from "@/types/login-types";
 import qs from "qs";
 import { NavigateOptions } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { toastify } from "@/utils/toast";
-import { handleFileDownload, isAPISuccess } from "@/utils/helpers";
+import { handleFileDownload, isAPISuccess, resetRef } from "@/utils/helpers";
 import dayjs from "dayjs";
 import { Pickslip } from "@/types/pickslip-type";
 import { getStoredScanSessionID, getStoredUser } from "@/utils/session-utils";
@@ -84,7 +84,7 @@ export async function Login(
 
     if (!success) return;
 
-    window.dispatchEvent(new Event("loggedin"));
+    window.dispatchEvent(new Event("login"));
     localStorage.setItem(
       "login",
       `Login at ${dayjs().format("DD-MM-YYYY hh:mm:ss")}`,
@@ -131,9 +131,7 @@ export async function Logout(
     apiErrorPrompter(error);
   } finally {
     setLoading(false);
-    setTimeout(() => {
-       logoutRef.current = false;
-    }, 2000);
+    resetRef(logoutRef);
   }
 }
 
