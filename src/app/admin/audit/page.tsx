@@ -7,11 +7,7 @@ import NoData from "@/components/no-data";
 import useAppStore from "@/store/app-store";
 import { UserLogsItem } from "@/types/table-types";
 import { customAxios } from "@/utils/axios";
-import {
-  isAPISuccess,
-  searchParam,
-  timestamp,
-} from "@/utils/helpers";
+import { isAPISuccess, searchParam, timestamp } from "@/utils/helpers";
 import { useEffect, useLayoutEffect, useState } from "react";
 
 export default function AuditPage() {
@@ -50,13 +46,8 @@ export default function AuditPage() {
 
     if (!searchVal) return data;
 
-    const searched = data?.filter(
-      (d) =>
-        searchParam(d.user_id).includes(searchParam(searchVal)) ||
-        searchParam(d.username).includes(searchParam(searchVal)) ||
-        timestamp(searchParam(d.login_time))?.includes(searchParam(searchVal)) ||
-        timestamp(searchParam(d.logout_time))?.includes(searchParam(searchVal)) ||
-        timestamp(searchParam(d.login_flag))?.includes(searchParam(searchVal)),
+    const searched = data?.filter((d) =>
+      searchParam(d.username).includes(searchParam(searchVal)),
     );
 
     return searched;
