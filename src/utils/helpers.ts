@@ -5,6 +5,7 @@ import { Pickslip, PickslipItem } from "@/types/pickslip-type";
 import { regexMod } from "@/constants/regex-data";
 import { UserLogsItem, UserTableItem } from "@/types/table-types";
 import { getStoredUser } from "./session-utils";
+import { RefObject } from "react";
 
 export function tableIndices(page: number, rowsPerPage: number) {
   const indices = {
@@ -132,3 +133,9 @@ export function timestamp(date?: string | null) {
 
   return date ? dayjs(date).format(format) : "";
 }
+
+ export function resetRef(ref: RefObject<boolean>) {
+    setTimeout(() => {
+      ref.current = false;
+    }, 3000);
+  }

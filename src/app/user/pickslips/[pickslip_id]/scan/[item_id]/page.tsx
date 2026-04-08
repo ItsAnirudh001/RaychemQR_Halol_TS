@@ -6,7 +6,7 @@ import QRScanner from "@/components/user/qr-scanner";
 import useAppStore from "@/store/app-store";
 import { ScannedItem } from "@/types/pickslip-type";
 import { customAxios } from "@/utils/axios";
-import { isAPISuccess } from "@/utils/helpers";
+import { isAPISuccess, resetRef } from "@/utils/helpers";
 import {
   getStoredScanItem,
   getStoredScanSessionID,
@@ -14,7 +14,7 @@ import {
 import { toastify } from "@/utils/toast";
 import { IDetectedBarcode } from "@yudiel/react-qr-scanner";
 import { useRouter } from "next/navigation";
-import { RefObject, useRef } from "react";
+import { useRef } from "react";
 import { IoChevronBackCircle } from "react-icons/io5";
 
 export default function ItemScanPage() {
@@ -27,12 +27,6 @@ export default function ItemScanPage() {
   const scanErrorRef = useRef(false);
 
   const scanSuccessVal = useRef("");
-
-  function resetRef(ref: RefObject<boolean>) {
-    setTimeout(() => {
-      ref.current = false;
-    }, 3000);
-  }
 
   async function postScanItem(scannedItem: ScannedItem, scanned_qty: number) {
     if (scanPostRef.current) return;
@@ -47,6 +41,17 @@ export default function ItemScanPage() {
     console.log("scanned_qty", scanned_qty);
 
     let mismatches: string[] = [];
+    let unfound: string[] = [];
+
+    if (!pcn) unfound.push("Item Code");
+    if (Number.isNaN(scanned_qty)) unfound.push("Quantity");
+
+    if (unfound.length > 0) {
+      toastify("warning", `${unfound.join(", ")} not found`);
+      resetRef(scanPostRef);
+      unfound = [];
+      return;
+    }
 
     if (pcn !== item_code) mismatches.push("Item Code");
     if (scanned_qty !== requested_qty) mismatches.push("Quantity");
