@@ -245,7 +245,7 @@ export default function PickslipItemsScreen() {
 
       {/* body */}
       <div
-        className={`flex flex-col p-[2vh] gap-[2vh] ${smallHeight() ? "mt-[12vh]" : "mt-[9vh]"} ${allScanned ? "mb-[15.5vh]" : "mb-[2.2vh]"}`}
+        className={`flex flex-col p-[2vh] gap-[2vh] ${smallHeight() ? "mt-[10vh]" : "mt-[7.5vh]"} ${allScanned ? "mb-[15.5vh]" : "mb-[2.2vh]"}`}
       >
         {/* top buttons */}
         {pickslipItems && pickslipItems.length > 0 && (

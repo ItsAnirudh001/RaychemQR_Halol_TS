@@ -193,7 +193,7 @@ export default function PickslipsScreen() {
 
       {/* body */}
       <div
-        className={`flex flex-col px-4 py-5 gap-5 ${smallHeight() ? "mt-[10vh]" : "mt-[6.5vh]"}`}
+        className={`flex flex-col px-4 py-5 gap-5 ${smallHeight() ? "mt-[10vh]" : "mt-[7.5vh]"}`}
       >
         {/* top buttons */}
         {pickslips && pickslips.length > 0 && (
