@@ -44,6 +44,14 @@ export default function LoginPage() {
     });
   }
 
+  // const logoutRef = use
+
+  // useLayoutEffect(() => {
+  //    const user_id = getStoredUser()?.user_id;
+
+  //    if(user_id) 
+  // }, [])
+
   useEffect(() => {
     Logout(setLoading, push, logoutRef);
   }, []);
