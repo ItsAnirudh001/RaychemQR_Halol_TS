@@ -1,16 +1,16 @@
-import { customAxios } from "@/utils/axios";
-import { commonmodroutes, commonroutes } from "./common-routes";
 import { LoginForm } from "@/types/login-types";
-import qs from "qs";
-import { NavigateOptions } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { toastify } from "@/utils/toast";
-import { handleFileDownload, isAPISuccess, resetRef } from "@/utils/helpers";
-import dayjs from "dayjs";
 import { Pickslip } from "@/types/pickslip-type";
+import { customAxios } from "@/utils/axios";
+import { handleFileDownload, isAPISuccess, resetRef } from "@/utils/helpers";
 import { getStoredScanSessionID, getStoredUser } from "@/utils/session-utils";
-import { useroutes } from "./user/user-routes";
+import { toastify } from "@/utils/toast";
 import axios from "axios";
+import dayjs from "dayjs";
+import { NavigateOptions } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import qs from "qs";
 import { RefObject } from "react";
+import { commonmodroutes, commonroutes } from "./common-routes";
+import { useroutes } from "./user/user-routes";
 
 export function apiErrorPrompter(error: unknown) {
   let detail: unknown;
@@ -102,14 +102,14 @@ export async function Login(
 export async function Logout(
   setLoading: (value: boolean) => void,
   push: (href: string, options?: NavigateOptions | undefined) => void,
-  logoutRef:RefObject<boolean>
+  logoutRef: RefObject<boolean>,
 ) {
-  if(logoutRef.current) return;
+  if (logoutRef.current) return;
 
   logoutRef.current = true;
   const user = getStoredUser();
 
-  if(!user) return;
+  if (!user) return;
 
   console.log("Triggwered logout for", user);
 
@@ -124,7 +124,7 @@ export async function Logout(
     push("/");
     toastify("success", data?.message);
     // setTimeout(() => {
-      localStorage.clear()
+    localStorage.clear();
     // }, 2000);
   } catch (error) {
     console.error("Error in logout", error);
@@ -219,6 +219,8 @@ export async function AbortScanSession(setLoading?: (value: boolean) => void) {
     const { data } = await customAxios.post(useroutes.abortScanSession, {
       session_id,
     });
+
+    if (isAPISuccess(data.status)) sessionStorage.removeItem("scan_session_id");
 
     return data;
   } catch (error) {

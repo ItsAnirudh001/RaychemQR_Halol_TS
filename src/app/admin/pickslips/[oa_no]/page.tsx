@@ -52,7 +52,7 @@ export default function PickslipItemsPage() {
     new Promise((resolve) => {
       back();
       resolve(() => {});
-    }).then(() => localStorage.removeItem("pickslip"));
+    }).then(() => sessionStorage.removeItem("pickslip"));
   }
 
   async function handleDownloadReport() {
@@ -89,7 +89,7 @@ export default function PickslipItemsPage() {
     setSearchVal,
   };
 
-  if (loading) return <></>;
+  if(loading) return <></>;
 
   return (
     <div className="page gap-[3vh]">

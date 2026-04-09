@@ -1,22 +1,22 @@
 "use client";
 
 import { adminroutes } from "@/api/admin/admin-routes";
+import { apiErrorPrompter } from "@/api/common-utils";
 import AddEditUserModal from "@/components/admin/modals/add-edit-delete-modal";
+import AdminPageHead from "@/components/admin/page-head";
 import UsersTable from "@/components/admin/tables/users-table";
+import NoData from "@/components/no-data";
+import { userTableObject } from "@/constants/admin/admin-constants";
+import useAppStore from "@/store/app-store";
+import { MuiInputChangeEvent } from "@/types/mui-types";
 import { UserTableItem } from "@/types/table-types";
 import { customAxios } from "@/utils/axios";
+import { isAPISuccess, searchParam, validatedInput } from "@/utils/helpers";
+import { getStoredUser } from "@/utils/session-utils";
+import { toastify } from "@/utils/toast";
+import { SelectChangeEvent } from "@mui/material";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
-import useAppStore from "@/store/app-store";
-import { toastify } from "@/utils/toast";
-import { MuiInputChangeEvent } from "@/types/mui-types";
-import { apiErrorPrompter } from "@/api/common-utils";
-import { isAPISuccess, searchParam, validatedInput } from "@/utils/helpers";
-import { SelectChangeEvent } from "@mui/material";
-import { userTableObject } from "@/constants/admin/admin-constants";
-import NoData from "@/components/no-data";
-import AdminPageHead from "@/components/admin/page-head";
-import { getStoredUser } from "@/utils/session-utils";
 
 export default function UserManagementPage() {
   const { loading, setLoading } = useAppStore();
@@ -161,7 +161,7 @@ export default function UserManagementPage() {
 
   const headProps = { title: "User Management", handleRefresh, setSearchVal };
 
-  if (loading) return <></>;
+  if(loading) return <></>;
 
   return (
     <div className="page gap-[3vh]">
