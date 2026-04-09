@@ -65,7 +65,7 @@ export default function PickslipsPage() {
     setSearchVal,
   };
 
-  if (loading) return <></>;
+  if(loading) return <></>;
 
   return (
     <div className="page gap-6">

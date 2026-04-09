@@ -1,13 +1,13 @@
 "use client";
 
 import { Menu, MenuItem } from "@mui/material";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { RiLogoutCircleLine } from "react-icons/ri";
-import { PiUserCircleFill } from "react-icons/pi";
-import { MdLock } from "react-icons/md";
-import { useRouter } from "next/navigation";
 import { IoRefreshCircleSharp } from "react-icons/io5";
+import { MdLock } from "react-icons/md";
+import { PiUserCircleFill } from "react-icons/pi";
+import { RiLogoutCircleLine } from "react-icons/ri";
 
 export default function UserAuthHeader({
   children,
@@ -93,7 +93,7 @@ export default function UserAuthHeader({
             className="animated2 mui-menuitem-mobile"
             onClick={() => push("/user/changepassword")}
           >
-            <MdLock className="text-[1.25rem]" />
+            <MdLock className="text-[1.1rem]" />
             Change Password
           </MenuItem>
           <MenuItem

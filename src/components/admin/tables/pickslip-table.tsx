@@ -1,5 +1,10 @@
 "use client";
 
+import MuiPagination from "@/components/material-ui/pagination";
+import { rowsPerPage } from "@/constants/admin/paginate-data";
+import { pickslipTableHeaders } from "@/constants/admin/table-headers";
+import { Pickslip } from "@/types/pickslip-type";
+import { tableIndices, timestamp } from "@/utils/helpers";
 import {
   Paper,
   Table,
@@ -9,14 +14,8 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import dayjs from "dayjs";
-import { Pickslip } from "@/types/pickslip-type";
 import { useRouter } from "next/navigation";
-import { pickslipTableHeaders } from "@/constants/admin/table-headers";
-import MuiPagination from "@/components/material-ui/pagination";
-import { rowsPerPage } from "@/constants/admin/paginate-data";
 import { useState } from "react";
-import { tableIndices, timestamp } from "@/utils/helpers";
 
 export default function PickslipTable(props: {
   pickslips: Pickslip[] | undefined;
@@ -30,7 +29,7 @@ export default function PickslipTable(props: {
 
   function handleOrderClick(data: Pickslip) {
     new Promise((resolve) => {
-      localStorage.setItem("pickslip", JSON.stringify(data));
+      sessionStorage.setItem("pickslip", JSON.stringify(data));
       resolve(() => {});
     }).then(() => push(`/admin/pickslips/${data.oa_no}`));
   }

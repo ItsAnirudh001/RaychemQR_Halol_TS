@@ -3,14 +3,13 @@
 import { isAdminPath } from "@/utils/admin/admin-utils";
 import { resetRef } from "@/utils/helpers";
 import { toastify } from "@/utils/toast";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 export default function useMobileAutoCall(
   callback: () => void,
   message?: string,
 ) {
-  const { push } = useRouter();
   const path = usePathname()
 
   const logoutRef = useRef(false);

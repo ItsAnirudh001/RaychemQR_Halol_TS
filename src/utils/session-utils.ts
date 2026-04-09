@@ -13,22 +13,22 @@ export function getStoredUser() {
 }
 
 export function getStoredScanSessionID() {
-  if (typeof localStorage === "undefined") return;
+  if (typeof sessionStorage === "undefined") return;
 
-  const session_id = localStorage.getItem("scan_session_id");
+  const session_id = sessionStorage.getItem("scan_session_id");
   return session_id;
 }
 
 export function getStoredScanItem() {
-  if (typeof localStorage === "undefined") return;
+  if (typeof sessionStorage === "undefined") return;
 
-  const scan_item = JSON.parse(localStorage.getItem("scan_item")!);
+  const scan_item = JSON.parse(sessionStorage.getItem("scan_item")!);
   return scan_item;
 }
 
 export function getStoredPickslip() {
-  if (typeof localStorage === "undefined") return;
+  if (typeof sessionStorage === "undefined") return;
 
-  const pickslip = JSON.parse(localStorage.getItem("pickslip")!);
+  const pickslip = JSON.parse(sessionStorage.getItem("pickslip")!);
   return pickslip;
 }

@@ -1,14 +1,12 @@
 "use client";
 
+import useMobileAutoCall from "@/hooks/user/useMobileAutoCall";
+import { isAdminPath } from "@/utils/admin/admin-utils";
 import { getStoredScanSessionID, userExists } from "@/utils/session-utils";
+import { preauthUserPaths } from "@/utils/user/user-utils";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import UnAuth from "../unauth";
-import { preauthUserPaths } from "@/utils/user/user-utils";
-import { useroutes } from "@/api/user/user-routes";
-import useMobileAutoCall from "@/hooks/user/useMobileAutoCall";
-import { isAdminPath } from "@/utils/admin/admin-utils";
-import { toastify } from "@/utils/toast";
 
 export default function MobileLayout({
   children,
@@ -17,7 +15,9 @@ export default function MobileLayout({
   const { push } = useRouter();
 
   function autoAbortScanSession() {
-    push("/user/pickslips")
+    const session_id = getStoredScanSessionID();
+
+    if (session_id) push("/user/pickslips");
   }
 
   useMobileAutoCall(autoAbortScanSession);

@@ -7,7 +7,7 @@ import NoData from "@/components/no-data";
 import useAppStore from "@/store/app-store";
 import { UserLogsItem } from "@/types/table-types";
 import { customAxios } from "@/utils/axios";
-import { isAPISuccess, searchParam, timestamp } from "@/utils/helpers";
+import { isAPISuccess, searchParam } from "@/utils/helpers";
 import { useEffect, useLayoutEffect, useState } from "react";
 
 export default function AuditPage() {
@@ -64,7 +64,7 @@ export default function AuditPage() {
     setSearchVal,
   };
 
-  if (loading) return <></>;
+  if(loading) return <></>;
 
   return (
     <div className="page gap-[3vh]">

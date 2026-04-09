@@ -1,38 +1,37 @@
 "use client";
 
+import { apiErrorPrompter, GetPickslipItems } from "@/api/common-utils";
+import { usermodroutes } from "@/api/user/user-routes";
+import NoData from "@/components/no-data";
 import UserAuthHeader from "@/components/user/authd-header";
-import { FaCube, FaRegClock } from "react-icons/fa";
-import { FaRegCircleCheck, FaHashtag } from "react-icons/fa6";
-import { TbArrowsSort } from "react-icons/tb";
-import React, { useEffect, useLayoutEffect, useState } from "react";
-import { TbReload } from "react-icons/tb";
-import { IoChevronBackCircle } from "react-icons/io5";
-import { useRouter } from "next/navigation";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { LuQrCode } from "react-icons/lu";
 import ItemDeletionModal from "@/components/user/modals/item-delete-modal";
 import OrderSubmissionModal from "@/components/user/modals/order-submission-modal";
+import useAppStore from "@/store/app-store";
 import { PickslipItem } from "@/types/pickslip-type";
-import NoData from "@/components/no-data";
 import { customAxios } from "@/utils/axios";
-import { usermodroutes } from "@/api/user/user-routes";
 import {
   dynamicClass,
   isAPISuccess,
   searchParam,
   smallHeight,
 } from "@/utils/helpers";
-import { toastify } from "@/utils/toast";
-import useAppStore from "@/store/app-store";
-import { apiErrorPrompter, GetPickslipItems } from "@/api/common-utils";
 import {
   getStoredPickslip,
   getStoredScanSessionID,
 } from "@/utils/session-utils";
+import { toastify } from "@/utils/toast";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { FaRegClock } from "react-icons/fa";
+import { FaHashtag, FaRegCircleCheck } from "react-icons/fa6";
+import { IoChevronBackCircle } from "react-icons/io5";
+import { LuQrCode } from "react-icons/lu";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { TbArrowsSort } from "react-icons/tb";
 
 export default function PickslipItemsScreen() {
   const { back, push } = useRouter();
-  const { setLoading } = useAppStore();
+  const { loading, setLoading } = useAppStore();
   const pickslip = getStoredPickslip();
 
   const [sortKey, setSortKey] = useState<string>("");
@@ -115,7 +114,7 @@ export default function PickslipItemsScreen() {
         searchParam(d.item_code).includes(searchParam(searchVal)) ||
         searchParam(d.material_description).includes(searchParam(searchVal)) ||
         searchParam(d.serial_no).includes(searchParam(searchVal)) ||
-        searchParam(d.batch_no).includes(searchParam(searchVal))
+        searchParam(d.batch_no).includes(searchParam(searchVal)),
     );
 
     return searched;
@@ -156,7 +155,7 @@ export default function PickslipItemsScreen() {
   }
 
   function handleScanClick(data: PickslipItem) {
-    localStorage.setItem("scan_item", JSON.stringify(data));
+    sessionStorage.setItem("scan_item", JSON.stringify(data));
     push(`/user/pickslips/${pickslip_id}/scan/${data.item_id}`);
   }
 
@@ -222,6 +221,8 @@ export default function PickslipItemsScreen() {
 
   // console.log("items", pickslipItems);
 
+  if (loading) return <></>;
+
   return (
     <>
       {/* header */}
@@ -244,47 +245,49 @@ export default function PickslipItemsScreen() {
 
       {/* body */}
       <div
-        className={`flex flex-col p-[2vh] gap-[2vh] ${smallHeight() ? "mt-[12vh]" : "mt-[9vh]"} ${allScanned ? "mb-[15.5vh]" : "mb-[2.2vh]"}`}
+        className={`flex flex-col p-[2vh] gap-[2vh] ${smallHeight() ? "mt-[10vh]" : "mt-[7.5vh]"} ${allScanned ? "mb-[15.5vh]" : "mb-[2.2vh]"}`}
       >
         {/* top buttons */}
-        {validData ? (
-          <>
-            <div className="flex justify-between">
-              <div className="flex h-[3.5vh] gap-[2.5vw] items-center">
-                <button
-                  className={dynamicClass(Boolean(sortKey))}
-                  onClick={handleSort}
-                >
-                  <span>Sort</span>
-                  <TbArrowsSort />
-                </button>
+        {pickslipItems && pickslipItems.length > 0 && (
+          <div className="flex justify-between">
+            <div className="flex h-[3.5vh] gap-[2.5vw] items-center">
+              <button
+                className={dynamicClass(Boolean(sortKey))}
+                onClick={handleSort}
+              >
+                <span>Sort</span>
+                <TbArrowsSort />
+              </button>
 
-                {created && (
-                  <>
-                    <div className="h-[90%] w-0.5 bg-[rgba(171,181,194,1)]" />
+              {created && (
+                <>
+                  <div className="h-[90%] w-0.5 bg-[rgba(171,181,194,1)]" />
 
-                    <button
-                      className={dynamicClass(statusFilter === "pending")}
-                      onClick={() => setStatusFilter("pending")}
-                    >
-                      <FaRegClock />
-                      <span>Pending</span>
-                    </button>
+                  <button
+                    className={dynamicClass(statusFilter === "pending")}
+                    onClick={() => setStatusFilter("pending")}
+                  >
+                    <FaRegClock />
+                    <span>Pending</span>
+                  </button>
 
-                    <button
-                      className={dynamicClass(statusFilter === "verified")}
-                      onClick={() => setStatusFilter("verified")}
-                    >
-                      <FaRegCircleCheck />
-                      <span>Verified</span>
-                    </button>
-                  </>
-                )}
-              </div>
-
-              {/* <TbReload className="text-3xl self-center" onClick={handleReset} /> */}
+                  <button
+                    className={dynamicClass(statusFilter === "verified")}
+                    onClick={() => setStatusFilter("verified")}
+                  >
+                    <FaRegCircleCheck />
+                    <span>Verified</span>
+                  </button>
+                </>
+              )}
             </div>
 
+            {/* <TbReload className="text-3xl self-center" onClick={handleReset} /> */}
+          </div>
+        )}
+
+        {validData ? (
+          <>
             {/* order cards */}
             {finalData?.map((data, index) => (
               <div
@@ -374,23 +377,23 @@ export default function PickslipItemsScreen() {
                 </div>
               </div>
             ))}
+
+            {allScanned && (
+              <div className="fixed bottom-[1.5vh] left-0 right-0 p-[5vw] bg-[rgba(255,255,255,0.5)] text-white text-center space-y-[0.75vh]">
+                <button
+                  className="animated2 flex items-center justify-center gap-[2vw] mobile-btn-main bg-[rgba(6,140,95,1)]! font-normal! rounded-2xl! shadow-[4px_55px_24px_rgba(0,0,0,0.8)] text-[4.5vw]"
+                  onClick={postSubmitPickslip}
+                >
+                  <FaRegCircleCheck className="text-[5.5vw]" />
+                  Submit Order
+                </button>
+
+                <span className="text-[3.25vw]">{`Validated all items to submit (${scannedItems?.length}/${pickslipItems?.length} completed)`}</span>
+              </div>
+            )}
           </>
         ) : (
           <NoData />
-        )}
-
-        {allScanned && pickslip?.status !== "submitted" && (
-          <div className="fixed bottom-[1.5vh] left-0 right-0 p-[5vw] bg-[rgba(255,255,255,0.5)] text-white text-center space-y-[0.75vh]">
-            <button
-              className="animated2 flex items-center justify-center gap-[2vw] mobile-btn-main bg-[rgba(6,140,95,1)]! font-normal! rounded-2xl! shadow-[4px_55px_24px_rgba(0,0,0,0.8)] text-[4.5vw]"
-              onClick={postSubmitPickslip}
-            >
-              <FaRegCircleCheck className="text-[5.5vw]" />
-              Submit Order
-            </button>
-
-            <span className="text-[3.25vw]">{`Validated all items to submit (${scannedItems?.length}/${pickslipItems?.length} completed)`}</span>
-          </div>
         )}
       </div>
 

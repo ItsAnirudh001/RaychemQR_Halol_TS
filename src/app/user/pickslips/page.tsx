@@ -1,22 +1,17 @@
 "use client";
 
-import UserAuthHeader from "@/components/user/authd-header";
-import { FaCube, FaRegClock } from "react-icons/fa";
-import { FaRegCircleCheck } from "react-icons/fa6";
-import { TbArrowsSort } from "react-icons/tb";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Pickslip } from "@/types/pickslip-type";
-import useAppStore from "@/store/app-store";
 import {
   AbortScanSession,
   apiErrorPrompter,
   GetAllPickslips,
   GetFileForDownload,
 } from "@/api/common-utils";
-import NoData from "@/components/no-data";
-import { customAxios } from "@/utils/axios";
 import { useroutes } from "@/api/user/user-routes";
+import NoData from "@/components/no-data";
+import UserAuthHeader from "@/components/user/authd-header";
+import useAppStore from "@/store/app-store";
+import { Pickslip } from "@/types/pickslip-type";
+import { customAxios } from "@/utils/axios";
 import {
   dynamicClass,
   getScannedItems,
@@ -24,12 +19,16 @@ import {
   resetRef,
   smallHeight,
 } from "@/utils/helpers";
-import { toastify } from "@/utils/toast";
 import { getStoredScanSessionID } from "@/utils/session-utils";
+import { toastify } from "@/utils/toast";
+import { useRouter } from "next/navigation";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { FaCube } from "react-icons/fa";
+import { TbArrowsSort } from "react-icons/tb";
 
 export default function PickslipsScreen() {
   const { push } = useRouter();
-  const { setLoading } = useAppStore();
+  const { loading, setLoading } = useAppStore();
 
   const [sortKey, setSortKey] = useState<string>("");
   const [pickslips, setPickslips] = useState<Pickslip[]>();
@@ -125,7 +124,7 @@ export default function PickslipsScreen() {
   }
 
   function handleViewItems(data: Pickslip) {
-    localStorage.setItem("pickslip", JSON.stringify(data));
+    sessionStorage.setItem("pickslip", JSON.stringify(data));
     setTimeout(() => {
       push(`/user/pickslips/${data.pickslip_id}`);
     }, 400);
@@ -150,7 +149,7 @@ export default function PickslipsScreen() {
 
       console.log("received session_id", session_id);
 
-      localStorage.setItem("scan_session_id", String(session_id));
+      sessionStorage.setItem("scan_session_id", String(session_id));
       handleViewItems(pickslip);
     } catch (error) {
       console.error("Error in startScanSession", error);
@@ -180,6 +179,8 @@ export default function PickslipsScreen() {
 
   const headerProps = { setSearchVal, handleRefresh };
 
+  if (loading) return <></>;
+
   return (
     <>
       {/* header */}
@@ -192,48 +193,50 @@ export default function PickslipsScreen() {
 
       {/* body */}
       <div
-        className={`flex flex-col px-4 py-5 gap-5 ${smallHeight() ? "mt-[10vh]" : "mt-[6.5vh]"}`}
+        className={`flex flex-col px-4 py-5 gap-5 ${smallHeight() ? "mt-[10vh]" : "mt-[7.5vh]"}`}
       >
-        {validData ? (
-          <>
-            {/* top buttons */}
-            <div className="flex justify-between">
-              <div className="flex h-[3.5vh] gap-[2.2vw] items-center">
-                <button className={dynamicClass(sortKey)} onClick={handleSort}>
-                  <span>Sort</span>
-                  <TbArrowsSort />
-                </button>
+        {/* top buttons */}
+        {pickslips && pickslips.length > 0 && (
+          <div className="flex justify-between">
+            <div className="flex h-[3.5vh] gap-[2.2vw] items-center">
+              <button className={dynamicClass(sortKey)} onClick={handleSort}>
+                <span>Sort</span>
+                <TbArrowsSort />
+              </button>
 
-                <div className="h-[90%] w-[0.5vw] bg-[rgba(171,181,194,1)]" />
+              <div className="h-[90%] w-[0.5vw] bg-[rgba(171,181,194,1)]" />
 
-                <button
-                  className={dynamicClass(statusFilter === "created")}
-                  onClick={() => setStatusFilter("created")}
-                >
-                  {/* <FaRegClock /> */}
-                  <span>Pending</span>
-                </button>
+              <button
+                className={dynamicClass(statusFilter === "created")}
+                onClick={() => setStatusFilter("created")}
+              >
+                {/* <FaRegClock /> */}
+                <span>Pending</span>
+              </button>
 
-                <button
-                  className={dynamicClass(statusFilter === "completed")}
-                  onClick={() => setStatusFilter("completed")}
-                >
-                  {/* <FaRegCircleCheck /> */}
-                  <span>Completed</span>
-                </button>
+              <button
+                className={dynamicClass(statusFilter === "completed")}
+                onClick={() => setStatusFilter("completed")}
+              >
+                {/* <FaRegCircleCheck /> */}
+                <span>Completed</span>
+              </button>
 
-                <button
-                  className={dynamicClass(statusFilter === "submitted")}
-                  onClick={() => setStatusFilter("submitted")}
-                >
-                  {/* <FaRegCircleCheck /> */}
-                  <span>Submitted</span>
-                </button>
-              </div>
-
-              {/* <TbReload className="text-3xl self-center" onClick={handleReset} /> */}
+              <button
+                className={dynamicClass(statusFilter === "submitted")}
+                onClick={() => setStatusFilter("submitted")}
+              >
+                {/* <FaRegCircleCheck /> */}
+                <span>Submitted</span>
+              </button>
             </div>
 
+            {/* <TbReload className="text-3xl self-center" onClick={handleReset} /> */}
+          </div>
+        )}
+
+        {validData ? (
+          <>
             {/* order cards */}
             {finalData?.map((data) => (
               <div
