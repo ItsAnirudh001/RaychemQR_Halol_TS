@@ -16,8 +16,7 @@ import {
   dynamicClass,
   getScannedItems,
   isAPISuccess,
-  resetRef,
-  smallHeight,
+  resetRef
 } from "@/utils/helpers";
 import { getStoredScanSessionID } from "@/utils/session-utils";
 import { toastify } from "@/utils/toast";
@@ -193,7 +192,7 @@ export default function PickslipsScreen() {
 
       {/* body */}
       <div
-        className={`flex flex-col px-4 py-5 gap-5 ${smallHeight() ? "mt-[10vh]" : "mt-[7.5vh]"}`}
+        className="flex flex-col px-4 py-5 gap-5 mt-[7.5vh]"
       >
         {/* top buttons */}
         {pickslips && pickslips.length > 0 && (
@@ -297,7 +296,7 @@ export default function PickslipsScreen() {
                   {data.status === "completed" && (
                     <button
                       className="animated2 mobile-btn-main py-2.5! font-medium! text-[0.85rem]!"
-                      onClick={() => handleViewItems(data)}
+                      onClick={() => postStartScan(data)}
                     >
                       View Items
                     </button>

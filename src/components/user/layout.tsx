@@ -13,6 +13,11 @@ export default function MobileLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const path = usePathname();
   const { push } = useRouter();
+  const invalidAccess =
+    !userExists() &&
+    !preauthUserPaths.includes(path) &&
+    !path.includes("reset");
+  
 
   function autoAbortScanSession() {
     const session_id = getStoredScanSessionID();
@@ -24,12 +29,7 @@ export default function MobileLayout({
 
   if (isAdminPath(path)) return <></>;
 
-  if (
-    !userExists() &&
-    !preauthUserPaths.includes(path) &&
-    !path.includes("reset")
-  )
-    return <UnAuth no_margin />;
+  if (invalidAccess) return <UnAuth no_margin />;
 
   return (
     <div className="lg:hidden" suppressHydrationWarning={true}>
