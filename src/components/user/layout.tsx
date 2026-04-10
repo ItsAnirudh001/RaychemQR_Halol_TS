@@ -1,6 +1,7 @@
 "use client";
 
 import useMobileAutoCall from "@/hooks/user/useMobileAutoCall";
+import useTokenLogout from "@/hooks/useTokenLogout";
 import { isAdminPath } from "@/utils/admin/admin-utils";
 import { getStoredScanSessionID, userExists } from "@/utils/session-utils";
 import { preauthUserPaths } from "@/utils/user/user-utils";
@@ -25,6 +26,7 @@ export default function MobileLayout({
     if (session_id) push("/user/pickslips");
   }
 
+  useTokenLogout();
   useMobileAutoCall(autoAbortScanSession);
 
   if (isAdminPath(path)) return <></>;

@@ -1,11 +1,11 @@
-import dayjs from "dayjs";
-import { toastify } from "./toast";
-import { jwtDecode, JwtPayload } from "jwt-decode";
-import { Pickslip, PickslipItem } from "@/types/pickslip-type";
 import { regexMod } from "@/constants/regex-data";
+import { Pickslip, PickslipItem } from "@/types/pickslip-type";
 import { UserLogsItem, UserTableItem } from "@/types/table-types";
-import { getStoredUser } from "./session-utils";
+import dayjs from "dayjs";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 import { RefObject } from "react";
+import { getStoredUser } from "./session-utils";
+import { toastify } from "./toast";
 
 export function tableIndices(page: number, rowsPerPage: number) {
   const indices = {
@@ -64,6 +64,7 @@ export function checkToken() {
 
   try {
     const decoded: JwtPayload = jwtDecode(token);
+    localStorage.setItem("JWT",JSON.stringify(decoded))
     const { exp, iat } = decoded;
     if (!exp || !iat) return 0;
 

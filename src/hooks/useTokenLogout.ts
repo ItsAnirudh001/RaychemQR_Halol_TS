@@ -1,15 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { checkToken } from "@/utils/helpers";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function useTokenLogout() {
   const { push } = useRouter();
 
   async function tokenLogout() {
     const remainingTime = checkToken();
-    // const remainingTime = 10 * 60 * 1000;
+
+    // console.log("token expiry time",remainingTime)
 
     setTimeout(() => {
      push("/")
