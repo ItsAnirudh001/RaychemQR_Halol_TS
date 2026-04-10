@@ -71,6 +71,19 @@ export default function PickslipItemsScreen() {
     }
   }
 
+  function updateStoredPickslip(status: string) {
+    const updatedPickslip = { ...pickslip, status };
+    sessionStorage.setItem("pickslip", JSON.stringify(updatedPickslip));
+  }
+
+  const allScanned = scannedItems?.length == pickslipItems?.length;
+
+  useEffect(() => {
+    if(submitted) return;
+
+    updateStoredPickslip(allScanned ? "completed" : "created");
+  }, [allScanned]);
+
   useEffect(() => {
     fetchPickslipItems();
   }, []);
