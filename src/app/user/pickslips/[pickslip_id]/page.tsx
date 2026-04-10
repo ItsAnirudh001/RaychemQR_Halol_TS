@@ -9,11 +9,7 @@ import OrderSubmissionModal from "@/components/user/modals/order-submission-moda
 import useAppStore from "@/store/app-store";
 import { PickslipItem } from "@/types/pickslip-type";
 import { customAxios } from "@/utils/axios";
-import {
-  dynamicClass,
-  isAPISuccess,
-  searchParam
-} from "@/utils/helpers";
+import { dynamicClass, isAPISuccess, searchParam } from "@/utils/helpers";
 import {
   getStoredPickslip,
   getStoredScanSessionID,
@@ -48,6 +44,7 @@ export default function PickslipItemsScreen() {
   }, []);
 
   const created = pickslip?.status === "created";
+  const completed = pickslip?.status === "completed";
   const submitted = pickslip?.status === "submitted";
 
   const { oa_no, pickslip_id } = pickslip;
@@ -217,7 +214,6 @@ export default function PickslipItemsScreen() {
 
   const finalData = searchedData();
   const validData = Array.isArray(finalData) && finalData.length > 0;
-  const allScanned = scannedItems?.length == pickslipItems?.length;
 
   // console.log("items", pickslipItems);
 
@@ -245,7 +241,7 @@ export default function PickslipItemsScreen() {
 
       {/* body */}
       <div
-        className={`flex flex-col p-[2vh] gap-[2vh] mt-[9.5vh] ${allScanned ? "mb-[15.5vh]" : "mb-[2.2vh]"}`}
+        className={`flex flex-col p-[2vh] gap-[2vh] mt-[9.5vh] ${completed ? "mb-[15.5vh]" : "mb-[2.2vh]"}`}
       >
         {/* top buttons */}
         {pickslipItems && pickslipItems.length > 0 && (
@@ -378,7 +374,7 @@ export default function PickslipItemsScreen() {
               </div>
             ))}
 
-            {allScanned && (
+            {completed && (
               <div className="fixed bottom-[1.5vh] left-0 right-0 p-[5vw] bg-[rgba(255,255,255,0.5)] text-white text-center space-y-[0.75vh]">
                 <button
                   className="animated2 flex items-center justify-center gap-[2vw] mobile-btn-main bg-[rgba(6,140,95,1)]! font-normal! rounded-2xl! shadow-[4px_55px_24px_rgba(0,0,0,0.8)] text-[4.5vw]"
