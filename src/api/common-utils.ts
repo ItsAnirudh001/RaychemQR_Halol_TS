@@ -36,6 +36,29 @@ export function apiErrorPrompter(error: unknown) {
   }
 }
 
+export async function AbortScanSession(setLoading?: (value: boolean) => void) {
+  const session_id = getStoredScanSessionID();
+
+  if(!session_id) return;
+
+  if (setLoading) setLoading(true);
+
+  try {
+    const { data } = await customAxios.post(useroutes.abortScanSession, {
+      session_id,
+    });
+
+    if (isAPISuccess(data.status)) sessionStorage.removeItem("scan_session_id");
+
+    return data;
+  } catch (error) {
+    console.error("Error in /abortScanSession", error);
+    apiErrorPrompter(error);
+  } finally {
+    if (setLoading) setLoading(false);
+  }
+}
+
 export async function Login(
   access_mode: string,
   setLoading: (value: boolean) => void,
@@ -107,6 +130,8 @@ export async function Logout(
   if (logoutRef.current) return;
 
   logoutRef.current = true;
+  await AbortScanSession();
+   
   const user = getStoredUser();
 
   if (!user) return;
@@ -203,29 +228,6 @@ export async function GetPickslipItems(
     apiErrorPrompter(error);
   } finally {
     setLoading(false);
-  }
-}
-
-export async function AbortScanSession(setLoading?: (value: boolean) => void) {
-  const session_id = getStoredScanSessionID();
-
-  // if(!session_id) return;
-
-  if (setLoading) setLoading(true);
-
-  try {
-    const { data } = await customAxios.post(useroutes.abortScanSession, {
-      session_id,
-    });
-
-    if (isAPISuccess(data.status)) sessionStorage.removeItem("scan_session_id");
-
-    return data;
-  } catch (error) {
-    console.error("Error in /abortScanSession", error);
-    apiErrorPrompter(error);
-  } finally {
-    if (setLoading) setLoading(false);
   }
 }
 
