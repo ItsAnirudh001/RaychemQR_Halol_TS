@@ -123,9 +123,7 @@ export async function Logout(
     );
     push("/");
     toastify("success", data?.message);
-    // setTimeout(() => {
     localStorage.clear();
-    // }, 2000);
   } catch (error) {
     console.error("Error in logout", error);
     apiErrorPrompter(error);
