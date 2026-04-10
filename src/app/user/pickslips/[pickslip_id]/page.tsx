@@ -53,6 +53,8 @@ export default function PickslipItemsScreen() {
     (item: PickslipItem) => item.is_scanned == true,
   );
 
+  console.log("scanned items",scannedItems);
+
   async function fetchPickslipItems() {
     setLoading(true);
     const { pickslip_id } = pickslip;
@@ -226,7 +228,7 @@ export default function PickslipItemsScreen() {
   };
 
   const finalData = searchedData();
-  const validData = Array.isArray(finalData) && finalData.length > 0;
+  const validData = !loading && Array.isArray(finalData) && finalData.length > 0;
 
   // console.log("items", pickslipItems);
 
@@ -387,7 +389,7 @@ export default function PickslipItemsScreen() {
               </div>
             ))}
 
-            {completed && (
+            {pickslip?.status === "completed" && (
               <div className="fixed bottom-[1.5vh] left-0 right-0 p-[5vw] bg-[rgba(255,255,255,0.5)] text-white text-center space-y-[0.75vh]">
                 <button
                   className="animated2 flex items-center justify-center gap-[2vw] mobile-btn-main bg-[rgba(6,140,95,1)]! font-normal! rounded-2xl! shadow-[4px_55px_24px_rgba(0,0,0,0.8)] text-[4.5vw]"
