@@ -33,6 +33,7 @@ export default function PickslipItemsScreen() {
   const [pickslipItems, setPickslipItems] = useState<PickslipItem[]>();
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [searchVal, setSearchVal] = useState<string>("");
+  const [pickslipStatus, setPickslipStatus] = useState(pickslip?.status);
 
   const [viewDelete, setViewDelete] = useState<boolean>(false);
   const [viewDashboard, setViewDashboard] = useState<boolean>(false);
@@ -43,9 +44,9 @@ export default function PickslipItemsScreen() {
     setLoading(true);
   }, []);
 
-  const created = pickslip?.status === "created";
-  const completed = pickslip?.status === "completed";
-  const submitted = pickslip?.status === "submitted";
+  const created = pickslipStatus === "created";
+  const completed = pickslipStatus === "completed";
+  const submitted = pickslipStatus === "submitted";
 
   const { oa_no, pickslip_id } = pickslip;
 
@@ -81,9 +82,11 @@ export default function PickslipItemsScreen() {
   const allScanned = scannedItems?.length == pickslipItems?.length;
 
   useEffect(() => {
+    const status = allScanned ? "completed" : "created";
+    setPickslipStatus(status);
     if(submitted) return;
 
-    updateStoredPickslip(allScanned ? "completed" : "created");
+    updateStoredPickslip(status);
   }, [allScanned]);
 
   useEffect(() => {
@@ -389,7 +392,7 @@ export default function PickslipItemsScreen() {
               </div>
             ))}
 
-            {pickslip?.status === "completed" && (
+            {completed && (
               <div className="fixed bottom-[1.5vh] left-0 right-0 p-[5vw] bg-[rgba(255,255,255,0.5)] text-white text-center space-y-[0.75vh]">
                 <button
                   className="animated2 flex items-center justify-center gap-[2vw] mobile-btn-main bg-[rgba(6,140,95,1)]! font-normal! rounded-2xl! shadow-[4px_55px_24px_rgba(0,0,0,0.8)] text-[4.5vw]"
