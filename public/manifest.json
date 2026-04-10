@@ -5,8 +5,8 @@
   "display": "standalone",
   "description": "Official PWA for the RaychemQR HALOL",
   "id" : "/",
-  "background_color": "transparent",
-  "theme_color": "transparent",
+  "background_color": "white",
+  "theme_color": "white",
   "orientation": "portrait",
   "icons": [
     {
