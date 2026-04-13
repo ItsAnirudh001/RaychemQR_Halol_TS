@@ -9,7 +9,6 @@ import {
 import { useroutes } from "@/api/user/user-routes";
 import NoData from "@/components/no-data";
 import UserAuthHeader from "@/components/user/authd-header";
-import useBackGesture from "@/hooks/useBackGesture";
 import useAppStore from "@/store/app-store";
 import { Pickslip } from "@/types/pickslip-type";
 import { customAxios } from "@/utils/axios";
@@ -81,8 +80,6 @@ export default function PickslipsScreen() {
     fetchPickslips();
     postAbortSession();
   }, []);
-
-  useBackGesture();
 
   function sortedData() {
     if (!sortKey) return pickslips;
