@@ -26,7 +26,7 @@ import { TbArrowsSort } from "react-icons/tb";
 
 export default function PickslipItemsScreen() {
   const { back, push } = useRouter();
-  const { loading, setLoading } = useAppStore();
+  const { setLoading } = useAppStore();
   const pickslip = getStoredPickslip();
 
   const [sortKey, setSortKey] = useState<string>("");
@@ -231,11 +231,9 @@ export default function PickslipItemsScreen() {
   };
 
   const finalData = searchedData();
-  const validData = !loading && Array.isArray(finalData) && finalData.length > 0;
+  const validData = Array.isArray(finalData) && finalData.length > 0;
 
   // console.log("items", pickslipItems);
-
-  if (loading) return <></>;
 
   return (
     <>

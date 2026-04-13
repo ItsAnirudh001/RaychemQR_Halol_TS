@@ -2,7 +2,11 @@ import { LoginForm } from "@/types/login-types";
 import { Pickslip } from "@/types/pickslip-type";
 import { customAxios } from "@/utils/axios";
 import { handleFileDownload, isAPISuccess, resetRef } from "@/utils/helpers";
-import { getStoredScanSessionID, getStoredUser } from "@/utils/session-utils";
+import {
+  getStoredScanSessionID,
+  getStoredUser,
+  updateLogoutMode,
+} from "@/utils/session-utils";
 import { toastify } from "@/utils/toast";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -32,14 +36,14 @@ export function apiErrorPrompter(error: unknown) {
       break;
 
     default:
-      toastify("error", "Unknown error");
+      toastify("error", "Server error");
   }
 }
 
 export async function AbortScanSession(setLoading?: (value: boolean) => void) {
   const session_id = getStoredScanSessionID();
 
-  if(!session_id) return;
+  if (!session_id) return;
 
   if (setLoading) setLoading(true);
 
@@ -112,6 +116,7 @@ export async function Login(
       "login",
       `Login at ${dayjs().format("DD-MM-YYYY hh:mm:ss")}`,
     );
+    updateLogoutMode("disabled");
 
     callback();
   } catch (error) {
@@ -131,12 +136,12 @@ export async function Logout(
 
   logoutRef.current = true;
   await AbortScanSession();
-   
+
   const user = getStoredUser();
 
   if (!user) return;
 
-  console.log("Triggwered logout for", user);
+  // console.log("Triggwered logout for", user);
 
   setLoading(true);
   try {
@@ -149,6 +154,7 @@ export async function Logout(
     push("/");
     toastify("success", data?.message);
     localStorage.clear();
+    sessionStorage.clear();
   } catch (error) {
     console.error("Error in logout", error);
     apiErrorPrompter(error);

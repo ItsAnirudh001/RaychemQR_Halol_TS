@@ -56,11 +56,7 @@ export default function PickslipItemsPage() {
   }
 
   async function handleDownloadReport() {
-    try {
-      await GetFileForDownload(pickslip, setLoading);
-    } catch (error) {
-      console.error("Error in downloadFile for admin", error);
-    }
+    await GetFileForDownload(pickslip, setLoading);
   }
 
   function searchedData() {
@@ -88,8 +84,6 @@ export default function PickslipItemsPage() {
     handleRefresh: fetchPickslipItems,
     setSearchVal,
   };
-
-  if(loading) return <></>;
 
   return (
     <div className="page gap-[3vh]">

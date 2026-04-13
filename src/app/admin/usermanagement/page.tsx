@@ -95,6 +95,7 @@ export default function UserManagementPage() {
   }
 
   useEffect(() => {
+    sessionStorage.setItem("logout_session", "enabled");
     fetchUsers();
   }, []);
 
@@ -160,8 +161,6 @@ export default function UserManagementPage() {
   };
 
   const headProps = { title: "User Management", handleRefresh, setSearchVal };
-
-  if(loading) return <></>;
 
   return (
     <div className="page gap-[3vh]">

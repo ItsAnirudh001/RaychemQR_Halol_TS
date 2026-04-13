@@ -16,7 +16,7 @@ import {
   dynamicClass,
   getScannedItems,
   isAPISuccess,
-  resetRef
+  resetRef,
 } from "@/utils/helpers";
 import { getStoredScanSessionID } from "@/utils/session-utils";
 import { toastify } from "@/utils/toast";
@@ -27,7 +27,7 @@ import { TbArrowsSort } from "react-icons/tb";
 
 export default function PickslipsScreen() {
   const { push } = useRouter();
-  const { loading, setLoading } = useAppStore();
+  const { setLoading } = useAppStore();
 
   const [sortKey, setSortKey] = useState<string>("");
   const [pickslips, setPickslips] = useState<Pickslip[]>();
@@ -76,6 +76,7 @@ export default function PickslipsScreen() {
   }
 
   useEffect(() => {
+    sessionStorage.setItem("logout_session", "enabled");
     fetchPickslips();
     postAbortSession();
   }, []);
@@ -159,11 +160,7 @@ export default function PickslipsScreen() {
   }
 
   async function handleDownloadReport(pickslip: Pickslip) {
-    try {
-      await GetFileForDownload(pickslip, setLoading);
-    } catch (error) {
-      console.error("Error in downloadFile for user", error);
-    }
+    await GetFileForDownload(pickslip, setLoading);
   }
 
   async function handleRefresh() {
@@ -178,8 +175,6 @@ export default function PickslipsScreen() {
 
   const headerProps = { setSearchVal, handleRefresh };
 
-  if (loading) return <></>;
-
   return (
     <>
       {/* header */}
@@ -191,9 +186,7 @@ export default function PickslipsScreen() {
       </UserAuthHeader>
 
       {/* body */}
-      <div
-        className="flex flex-col px-4 py-5 gap-5 mt-[7.5vh]"
-      >
+      <div className="flex flex-col px-4 py-5 gap-5 mt-[7.5vh]">
         {/* top buttons */}
         {pickslips && pickslips.length > 0 && (
           <div className="flex justify-between">

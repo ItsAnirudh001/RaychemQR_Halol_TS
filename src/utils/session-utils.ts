@@ -32,3 +32,9 @@ export function getStoredPickslip() {
   const pickslip = JSON.parse(sessionStorage.getItem("pickslip")!);
   return pickslip;
 }
+
+export function updateLogoutMode(mode: string) {
+  if (typeof localStorage === "undefined") return;
+
+  localStorage.setItem("logout_mode", mode);
+}

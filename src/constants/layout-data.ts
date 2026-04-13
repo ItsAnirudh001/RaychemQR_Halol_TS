@@ -1,4 +1,5 @@
 import { Poppins } from "next/font/google";
+import { sidebarData } from "./sidebar-data";
 
 export const fontSans = Poppins({
   display: "swap",
@@ -8,3 +9,8 @@ export const fontSans = Poppins({
 });
 
 export const isDev = process.env.NEXT_PUBLIC_ENV === "Local";
+
+export const homePaths = {
+  admin : sidebarData[0].route,
+  user : "/user/pickslips"
+}

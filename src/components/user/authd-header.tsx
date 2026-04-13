@@ -1,5 +1,6 @@
 "use client";
 
+import { updateLogoutMode } from "@/utils/session-utils";
 import { Menu, MenuItem } from "@mui/material";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -39,12 +40,13 @@ export default function UserAuthHeader({
 
   function headerLogout() {
     hideMenu();
+    updateLogoutMode("normal");
     push("/")
   }
 
   return (
     <div
-      className="shadowed flex p-3 items-center justify-between box-shadow bg-white
+      className="shadowed flex py-[1.25vh] px-[2vw] items-center justify-between box-shadow bg-white
       fixed right-0 left-0 top-0"
     >
       <div className="flex gap-2 items-center">{children}</div>
