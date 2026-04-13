@@ -3,7 +3,7 @@
 import { Login } from "@/api/common-utils";
 import MuiInput from "@/components/material-ui/input";
 import { homePaths } from "@/constants/layout-data";
-import useDynamicLogout from "@/hooks/useDynamicLogout";
+import useSessionHandle from "@/hooks/useSessionHandle";
 import useAppStore from "@/store/app-store";
 import { LoginForm } from "@/types/login-types";
 import { MuiInputChangeEvent } from "@/types/mui-types";
@@ -43,7 +43,7 @@ export default function UserLoginPage() {
     await Login("user", setLoading, form, () => push(homePath));
   }
 
-  useDynamicLogout(homePath);
+  useSessionHandle(homePath);
 
   return (
     <div className="flex flex-col gap-[3vh] p-4 overflow-y-hidden bg-white h-screen">

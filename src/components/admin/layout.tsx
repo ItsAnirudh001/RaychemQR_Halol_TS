@@ -8,7 +8,7 @@ import { userExists } from "@/utils/session-utils";
 import { isUserPath } from "@/utils/user/user-utils";
 import { usePathname } from "next/navigation";
 import React from "react";
-import UnAuth from "../unauth";
+import UnauthorizedPage from "../unauth-page";
 import AdminHeader from "./header";
 import AdminSidebar from "./sidebar";
 
@@ -25,7 +25,7 @@ export default function AdminLayout({
   if (isUserPath(path)) return <></>;
 
   if (!userExists() && !preauthAdminPaths.includes(path))
-    return <UnAuth no_margin />;
+    return <UnauthorizedPage no_margin />;
 
   return (
     <div
