@@ -2,7 +2,7 @@
 
 import { apiErrorPrompter } from "@/api/common-utils";
 import { useroutes } from "@/api/user/user-routes";
-import UnAuth from "@/components/unauth";
+import UnauthorizedPage from "@/components/unauth-page";
 import PasswordResetForm from "@/components/user/password-reset-form";
 import useAppStore from "@/store/app-store";
 import { ResetForm } from "@/types/user/user-types";
@@ -43,7 +43,7 @@ export default function ChangePasswordPage() {
     }
   }
 
-  if (!user.access_token) return <UnAuth />;
+  if (!user.access_token) return <UnauthorizedPage />;
 
   return (
     <PasswordResetForm

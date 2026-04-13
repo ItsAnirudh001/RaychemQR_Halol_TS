@@ -9,7 +9,7 @@ import { getStoredScanSessionID, userExists } from "@/utils/session-utils";
 import { preauthUserPaths } from "@/utils/user/user-utils";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
-import UnAuth from "../unauth";
+import UnauthorizedPage from "../unauth-page";
 
 export default function MobileLayout({
   children,
@@ -34,7 +34,7 @@ export default function MobileLayout({
 
   if (isAdminPath(path)) return <></>;
 
-  if (invalidAccess) return <UnAuth no_margin />;
+  if (invalidAccess) return <UnauthorizedPage no_margin />;
 
   return (
     <div
