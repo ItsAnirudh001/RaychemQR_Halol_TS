@@ -1,26 +1,26 @@
 "use client";
 
+import { Login } from "@/api/common-utils";
 import MuiInput from "@/components/material-ui/input";
+import { homePaths } from "@/constants/layout-data";
+import useDynamicLogout from "@/hooks/useDynamicLogout";
+import useAppStore from "@/store/app-store";
+import { LoginForm } from "@/types/login-types";
 import { MuiInputChangeEvent } from "@/types/mui-types";
+import { validatedInput } from "@/utils/helpers";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import { LoginForm } from "@/types/login-types";
-import { Login, Logout } from "@/api/common-utils";
-import useAppStore from "@/store/app-store";
-import { validatedInput } from "@/utils/helpers";
+import { useState } from "react";
 
-export default function LoginPage() {
+export default function AdminLoginPage() {
   const { push } = useRouter();
   const { setLoading } = useAppStore();
+  const homePath = homePaths.admin;
 
   const [form, setForm] = useState<LoginForm>({
     username: "",
     password: "",
   });
-
-  const logoutRef = useRef<boolean>(false);
 
   function updateForm(key: string, e: MuiInputChangeEvent) {
     setForm((prev) => {
@@ -36,12 +36,10 @@ export default function LoginPage() {
 
     if (!validatedInput(form.password, "password")) return;
 
-    await Login("admin", setLoading, form, () => push("/admin/usermanagement"));
+    await Login("admin", setLoading, form, () => push(homePath));
   }
 
-  useEffect(() => {
-    Logout(setLoading, push,logoutRef);
-  }, []);
+  useDynamicLogout(homePath);
 
   return (
     <div className="flex w-screen h-screen mt-[-10vh] overflow-hidden">

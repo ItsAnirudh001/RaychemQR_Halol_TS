@@ -2,6 +2,7 @@
 
 import useMobileAutoCall from "@/hooks/user/useMobileAutoCall";
 import useTokenLogout from "@/hooks/useTokenLogout";
+import useAppStore from "@/store/app-store";
 import { isAdminPath } from "@/utils/admin/admin-utils";
 import { getStoredScanSessionID, userExists } from "@/utils/session-utils";
 import { preauthUserPaths } from "@/utils/user/user-utils";
@@ -14,6 +15,7 @@ export default function MobileLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const path = usePathname();
   const { push } = useRouter();
+  const { loading } = useAppStore();
   const invalidAccess =
     !userExists() &&
     !preauthUserPaths.includes(path) &&
@@ -34,7 +36,7 @@ export default function MobileLayout({
   if (invalidAccess) return <UnAuth no_margin />;
 
   return (
-    <div className="lg:hidden" suppressHydrationWarning={true}>
+    <div className={`lg:hidden ${loading ? "hidden" : ""}`} suppressHydrationWarning>
       <div className="lg:hidden flex flex-col w-screen overflow-x-hidden">
         {children}
       </div>

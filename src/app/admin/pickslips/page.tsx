@@ -65,8 +65,6 @@ export default function PickslipsPage() {
     setSearchVal,
   };
 
-  if(loading) return <></>;
-
   return (
     <div className="page gap-6">
       <AdminPageHead {...headProps} />

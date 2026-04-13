@@ -89,8 +89,6 @@ export default function PickslipItemsPage() {
     setSearchVal,
   };
 
-  if(loading) return <></>;
-
   return (
     <div className="page gap-[3vh]">
       <div className="flex items-center gap-[0.5vw]">

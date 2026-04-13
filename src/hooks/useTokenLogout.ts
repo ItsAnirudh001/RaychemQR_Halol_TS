@@ -1,6 +1,7 @@
 "use client";
 
 import { checkToken } from "@/utils/helpers";
+import { updateLogoutMode } from "@/utils/session-utils";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -13,7 +14,8 @@ export default function useTokenLogout() {
     // console.log("token expiry time",remainingTime)
 
     setTimeout(() => {
-     push("/")
+      updateLogoutMode("token");
+      push("/");
     }, remainingTime);
   }
 

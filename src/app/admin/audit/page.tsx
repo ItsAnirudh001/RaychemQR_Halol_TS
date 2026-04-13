@@ -64,8 +64,6 @@ export default function AuditPage() {
     setSearchVal,
   };
 
-  if(loading) return <></>;
-
   return (
     <div className="page gap-[3vh]">
       <AdminPageHead {...headProps} />

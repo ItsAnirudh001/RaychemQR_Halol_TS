@@ -1,20 +1,21 @@
 "use client";
 
-import { Login, Logout } from "@/api/common-utils";
+import { Login } from "@/api/common-utils";
 import MuiInput from "@/components/material-ui/input";
+import { homePaths } from "@/constants/layout-data";
+import useDynamicLogout from "@/hooks/useDynamicLogout";
 import useAppStore from "@/store/app-store";
 import { LoginForm } from "@/types/login-types";
 import { MuiInputChangeEvent } from "@/types/mui-types";
 import { validatedInput } from "@/utils/helpers";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
-export default function LoginPage() {
+export default function UserLoginPage() {
   const { push } = useRouter();
   const { setLoading } = useAppStore();
-
-  const logoutRef = useRef<boolean>(false);
+  const homePath = homePaths.user;
 
   const [form, setForm] = useState<LoginForm>({
     username: "",
@@ -39,22 +40,10 @@ export default function LoginPage() {
 
     if (!validatedInput(form.password, "password")) return;
 
-    await Login("user", setLoading, form, () => {
-      push("/user/pickslips");
-    });
+    await Login("user", setLoading, form, () => push(homePath));
   }
 
-  // const logoutRef = use
-
-  // useLayoutEffect(() => {
-  //    const user_id = getStoredUser()?.user_id;
-
-  //    if(user_id) 
-  // }, [])
-
-  useEffect(() => {
-    Logout(setLoading, push, logoutRef);
-  }, []);
+  useDynamicLogout(homePath);
 
   return (
     <div className="flex flex-col gap-[3vh] p-4 overflow-y-hidden bg-white h-screen">

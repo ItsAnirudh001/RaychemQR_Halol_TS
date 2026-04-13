@@ -2,7 +2,7 @@
 
 import { AutoLogout } from "@/api/common-utils";
 import useAutoCall from "@/hooks/useAutoCall";
-import { getStoredUser } from "@/utils/session-utils";
+import { getStoredUser, updateLogoutMode } from "@/utils/session-utils";
 import { isUserPath } from "@/utils/user/user-utils";
 import { Menu, MenuItem } from "@mui/material";
 import Image from "next/image";
@@ -35,6 +35,7 @@ export default function AdminHeader() {
 
   function headerLogout() {
     hideMenu();
+    updateLogoutMode("normal");
     push("/")
   }
 
@@ -47,7 +48,7 @@ export default function AdminHeader() {
   return (
     <div className="fixed top-0 left-0 w-full z-50 flex flex-row py-4 px-4 items-center gap-4 bg-header-bg h-[10vh] justify-between">
       <Image
-        suppressHydrationWarning={true}
+        suppressHydrationWarning
         src="/ray-logo.png"
         alt="Org logo"
         width={200}

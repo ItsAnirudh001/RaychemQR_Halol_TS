@@ -8,3 +8,8 @@ export const fontSans = Poppins({
 });
 
 export const isDev = process.env.NEXT_PUBLIC_ENV === "Local";
+
+export const homePaths = {
+  admin : "/admin/usermanagement",
+  user : "/user/pickslips"
+}

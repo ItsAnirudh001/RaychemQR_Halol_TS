@@ -1,20 +1,22 @@
 "use client";
 
-import React from "react";
-import AdminHeader from "./header";
-import AdminSidebar from "./sidebar";
-import { usePathname } from "next/navigation";
-import { userExists } from "@/utils/session-utils";
-import { preauthAdminPaths } from "@/utils/admin/admin-utils";
-import UnAuth from "../unauth";
 import { isDev } from "@/constants/layout-data";
 import useTokenLogout from "@/hooks/useTokenLogout";
+import useAppStore from "@/store/app-store";
+import { preauthAdminPaths } from "@/utils/admin/admin-utils";
+import { userExists } from "@/utils/session-utils";
 import { isUserPath } from "@/utils/user/user-utils";
+import { usePathname } from "next/navigation";
+import React from "react";
+import UnAuth from "../unauth";
+import AdminHeader from "./header";
+import AdminSidebar from "./sidebar";
 
 export default function AdminLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const path = usePathname();
+  const { loading } = useAppStore()
 
   useTokenLogout();
 
@@ -27,8 +29,8 @@ export default function AdminLayout({
 
   return (
     <div
-      className={`${isDev ? "flex flex-col" : "hidden lg:flex lg:flex-col"} w-screen overflow-x-hidden`}
-      suppressHydrationWarning={true}
+      className={`${isDev ? "flex flex-col" : "hidden lg:flex lg:flex-col"} w-screen overflow-x-hidden ${loading ? "hidden" : ""}`}
+      suppressHydrationWarning
     >
       <AdminHeader />
 
