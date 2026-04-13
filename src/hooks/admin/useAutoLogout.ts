@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-export default function useAutoCall(callback: () => void) {
+export default function useAutoLogout(callback: () => void) {
   function handleBeforeUnload(e: BeforeUnloadEvent) {
     e.preventDefault();
   }

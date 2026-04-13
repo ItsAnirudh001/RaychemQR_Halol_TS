@@ -1,7 +1,7 @@
 "use client";
 
 import { AutoLogout } from "@/api/common-utils";
-import useAutoCall from "@/hooks/useAutoCall";
+import useAutoLogout from "@/hooks/admin/useAutoLogout";
 import { getStoredUser, updateLogoutMode } from "@/utils/session-utils";
 import { isUserPath } from "@/utils/user/user-utils";
 import { Menu, MenuItem } from "@mui/material";
@@ -23,7 +23,7 @@ export default function AdminHeader() {
     localStorage.clear()
   }
 
-  useAutoCall(postLogout);
+  useAutoLogout(postLogout);
 
   function showMenu(event: React.MouseEvent<HTMLButtonElement>) {
     setMenuAnchor(event.currentTarget);
