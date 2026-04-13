@@ -160,11 +160,7 @@ export default function PickslipsScreen() {
   }
 
   async function handleDownloadReport(pickslip: Pickslip) {
-    try {
-      await GetFileForDownload(pickslip, setLoading);
-    } catch (error) {
-      console.error("Error in downloadFile for user", error);
-    }
+    await GetFileForDownload(pickslip, setLoading);
   }
 
   async function handleRefresh() {

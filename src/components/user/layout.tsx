@@ -1,6 +1,7 @@
 "use client";
 
-import useMobileAutoCall from "@/hooks/user/useMobileAutoCall";
+import { homePaths } from "@/constants/layout-data";
+import useScanSessionAbort from "@/hooks/user/useScanSessionAbort";
 import useTokenLogout from "@/hooks/useTokenLogout";
 import useAppStore from "@/store/app-store";
 import { isAdminPath } from "@/utils/admin/admin-utils";
@@ -20,23 +21,26 @@ export default function MobileLayout({
     !userExists() &&
     !preauthUserPaths.includes(path) &&
     !path.includes("reset");
-  
 
   function autoAbortScanSession() {
     const session_id = getStoredScanSessionID();
 
-    if (session_id) push("/user/pickslips");
+    if (session_id) push(homePaths.user);
   }
 
   useTokenLogout();
-  useMobileAutoCall(autoAbortScanSession);
+
+  useScanSessionAbort(autoAbortScanSession);
 
   if (isAdminPath(path)) return <></>;
 
   if (invalidAccess) return <UnAuth no_margin />;
 
   return (
-    <div className={`lg:hidden ${loading ? "hidden" : ""}`} suppressHydrationWarning>
+    <div
+      className={`lg:hidden ${loading ? "hidden" : ""}`}
+      suppressHydrationWarning
+    >
       <div className="lg:hidden flex flex-col w-screen overflow-x-hidden">
         {children}
       </div>

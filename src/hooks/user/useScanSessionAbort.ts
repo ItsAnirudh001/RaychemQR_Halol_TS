@@ -6,17 +6,13 @@ import { toastify } from "@/utils/toast";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
-export default function useMobileAutoCall(
+export default function useScanSessionAbort(
   callback: () => void,
   message?: string,
 ) {
-  const path = usePathname()
+  const path = usePathname();
 
   const logoutRef = useRef(false);
-
-  function handleBeforeUnload(e: BeforeUnloadEvent) {
-    e.preventDefault();
-  }
 
   function handleVisibilityChange() {
     if (logoutRef.current) return;
@@ -33,14 +29,11 @@ export default function useMobileAutoCall(
   }
 
   useEffect(() => {
-    if(isAdminPath(path)) return;
+    if (isAdminPath(path)) return;
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
+    return () =>
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
   }, []);
 }

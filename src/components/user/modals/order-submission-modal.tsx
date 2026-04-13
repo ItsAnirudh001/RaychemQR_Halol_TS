@@ -6,6 +6,7 @@ import {
   GetFileForDownload,
 } from "@/api/common-utils";
 import AppModal from "@/components/material-ui/modal";
+import { homePaths } from "@/constants/layout-data";
 import useAppStore from "@/store/app-store";
 import { PickslipItem } from "@/types/pickslip-type";
 import { isAPISuccess } from "@/utils/helpers";
@@ -47,7 +48,7 @@ export default function OrderSubmissionModal(props: {
 
   async function handleBackToDashboard() {
     await postAbortSession();
-    push("/user/pickslips");
+    push(homePaths.user);
     setTimeout(() => {
       sessionStorage.removeItem("pickslip");
       sessionStorage.removeItem("scan_session_id");
@@ -56,12 +57,7 @@ export default function OrderSubmissionModal(props: {
 
   async function handleDownloadReport() {
     const pickslip = getStoredPickslip();
-
-    try {
-      await GetFileForDownload(pickslip, setLoading);
-    } catch (error) {
-      console.error("Error in downloadFile for admin", error);
-    }
+    await GetFileForDownload(pickslip, setLoading);
   }
 
   return (
