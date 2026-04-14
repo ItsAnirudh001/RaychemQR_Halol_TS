@@ -8,6 +8,10 @@ import { useEffect } from "react";
 export default function useTokenLogout() {
   const { push } = useRouter();
 
+  function handleBeforeUnload(e: BeforeUnloadEvent) {
+    e.preventDefault();
+  }
+
   async function tokenLogout() {
     const remainingTime = checkToken();
 
@@ -20,8 +24,12 @@ export default function useTokenLogout() {
   }
 
   useEffect(() => {
+    window.addEventListener("beforeunload", handleBeforeUnload);
     window.addEventListener("login", tokenLogout);
 
-    return () => window.removeEventListener("login", tokenLogout);
+    return () => {
+      window.removeEventListener("login", tokenLogout);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
   }, []);
 }
