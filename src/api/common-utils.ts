@@ -240,7 +240,11 @@ export async function GetPickslipItems(
 export async function GetFileForDownload(
   pickslip: Pickslip,
   setLoading: (value: boolean) => void,
+  downloadRef: RefObject<boolean>,
 ) {
+  if (downloadRef.current) return;
+  downloadRef.current = true;
+
   setLoading(true);
 
   const { pickslip_id } = pickslip;
@@ -274,5 +278,6 @@ export async function GetFileForDownload(
     apiErrorPrompter(error);
   } finally {
     setLoading(false);
+    resetRef(downloadRef);
   }
 }

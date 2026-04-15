@@ -10,7 +10,7 @@ import { searchParam, timestamp } from "@/utils/helpers";
 import { useEffect, useLayoutEffect, useState } from "react";
 
 export default function PickslipsPage() {
-  const { loading, setLoading } = useAppStore();
+  const { setLoading } = useAppStore();
   const [pickslips, setPickslips] = useState<Pickslip[]>();
   const [searchVal, setSearchVal] = useState<string>("");
 
@@ -23,7 +23,7 @@ export default function PickslipsPage() {
     try {
       const data = await GetAllPickslips(setLoading);
       setPickslips(data);
-      console.log("api data",data);
+      console.log("api data", data);
     } catch (error) {
       console.error("Error fetching pickslips", error);
     } finally {
@@ -44,7 +44,7 @@ export default function PickslipsPage() {
       (d) =>
         searchParam(d.oa_no).includes(searchParam(searchVal)) ||
         searchParam(d.po_no).includes(searchParam(searchVal)) ||
-        timestamp(searchParam(d.created_at))?.includes(searchParam(searchVal))
+        timestamp(searchParam(d.created_at))?.includes(searchParam(searchVal)),
     );
 
     return searched;
@@ -55,7 +55,7 @@ export default function PickslipsPage() {
   const finalData = searchedData();
   const validData = Array.isArray(finalData) && finalData.length > 0;
 
-  console.log("validData",validData);
+  console.log("validData", validData);
 
   const tableProps = { pickslips: searchedData() };
 
@@ -63,6 +63,7 @@ export default function PickslipsPage() {
     title: "Pickslip details",
     handleRefresh: fetchPickslips,
     setSearchVal,
+    searchVal,
   };
 
   return (

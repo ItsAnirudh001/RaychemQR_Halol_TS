@@ -34,7 +34,7 @@ export default function AddEditUserModal(props: {
     handleRefresh,
   } = props;
 
-  const isCreate = mode === "Add User"
+  const isCreate = mode === "Add User";
   const isDelete = mode === "Delete User";
 
   const { setLoading } = useAppStore();
@@ -73,15 +73,16 @@ export default function AddEditUserModal(props: {
   }
 
   async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
-    if(!selectedUser) return;
-    
+    e.preventDefault();
+
+    if (!selectedUser) return;
+
     if (isDelete) return await postDeleteUser(selectedUser);
 
-    e.preventDefault();
     await postUserSubmit();
   }
 
-  if(!selectedUser) return <></>
+  if (!selectedUser) return <></>;
 
   return (
     <AppModal {...props}>

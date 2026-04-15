@@ -32,9 +32,10 @@ export default function PickslipsScreen() {
   const [sortKey, setSortKey] = useState<string>("");
   const [pickslips, setPickslips] = useState<Pickslip[]>();
   const [statusFilter, setStatusFilter] = useState<string>("");
-
   const [searchVal, setSearchVal] = useState<string>("");
+
   const abortRef = useRef<boolean>(false);
+  const downloadRef = useRef<boolean>(false);
 
   useLayoutEffect(() => {
     setLoading(true);
@@ -160,7 +161,7 @@ export default function PickslipsScreen() {
   }
 
   async function handleDownloadReport(pickslip: Pickslip) {
-    await GetFileForDownload(pickslip, setLoading);
+    await GetFileForDownload(pickslip, setLoading, downloadRef);
   }
 
   async function handleRefresh() {

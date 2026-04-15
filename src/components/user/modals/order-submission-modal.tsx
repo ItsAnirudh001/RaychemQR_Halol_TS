@@ -16,6 +16,7 @@ import {
 } from "@/utils/session-utils";
 import { toastify } from "@/utils/toast";
 import { useRouter } from "next/navigation";
+import { useRef } from "react";
 import { FaCube } from "react-icons/fa";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
@@ -29,6 +30,8 @@ export default function OrderSubmissionModal(props: {
   const { push } = useRouter();
   const { setLoading } = useAppStore();
   const { viewDashboard, hideDashboard, scannedItems, pickslipItems } = props;
+
+  const downloadRef = useRef<boolean>(false);
 
   async function postAbortSession() {
     const session_id = getStoredScanSessionID();
@@ -57,7 +60,7 @@ export default function OrderSubmissionModal(props: {
 
   async function handleDownloadReport() {
     const pickslip = getStoredPickslip();
-    await GetFileForDownload(pickslip, setLoading);
+    await GetFileForDownload(pickslip, setLoading, downloadRef);
   }
 
   return (

@@ -9,16 +9,17 @@ import { PickslipItem } from "@/types/pickslip-type";
 import { searchParam } from "@/utils/helpers";
 import { getStoredPickslip } from "@/utils/session-utils";
 import { useRouter } from "next/navigation";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FiDownload } from "react-icons/fi";
 import { IoChevronBackCircle } from "react-icons/io5";
 
 export default function PickslipItemsPage() {
   const { back } = useRouter();
-  const { loading, setLoading } = useAppStore();
+  const { setLoading } = useAppStore();
   const [searchVal, setSearchVal] = useState<string>("");
-
   const [pickslipItems, setPickslipItems] = useState<PickslipItem[]>();
+
+  const downloadRef = useRef<boolean>(false);
 
   useLayoutEffect(() => {
     setLoading(true);
@@ -56,7 +57,7 @@ export default function PickslipItemsPage() {
   }
 
   async function handleDownloadReport() {
-    await GetFileForDownload(pickslip, setLoading);
+    await GetFileForDownload(pickslip, setLoading, downloadRef);
   }
 
   function searchedData() {
@@ -83,6 +84,7 @@ export default function PickslipItemsPage() {
     title: `${pickslip?.oa_no} - Items`,
     handleRefresh: fetchPickslipItems,
     setSearchVal,
+    searchVal,
   };
 
   return (
