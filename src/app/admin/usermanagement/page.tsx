@@ -19,7 +19,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 
 export default function UserManagementPage() {
-  const { loading, setLoading } = useAppStore();
+  const { setLoading } = useAppStore();
 
   const [userModal, setUserModal] = useState<boolean>(false);
   const [mode, setMode] = useState<string>("");
@@ -67,7 +67,11 @@ export default function UserManagementPage() {
   const isEdit = Boolean(selectedUser?.user_id);
 
   async function postUserSubmit() {
-    if (mode === "Add User" && !validatedInput(selectedUser?.password || "", "password")) return;
+    if (
+      mode === "Add User" &&
+      !validatedInput(selectedUser?.password || "", "password")
+    )
+      return;
 
     setLoading(true);
 
@@ -160,7 +164,12 @@ export default function UserManagementPage() {
     showModal,
   };
 
-  const headProps = { title: "User Management", handleRefresh, setSearchVal };
+  const headProps = {
+    title: "User Management",
+    handleRefresh,
+    setSearchVal,
+    searchVal,
+  };
 
   return (
     <div className="page gap-[3vh]">

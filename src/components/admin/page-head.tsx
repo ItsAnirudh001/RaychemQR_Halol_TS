@@ -8,9 +8,10 @@ import { FaSearch } from "react-icons/fa";
 export default function AdminPageHead(props: {
   title: string;
   setSearchVal: React.Dispatch<React.SetStateAction<string>>;
+  searchVal: string;
   handleRefresh: () => Promise<void>;
 }) {
-  const { title, handleRefresh, setSearchVal } = props;
+  const { title, handleRefresh, setSearchVal, searchVal } = props;
 
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
     if (!setSearchVal) return;
@@ -35,6 +36,7 @@ export default function AdminPageHead(props: {
           <FaSearch />
           <input
             onChange={handleSearch}
+            value={searchVal}
             placeholder="Search"
             type="search"
             className="border-none outline-none placeholder-gray-500 font-medium w-full"

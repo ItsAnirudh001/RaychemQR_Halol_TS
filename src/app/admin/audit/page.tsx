@@ -11,7 +11,7 @@ import { isAPISuccess, searchParam } from "@/utils/helpers";
 import { useEffect, useLayoutEffect, useState } from "react";
 
 export default function AuditPage() {
-  const { loading, setLoading } = useAppStore();
+  const { setLoading } = useAppStore();
   const [userLogs, setUserLogs] = useState<UserLogsItem[]>();
   const [searchVal, setSearchVal] = useState<string>("");
 
@@ -62,6 +62,7 @@ export default function AuditPage() {
     title: "Audit Logs",
     handleRefresh: fetchUserLogs,
     setSearchVal,
+    searchVal,
   };
 
   return (
