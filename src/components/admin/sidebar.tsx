@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import Drawer from "@mui/material/Drawer";
 // import ClickAwayListener from "@mui/material/ClickAwayListener";
 // import { IoIosArrowDropright, IoIosArrowDropleft } from "react-icons/io";
-import { sidebarData } from "@/constants/sidebar-data";
+import { sidebarData } from "@/constants/admin/sidebar-data";
 import { isUserPath } from "@/utils/user/user-utils";
 
 export default function AdminSidebar() {
