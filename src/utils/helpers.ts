@@ -1,11 +1,11 @@
 import { regexMod } from "@/constants/regex-data";
 import { Pickslip, PickslipItem } from "@/types/pickslip-type";
 import { UserLogsItem, UserTableItem } from "@/types/table-types";
-import dayjs from "dayjs";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { RefObject } from "react";
 import { getStoredUser } from "./session-utils";
 import { toastify } from "./toast";
+import dayjs from "dayjs";
 
 export function tableIndices(page: number, rowsPerPage: number) {
   const indices = {
@@ -64,13 +64,14 @@ export function checkToken() {
 
   try {
     const decoded: JwtPayload = jwtDecode(token);
-    localStorage.setItem("JWT",JSON.stringify(decoded))
+    // console.log("decoded token", decoded);
     const { exp, iat } = decoded;
+
     if (!exp || !iat) return 0;
 
-    const tokenExpiryTime = (exp - iat) * 1000;
+    const expiryTime = (exp - iat) * 1000;
 
-    return tokenExpiryTime;
+    return expiryTime;
   } catch (error) {
     console.error("Error decoding token:", error);
     return 0;
@@ -135,8 +136,8 @@ export function timestamp(date?: string | null) {
   return date ? dayjs(date).format(format) : "";
 }
 
- export function resetRef(ref: RefObject<boolean>) {
-    setTimeout(() => {
-      ref.current = false;
-    }, 3000);
-  }
+export function resetRef(ref: RefObject<boolean>) {
+  setTimeout(() => {
+    ref.current = false;
+  }, 3000);
+}
