@@ -78,6 +78,7 @@ export default function PickslipsScreen() {
 
   useEffect(() => {
     sessionStorage.setItem("logout_session", "enabled");
+    sessionStorage.removeItem("pickslip");
     fetchPickslips();
     postAbortSession();
   }, []);

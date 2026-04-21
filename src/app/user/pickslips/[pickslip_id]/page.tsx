@@ -54,7 +54,7 @@ export default function PickslipItemsScreen() {
     (item: PickslipItem) => item.is_scanned == true,
   );
 
-  console.log("scanned items",scannedItems);
+  console.log("scanned items", scannedItems);
 
   async function fetchPickslipItems() {
     setLoading(true);
@@ -82,9 +82,13 @@ export default function PickslipItemsScreen() {
   const allScanned = scannedItems?.length == pickslipItems?.length;
 
   useEffect(() => {
-    const status = allScanned ? "completed" : "created";
+    const status = allScanned
+      ? !submitted
+        ? "completed"
+        : "submitted"
+      : "created";
     setPickslipStatus(status);
-    if(submitted) return;
+    if (submitted) return;
 
     updateStoredPickslip(status);
   }, [allScanned]);
