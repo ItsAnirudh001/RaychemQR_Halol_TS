@@ -156,7 +156,7 @@ export async function Logout(
     push("/");
     let message = data?.message;
     const tokenExpired = isLoginExpired();
-    if (tokenExpired) message = "Token Expired " + message;
+    if (tokenExpired) message = "Token Expired, " + message;
     toastify("success", message);
     localStorage.clear();
     sessionStorage.clear();

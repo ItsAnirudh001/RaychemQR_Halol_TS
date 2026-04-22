@@ -2,7 +2,7 @@
 
 import React from "react";
 import MuiTooltip from "../material-ui/tooltip";
-import { IoRefreshCircleSharp } from "react-icons/io5";
+import { BiRefresh } from "react-icons/bi";
 import { FaSearch } from "react-icons/fa";
 
 export default function AdminPageHead(props: {
@@ -45,10 +45,10 @@ export default function AdminPageHead(props: {
 
         <MuiTooltip title="Refresh Page">
           <button
-            className="animated hover-shadow rounded-3xl text-[3rem] text-[rgb(9,99,126)]"
+            className="animated rounded-3xl text-[3rem] text-[rgb(9,99,126)]"
             onClick={handleRefreshClick}
           >
-            <IoRefreshCircleSharp />
+            <BiRefresh />
           </button>
         </MuiTooltip>
       </div>

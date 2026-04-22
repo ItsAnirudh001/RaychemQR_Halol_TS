@@ -5,7 +5,7 @@ import { Menu, MenuItem } from "@mui/material";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { IoRefreshCircleSharp } from "react-icons/io5";
+import { BiRefresh } from "react-icons/bi";
 import { MdLock } from "react-icons/md";
 import { PiUserCircleFill } from "react-icons/pi";
 import { RiLogoutCircleLine } from "react-icons/ri";
@@ -41,7 +41,7 @@ export default function UserAuthHeader({
   function headerLogout() {
     hideMenu();
     updateLogoutMode("normal");
-    push("/")
+    push("/");
   }
 
   return (
@@ -52,12 +52,6 @@ export default function UserAuthHeader({
       <div className="flex gap-2 items-center">{children}</div>
 
       <div className="flex gap-[1.5vw] items-center">
-        {Boolean(handleRefresh) && (
-          <button className="animated2" onClick={handleRefresh}>
-            <IoRefreshCircleSharp className="text-primary-heading text-[2.2rem]" />
-          </button>
-        )}
-
         {Boolean(setSearchVal) && (
           <div className="flex bg-[rgba(237,243,247,1)] rounded-3xl p-2 placeholder:text-gray-600 gap-2 items-center border border-gray-300 text-[0.75rem]!">
             <FaSearch />
@@ -68,6 +62,12 @@ export default function UserAuthHeader({
               className="border-none outline-none placeholder-gray-500 font-medium max-w-[27vw]"
             />
           </div>
+        )}
+
+        {Boolean(handleRefresh) && (
+          <button className="animated2" onClick={handleRefresh}>
+            <BiRefresh className="text-primary-heading text-[2.2rem]" />
+          </button>
         )}
 
         <button className="animated2" onClick={showMenu}>
