@@ -34,7 +34,7 @@ export default function useTokenLogout() {
     }
 
     function handleVisibilityChange() {
-      if (document.visibilityState === "visible") listenForExpiry();
+      listenForExpiry();
     }
 
     const listenInterval = setInterval(listenForExpiry, 1000);
