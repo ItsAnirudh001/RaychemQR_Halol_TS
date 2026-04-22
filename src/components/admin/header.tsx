@@ -1,7 +1,7 @@
 "use client";
 
-import { AutoLogout } from "@/api/common-utils";
-import useAutoLogout from "@/hooks/admin/useAutoLogout";
+// import { AutoLogout } from "@/api/common-utils";
+// import useAutoLogout from "@/hooks/admin/useAutoLogout";
 import { getStoredUser, updateLogoutMode } from "@/utils/session-utils";
 import { isUserPath } from "@/utils/user/user-utils";
 import { Menu, MenuItem } from "@mui/material";
@@ -13,17 +13,17 @@ import { RiLogoutCircleLine } from "react-icons/ri";
 
 export default function AdminHeader() {
   const path = usePathname();
-  const { push } = useRouter()
+  const { push } = useRouter();
 
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
 
-  function postLogout() {
-    AutoLogout()
-    setMenuAnchor(null);
-    localStorage.clear()
-  }
+  // function postLogout() {
+  //   AutoLogout();
+  //   setMenuAnchor(null);
+  //   localStorage.clear();
+  // }
 
-  useAutoLogout(postLogout);
+  // useAutoLogout(postLogout);
 
   function showMenu(event: React.MouseEvent<HTMLButtonElement>) {
     setMenuAnchor(event.currentTarget);
@@ -36,7 +36,7 @@ export default function AdminHeader() {
   function headerLogout() {
     hideMenu();
     updateLogoutMode("normal");
-    push("/")
+    push("/");
   }
 
   // console.log("user",user);
@@ -63,10 +63,7 @@ export default function AdminHeader() {
         </div>
 
         <button onClick={showMenu} className="animated">
-          <PiUserCircleFill
-            color="rgb(9, 99, 126)"
-            className="text-[2.4rem]"
-          />
+          <PiUserCircleFill color="rgb(9, 99, 126)" className="text-[2.4rem]" />
         </button>
       </div>
 

@@ -1,7 +1,13 @@
 import { LoginForm } from "@/types/login-types";
 import { Pickslip } from "@/types/pickslip-type";
 import { customAxios } from "@/utils/axios";
-import { handleFileDownload, isAPISuccess, resetRef } from "@/utils/helpers";
+import {
+  checkToken,
+  handleFileDownload,
+  isAPISuccess,
+  isLoginExpired,
+  resetRef,
+} from "@/utils/helpers";
 import {
   getStoredScanSessionID,
   getStoredUser,
@@ -9,7 +15,6 @@ import {
 } from "@/utils/session-utils";
 import { toastify } from "@/utils/toast";
 import axios from "axios";
-import dayjs from "dayjs";
 import { NavigateOptions } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import qs from "qs";
 import { RefObject } from "react";
@@ -111,12 +116,14 @@ export async function Login(
 
     if (!success) return;
 
-    window.dispatchEvent(new Event("login"));
-    localStorage.setItem(
-      "login",
-      `Login at ${dayjs().format("DD-MM-YYYY hh:mm:ss")}`,
-    );
     updateLogoutMode("disabled");
+
+    const tokenExpiry = checkToken();
+
+    const loginTime = Date.now();
+    const logoutTime = loginTime + tokenExpiry;
+
+    localStorage.setItem("logout_time", String(logoutTime));
 
     callback();
   } catch (error) {
@@ -141,18 +148,16 @@ export async function Logout(
 
   if (!user) return;
 
-  // console.log("Triggwered logout for", user);
-
   setLoading(true);
+
   try {
     const { data } = await customAxios.post(commonroutes.logout);
     console.log("Logout triggered");
-    localStorage.setItem(
-      "logout",
-      `Logout at ${dayjs().format("DD-MM-YYYY hh:mm:ss")}`,
-    );
     push("/");
-    toastify("success", data?.message);
+    let message = data?.message;
+    const tokenExpired = isLoginExpired();
+    if (tokenExpired) message = "Token Expired " + message;
+    toastify("success", message);
     localStorage.clear();
     sessionStorage.clear();
   } catch (error) {
