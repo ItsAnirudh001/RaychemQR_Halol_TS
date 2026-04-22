@@ -24,7 +24,7 @@ export default function useTokenLogout() {
   }
 
   useEffect(() => {
-    function listenForExpiry() {
+    function handleExpiryListen() {
       const loginExpired = isLoginExpired();
 
       if (!loginExpired) return;
@@ -33,21 +33,15 @@ export default function useTokenLogout() {
       return handleLogout();
     }
 
-    function handleVisibilityChange() {
-      listenForExpiry();
-    }
+    const listenInterval = setInterval(handleExpiryListen, 1000);
 
-    const listenInterval = setInterval(listenForExpiry, 1000);
-
-    window.addEventListener("focus", listenForExpiry);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+    document.addEventListener("visibilitychange", handleExpiryListen);
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
       clearInterval(listenInterval);
-      window.removeEventListener("focus", listenForExpiry);
       window.removeEventListener("beforeunload", handleBeforeUnload);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      document.removeEventListener("visibilitychange", handleExpiryListen);
     };
   }, []);
 }
