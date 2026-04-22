@@ -119,7 +119,7 @@ export default function OrderSubmissionModal(props: {
             className="animated2 mobile-btn-main text-[rgba(64,108,175,1)]! border border-[rgba(64,108,175,1)] bg-transparent! w-full rounded-xl"
             onClick={handleDownloadReport}
           >
-            Download as PDF
+            Download Packslip
           </button>
 
           <button

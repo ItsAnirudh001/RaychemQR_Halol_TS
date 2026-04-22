@@ -3,7 +3,7 @@
 import { Logout } from "@/api/common-utils";
 import useAppStore from "@/store/app-store";
 import { isLoginExpired } from "@/utils/helpers";
-import { getStoredUser, updateLogoutMode } from "@/utils/session-utils";
+import { updateLogoutMode } from "@/utils/session-utils";
 import { toastify } from "@/utils/toast";
 import { useRouter } from "next/navigation";
 import { useLayoutEffect, useRef } from "react";
@@ -13,13 +13,6 @@ export default function useSessionHandle(homePath: string) {
   const { setLoading } = useAppStore();
 
   const logoutRef = useRef<boolean>(false);
-
-  function handleBeforeUnload(e: BeforeUnloadEvent) {
-    const user = getStoredUser();
-    if (!user?.user_id) return;
-
-    e.preventDefault();
-  }
 
   async function postLogout() {
     await Logout(setLoading, push, logoutRef);
@@ -44,9 +37,5 @@ export default function useSessionHandle(homePath: string) {
     }
 
     postLogout();
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, []);
 }
