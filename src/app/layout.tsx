@@ -8,9 +8,8 @@ import AdminLayout from "@/components/admin/layout";
 import MobileLayout from "@/components/user/layout";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import "./globals.css";
 import Loader from "@/components/loader";
-import { useNotificationCenter } from "react-toastify/addons/use-notification-center"
+import "./globals.css";
 
 dayjs.extend(customParseFormat);
 

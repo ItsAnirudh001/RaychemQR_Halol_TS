@@ -6,6 +6,7 @@ import { RefObject } from "react";
 import { getStoredUser } from "./session-utils";
 import { toastify } from "./toast";
 import dayjs from "dayjs";
+import { timestampFormat } from "@/constants/layout-data";
 
 export function tableIndices(page: number, rowsPerPage: number) {
   const indices = {
@@ -131,13 +132,29 @@ export function searchParam(value: string | number | null) {
 }
 
 export function timestamp(date?: string | null) {
-  const format = "DD-MM-YYYY hh:mm:ss";
-
-  return date ? dayjs(date).format(format) : "";
+  return date ? dayjs(date).format(timestampFormat) : "";
 }
 
 export function resetRef(ref: RefObject<boolean>) {
   setTimeout(() => {
     ref.current = false;
   }, 3000);
+}
+
+export function isLoginExpired() {
+  if (typeof localStorage === "undefined") return;
+
+  const currentTime = Date.now();
+  const logoutTime = localStorage.getItem("logout_time");
+
+  if (!logoutTime) return false;
+
+  // console.log("currentTime check", currentTime);
+  // console.log("logoutTime check", Number(logoutTime));
+
+  const expired: boolean = currentTime >= Number(logoutTime);
+
+  // console.log("expired?", expired);
+
+  return expired;
 }

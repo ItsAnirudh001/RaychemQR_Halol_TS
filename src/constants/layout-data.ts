@@ -14,3 +14,5 @@ export const homePaths = {
   admin: sidebarData[0].route,
   user: "/user/pickslips",
 };
+
+export const timestampFormat = "DD-MM-YYYY hh:mm:ss A";
