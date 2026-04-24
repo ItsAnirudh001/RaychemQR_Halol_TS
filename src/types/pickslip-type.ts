@@ -14,6 +14,7 @@ export interface PickslipItem {
   no_of_boxes: number | null;
   status: string;
   is_scanned: boolean;
+  remaining: number;
 }
 
 export interface ScannedItem {
