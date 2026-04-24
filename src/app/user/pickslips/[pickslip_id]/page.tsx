@@ -17,12 +17,12 @@ import {
 import { toastify } from "@/utils/toast";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { FaRegClock } from "react-icons/fa";
-import { FaHashtag, FaRegCircleCheck } from "react-icons/fa6";
+import { FaRegCircleCheck, FaRegClock } from "react-icons/fa6";
 import { IoChevronBackCircle } from "react-icons/io5";
 import { LuQrCode } from "react-icons/lu";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { TbArrowsSort } from "react-icons/tb";
+import { PiTagChevronFill } from "react-icons/pi";
 
 export default function PickslipItemsScreen() {
   const { back, push } = useRouter();
@@ -50,11 +50,11 @@ export default function PickslipItemsScreen() {
 
   const { oa_no, pickslip_id } = pickslip;
 
-  const scannedItems = pickslipItems?.filter(
-    (item: PickslipItem) => item.is_scanned == true,
+  const verifiedItems = pickslipItems?.filter(
+    (item: PickslipItem) => item.status === "verified",
   );
 
-  console.log("scanned items", scannedItems);
+  console.log("verified items", verifiedItems);
 
   async function fetchPickslipItems() {
     setLoading(true);
@@ -79,7 +79,7 @@ export default function PickslipItemsScreen() {
     sessionStorage.setItem("pickslip", JSON.stringify(updatedPickslip));
   }
 
-  const allScanned = scannedItems?.length == pickslipItems?.length;
+  const allScanned = verifiedItems?.length == pickslipItems?.length;
 
   useEffect(() => {
     const status = allScanned
@@ -136,22 +136,6 @@ export default function PickslipItemsScreen() {
     );
 
     return searched;
-  }
-
-  const iconClass = "text-blue-600";
-
-  function infoCard(label: string, value: string, icon: React.ReactNode) {
-    return (
-      <div className="flex flex-col bg-[rgba(242,247,252,1)] py-2 px-4 text-xs rounded-2xl gap-2 w-full">
-        <div className="flex items-center gap-1">
-          {icon}
-          <span className="text-[rgba(98,116,142,1)] font-medium text-[2.65vw]">
-            {label}
-          </span>
-        </div>
-        <span className="tracking-wide text-[3vw]">{value}</span>
-      </div>
-    );
   }
 
   function showDelete(data: PickslipItem) {
@@ -230,7 +214,7 @@ export default function PickslipItemsScreen() {
   const submitModalProps = {
     viewDashboard,
     hideDashboard,
-    scannedItems,
+    verifiedItems,
     pickslipItems,
   };
 
@@ -238,6 +222,20 @@ export default function PickslipItemsScreen() {
   const validData = Array.isArray(finalData) && finalData.length > 0;
 
   // console.log("items", pickslipItems);
+
+  function infoCard(label: string, value: string | null | undefined) {
+    return (
+      <div className="flex flex-col bg-[rgba(242,247,252,1)] py-2 px-4 text-xs rounded-2xl gap-2 w-full">
+        <div className="flex items-center gap-1">
+          <PiTagChevronFill className="text-blue-800" />
+          <span className="text-[#4e6380] font-bold text-[2.75vw]">
+            {label}
+          </span>
+        </div>
+        <span className="text-[3vw] tracking-wide">{value || ""}</span>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -261,7 +259,7 @@ export default function PickslipItemsScreen() {
 
       {/* body */}
       <div
-        className={`flex flex-col p-[2vh] gap-[2vh] mt-[9.5vh] ${completed ? "mb-[15.5vh]" : "mb-[2.2vh]"}`}
+        className={`flex flex-col p-[2vh] gap-[2vh] mt-[7.5vh] ${completed ? "mb-[15.5vh]" : "mb-[2.2vh]"}`}
       >
         {/* top buttons */}
         {pickslipItems && pickslipItems.length > 0 && (
@@ -323,8 +321,8 @@ export default function PickslipItemsScreen() {
                   <div className="flex items-center justify-between w-full">
                     {/* order id */}
                     <div className="flex items-center gap-[1.75vw]">
-                      <div className="flex bg-[rgba(215,231,255,1)] rounded-lg px-[1.15vw] py-[0.65vh] items-center text-[rgba(64,108,175,1)] gap-[0.75vw] text-[3.5vw]">
-                        <span>#</span>
+                      <div className="flex bg-[rgba(215,231,255,1)] rounded-lg px-[3vw] py-[0.65vh] items-center text-[rgba(64,108,175,1)] gap-[0.75vw] text-[3.5vw] font-bold">
+                        {/* <span>#</span> */}
                         <span>{index + 1}</span>
                       </div>
 
@@ -360,35 +358,25 @@ export default function PickslipItemsScreen() {
                     )}
                   </div>
 
-                  <div className="flex w-full gap-[2.5vw]">
-                    {infoCard(
-                      "Item Code",
-                      data.item_code,
-                      <FaHashtag className={iconClass} />,
-                    )}
+                  <div className="w-full">
                     {infoCard(
                       "Serial Number",
-                      data.serial_no || "",
-                      <FaHashtag className={iconClass} />,
+                      data.serial_no?.split(",").join(", "),
                     )}
                   </div>
 
                   <div className="flex w-full gap-[2.5vw]">
+                    {infoCard("Item Code", data.item_code)}
                     {infoCard(
-                      "Batch No.",
-                      data.batch_no || "NA",
-                      <FaHashtag className={iconClass} />,
+                      "Quantity",
+                      `${data.requested_qty - data.remaining || 0} / ${data.requested_qty}`,
                     )}
-                    {infoCard(
-                      "Weight",
-                      data.weight || "",
-                      <FaHashtag className={iconClass} />,
-                    )}
-                    {infoCard(
-                      "Box Type",
-                      data.box_type || "",
-                      <FaHashtag className={iconClass} />,
-                    )}
+                  </div>
+
+                  <div className="flex w-full gap-[2.5vw]">
+                    {infoCard("Batch No.", data.batch_no)}
+                    {infoCard("Weight", data.weight + " kg")}
+                    {infoCard("Box Type", data.box_type)}
                   </div>
                 </div>
               </div>
@@ -404,7 +392,7 @@ export default function PickslipItemsScreen() {
                   Submit Order
                 </button>
 
-                <span className="text-[3.25vw]">{`Validated all items to submit (${scannedItems?.length}/${pickslipItems?.length} completed)`}</span>
+                <span className="text-[3.25vw]">{`Validated all items : ${verifiedItems?.length} / ${pickslipItems?.length} verified`}</span>
               </div>
             )}
           </>

@@ -24,12 +24,12 @@ import { IoMdClose } from "react-icons/io";
 export default function OrderSubmissionModal(props: {
   viewDashboard: boolean;
   hideDashboard: () => void;
-  scannedItems: PickslipItem[] | undefined;
+  verifiedItems: PickslipItem[] | undefined;
   pickslipItems: PickslipItem[] | undefined;
 }) {
   const { push } = useRouter();
   const { setLoading } = useAppStore();
-  const { viewDashboard, hideDashboard, scannedItems, pickslipItems } = props;
+  const { viewDashboard, hideDashboard, verifiedItems, pickslipItems } = props;
 
   const downloadRef = useRef<boolean>(false);
 
@@ -95,7 +95,7 @@ export default function OrderSubmissionModal(props: {
               <span className="text-[1.75vh]">Items</span>
 
               <span className="text-[rgba(20,71,230,1)] text-[2vh] font-medium">
-                {scannedItems?.length}
+                {verifiedItems?.length}
               </span>
             </div>
 
@@ -108,7 +108,7 @@ export default function OrderSubmissionModal(props: {
 
               <span className="text-[rgba(0,122,85,1)] text-[2vh] font-medium">
                 {Math.round(
-                  (scannedItems?.length ?? 0) / (pickslipItems?.length ?? 0),
+                  (verifiedItems?.length ?? 0) / (pickslipItems?.length ?? 0),
                 ) * 100}
                 %
               </span>

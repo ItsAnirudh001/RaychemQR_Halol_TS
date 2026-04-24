@@ -32,7 +32,7 @@ export default function ItemScanPage() {
     if (scanPostRef.current) return;
     scanPostRef.current = true;
 
-    const { item_id, requested_qty, item_code } = item;
+    const { item_id, item_code } = item;
     const { serial_no, batch_no, box_type, pcn, weight } = scannedItem;
 
     console.log("scanned item", scannedItem);
@@ -40,26 +40,21 @@ export default function ItemScanPage() {
 
     console.log("scanned_qty", scanned_qty);
 
-    let mismatches: string[] = [];
-    let unfound: string[] = [];
+    let invalids: string[] = [];
 
-    if (!pcn) unfound.push("Item Code");
-    if (Number.isNaN(scanned_qty)) unfound.push("Quantity");
+    if (!pcn) invalids.push("Item Code");
+    if (Number.isNaN(scanned_qty)) invalids.push("Quantity");
 
-    if (unfound.length > 0) {
-      toastify("warning", `${unfound.join(", ")} not found`);
+    if (invalids.length > 0) {
+      toastify("warning", `Invalid ${invalids.join(", ")}`);
       resetRef(scanPostRef);
-      unfound = [];
+      invalids = [];
       return;
     }
 
-    if (pcn !== item_code) mismatches.push("Item Code");
-    if (scanned_qty !== requested_qty) mismatches.push("Quantity");
-
-    if (mismatches.length > 0) {
-      toastify("warning", `${mismatches.join(", ")} mismatch`);
+    if (pcn !== item_code) {
+      toastify("warning", `Item code mismatch`);
       resetRef(scanPostRef);
-      mismatches = [];
       return;
     }
 
@@ -99,11 +94,10 @@ export default function ItemScanPage() {
     } finally {
       setLoading(false);
       resetRef(scanPostRef);
-      mismatches = [];
     }
   }
 
-  console.log("scanPostref", scanPostRef.current);
+  // console.log("scanPostref", scanPostRef.current);
 
   async function handleQRScan(
     detectedCodes: IDetectedBarcode[],
@@ -142,9 +136,7 @@ export default function ItemScanPage() {
       const scannedItem: ScannedItem = {
         pcn: multiLot ? scanned[8] : scanned[6],
         batch_no: multiLot ? scanned[7] : scanned[5],
-        serial_no: multiLot
-          ? `${scanned[2]} ${scanned[3]} ${scanned[4]}`
-          : scanned[2],
+        serial_no: serials.join(", "),
         box_type: multiLot ? scanned[9] : scanned[7],
         weight: multiLot ? scanned[5] : scanned[3],
       };
