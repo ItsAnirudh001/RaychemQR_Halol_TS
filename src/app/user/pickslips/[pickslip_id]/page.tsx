@@ -246,20 +246,20 @@ export default function PickslipItemsScreen() {
             <IoChevronBackCircle />
           </button>
 
-          <div className="flex flex-col font-medium">
-            <span className="text-[rgba(144,161,185,1)] text-xs">Order ID</span>
-            <textarea
-              disabled
-              className="text-[3.25vw] w-[24vw] field-sizing-content"
-              value={oa_no || ""}
-            />
+          <div className="flex flex-col">
+            <span className="text-[#545d6b] text-[0.75rem] font-medium">
+              Order ID
+            </span>
+            <span className="text-[0.92rem] w-[24vw] field-sizing-content overflow-scroll font-semibold">
+              {oa_no}
+            </span>
           </div>
         </div>
       </UserAuthHeader>
 
       {/* body */}
       <div
-        className={`flex flex-col p-[2vh] gap-[2vh] mt-[7.5vh] ${completed ? "mb-[15.5vh]" : "mb-[2.2vh]"}`}
+        className={`flex flex-col p-[2vh] gap-[2vh] mt-[7.75vh] ${completed ? "mb-[15.5vh]" : "mb-[2.2vh]"}`}
       >
         {/* top buttons */}
         {pickslipItems && pickslipItems.length > 0 && (
@@ -369,13 +369,13 @@ export default function PickslipItemsScreen() {
                     {infoCard("Item Code", data.item_code)}
                     {infoCard(
                       "Quantity",
-                      `${data.requested_qty - data.remaining || 0} / ${data.requested_qty}`,
+                      `${data.requested_qty - data.remaining || 0}/${data.requested_qty}`,
                     )}
                   </div>
 
                   <div className="flex w-full gap-[2.5vw]">
                     {infoCard("Batch No.", data.batch_no)}
-                    {infoCard("Weight", data.weight + " kg")}
+                    {infoCard("Weight", data.weight ? `${data.weight} kg` : "")}
                     {infoCard("Box Type", data.box_type)}
                   </div>
                 </div>

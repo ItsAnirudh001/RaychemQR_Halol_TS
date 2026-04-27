@@ -188,7 +188,7 @@ export default function PickslipsScreen() {
       </UserAuthHeader>
 
       {/* body */}
-      <div className="flex flex-col px-4 py-5 gap-5 mt-[7.5vh]">
+      <div className="flex flex-col px-4 py-5 gap-5 mt-[7.75vh]">
         {/* top buttons */}
         {pickslips && pickslips.length > 0 && (
           <div className="flex justify-between">

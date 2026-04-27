@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const removeConsole = process.env.NEXT_PUBLIC_ENV !== "Local";
+const removeConsole: boolean = process.env.NEXT_PUBLIC_ENV !== "Local";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
